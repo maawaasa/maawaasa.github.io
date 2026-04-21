@@ -690,6 +690,98 @@
         }
 
         /* === SERVICE DETAIL === */
+        /* === ABOUT STRIP === */
+        .about-strip {
+            padding: 100px 50px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(122,170,212,0.04) 0%, rgba(88,142,184,0.02) 100%);
+        }
+        .about-strip-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .about-strip-content h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+        .about-strip-content h2 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .about-strip-content p {
+            font-size: 1rem;
+            color: var(--text-mid);
+            line-height: 1.9;
+            margin-bottom: 16px;
+        }
+        .about-strip-badges {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        .about-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 14px;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .about-badge:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(122,170,212,0.08); }
+        .about-badge-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--gold-glass);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+        .about-strip-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .about-stat-card {
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.3s;
+        }
+        .about-stat-card:hover { transform: translateX(-4px); border-color: var(--gold-border); }
+        .about-stat-num {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            min-width: 60px;
+        }
+        .about-stat-label { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+        .about-stat-label strong { display: block; font-size: 1rem; color: var(--text); font-weight: 700; }
+
+        @media (max-width: 900px) {
+            .about-strip { padding: 60px 20px; }
+            .about-strip-inner { grid-template-columns: 1fr; gap: 40px; }
+            .about-strip-content h2 { font-size: 1.5rem; }
+        }
+
+        /* === SERVICES === */
         .service-section {
             padding: 100px 50px;
             z-index: 1;
@@ -1708,6 +1800,45 @@
             <div class="hero-stat">
                 <div class="num">HDR</div>
                 <div class="label">معالجة احترافية</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT STRIP ==================== -->
+    <section class="about-strip reveal">
+        <div class="about-strip-inner">
+            <div class="about-strip-content">
+                <h2>نصيغ المشهد في قلب <em>مدينة الرياض</em></h2>
+                <p>مؤسسة مأوى المهارة التجارية متخصصة في التصوير العقاري الاحترافي، نقدم خدماتنا من قلب العاصمة الرياض لنساهم في رفع القيمة البصرية للعقارات وتسريع عمليات البيع والتأجير في واحد من أكثر الأسواق العقارية ديناميكية في المنطقة.</p>
+                <p>نجمع بين الخبرة الميدانية والتقنيات المتقدمة لنقدم محتوى بصري يُبرز كل تفصيلة في عقارك بالدقة والجودة التي يستحقها.</p>
+                <div class="about-strip-badges">
+                    <div class="about-badge">
+                        <div class="about-badge-icon">&#127963;</div>
+                        متواجدون في الرياض
+                    </div>
+                    <div class="about-badge">
+                        <div class="about-badge-icon">&#128202;</div>
+                        سجل تجاري: 1009034486
+                    </div>
+                    <div class="about-badge">
+                        <div class="about-badge-icon">&#127760;</div>
+                        تغطية شاملة للمنطقة
+                    </div>
+                </div>
+            </div>
+            <div class="about-strip-visual">
+                <div class="about-stat-card">
+                    <div class="about-stat-num">4K</div>
+                    <div class="about-stat-label"><strong>دقة تصوير فائقة</strong>أحدث المعدات والتقنيات السينمائية</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="about-stat-num">32%</div>
+                    <div class="about-stat-label"><strong>بيع أسرع للعقار</strong>العقارات المصورة احترافيًا تُباع أسرع</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="about-stat-num">1200%</div>
+                    <div class="about-stat-label"><strong>مشاركة أوسع</strong>المحتوى المرئي يُشارك أكثر من النص والصور</div>
+                </div>
             </div>
         </div>
     </section>
