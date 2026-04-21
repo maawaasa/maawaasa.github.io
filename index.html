@@ -692,93 +692,152 @@
         /* === SERVICE DETAIL === */
         /* === ABOUT STRIP === */
         .about-strip {
-            padding: 100px 50px;
+            padding: 120px 50px;
             position: relative;
             z-index: 1;
             background: linear-gradient(135deg, rgba(122,170,212,0.04) 0%, rgba(88,142,184,0.02) 100%);
         }
-        .about-strip-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+        .about-strip-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
         }
-        .about-strip-content h2 {
-            font-size: 2rem;
-            font-weight: 900;
+        .about-strip-header .tag {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 50px;
+            background: var(--gold-glass);
+            border: 1px solid var(--gold-border);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--gold-dark);
             margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+        .about-strip-header h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 14px;
             line-height: 1.4;
         }
-        .about-strip-content h2 em {
+        .about-strip-header h2 em {
             font-style: normal;
             background: linear-gradient(135deg, var(--gold-light), var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .about-strip-content p {
+        .about-strip-header p {
             font-size: 1rem;
             color: var(--text-mid);
             line-height: 1.9;
-            margin-bottom: 16px;
         }
-        .about-strip-badges {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-top: 24px;
+        .about-strip-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
         }
-        .about-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            border-radius: 14px;
+        .about-card {
             background: #fff;
             border: 1px solid var(--glass-border);
-            font-size: 0.88rem;
-            font-weight: 600;
-            transition: all 0.3s;
+            border-radius: 24px;
+            padding: 32px 28px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .about-badge:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(122,170,212,0.08); }
-        .about-badge-icon {
-            width: 36px; height: 36px; border-radius: 10px;
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .about-card:hover { transform: translateY(-4px); border-color: var(--gold-border); box-shadow: 0 12px 40px rgba(122,170,212,0.08); }
+        .about-card:hover::before { opacity: 1; }
+        .about-card-icon {
+            width: 52px; height: 52px; border-radius: 16px;
             background: var(--gold-glass);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.4rem;
+            margin-bottom: 18px;
         }
-        .about-strip-visual {
-            display: flex;
-            flex-direction: column;
+        .about-card h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .about-card p {
+            font-size: 0.88rem;
+            color: var(--text-mid);
+            line-height: 1.8;
+        }
+        .about-strip-stats {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
         }
-        .about-stat-card {
+        .about-stat-item {
+            text-align: center;
+            padding: 28px 16px;
+            border-radius: 20px;
             background: #fff;
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 24px 28px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
             transition: all 0.3s;
         }
-        .about-stat-card:hover { transform: translateX(-4px); border-color: var(--gold-border); }
-        .about-stat-num {
+        .about-stat-item:hover { border-color: var(--gold-border); transform: translateY(-2px); }
+        .about-stat-val {
             font-size: 2rem;
             font-weight: 900;
             background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            min-width: 60px;
+            margin-bottom: 6px;
         }
-        .about-stat-label { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
-        .about-stat-label strong { display: block; font-size: 1rem; color: var(--text); font-weight: 700; }
+        .about-stat-txt {
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            font-weight: 500;
+        }
+        .about-credentials {
+            max-width: 1100px;
+            margin: 30px auto 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .about-cred {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            transition: all 0.3s;
+        }
+        .about-cred:hover { border-color: var(--gold); color: var(--gold-dark); }
+        .about-cred-icon {
+            font-size: 1rem;
+        }
 
         @media (max-width: 900px) {
             .about-strip { padding: 60px 20px; }
-            .about-strip-inner { grid-template-columns: 1fr; gap: 40px; }
-            .about-strip-content h2 { font-size: 1.5rem; }
+            .about-strip-header h2 { font-size: 1.5rem; }
+            .about-strip-grid { grid-template-columns: 1fr; }
+            .about-strip-stats { grid-template-columns: 1fr 1fr; }
         }
 
         /* === SERVICES === */
@@ -1805,40 +1864,66 @@
     </section>
 
     <!-- ==================== ABOUT STRIP ==================== -->
-    <section class="about-strip reveal">
-        <div class="about-strip-inner">
-            <div class="about-strip-content">
-                <h2>نصيغ المشهد في قلب <em>مدينة الرياض</em></h2>
-                <p>مؤسسة مأوى المهارة التجارية متخصصة في التصوير العقاري الاحترافي، نقدم خدماتنا من قلب العاصمة الرياض لنساهم في رفع القيمة البصرية للعقارات وتسريع عمليات البيع والتأجير في واحد من أكثر الأسواق العقارية ديناميكية في المنطقة.</p>
-                <p>نجمع بين الخبرة الميدانية والتقنيات المتقدمة لنقدم محتوى بصري يُبرز كل تفصيلة في عقارك بالدقة والجودة التي يستحقها.</p>
-                <div class="about-strip-badges">
-                    <div class="about-badge">
-                        <div class="about-badge-icon">&#127963;</div>
-                        متواجدون في الرياض
-                    </div>
-                    <div class="about-badge">
-                        <div class="about-badge-icon">&#128202;</div>
-                        سجل تجاري: 1009034486
-                    </div>
-                    <div class="about-badge">
-                        <div class="about-badge-icon">&#127760;</div>
-                        تغطية شاملة للمنطقة
-                    </div>
-                </div>
+    <section class="about-strip" id="about">
+        <div class="about-strip-header reveal">
+            <div class="tag">من نحن</div>
+            <h2>نصيغ المشهد في قلب <em>مدينة الرياض</em></h2>
+            <p>مؤسسة مأوى المهارة التجارية متخصصة في التصوير العقاري الاحترافي، نقدم خدماتنا من قلب العاصمة الرياض لنساهم في رفع القيمة البصرية للعقارات وتسريع عمليات البيع والتأجير في واحد من أكثر الأسواق العقارية ديناميكية في المنطقة.</p>
+        </div>
+
+        <div class="about-strip-grid">
+            <div class="about-card reveal">
+                <div class="about-card-icon">&#127968;</div>
+                <h4>تصوير عقاري متكامل</h4>
+                <p>نجمع بين الخبرة الميدانية والتقنيات المتقدمة لنقدم محتوى بصري يُبرز كل تفصيلة في عقارك بالدقة والجودة التي يستحقها، من التصوير الداخلي إلى اللقطات الجوية.</p>
             </div>
-            <div class="about-strip-visual">
-                <div class="about-stat-card">
-                    <div class="about-stat-num">4K</div>
-                    <div class="about-stat-label"><strong>دقة تصوير فائقة</strong>أحدث المعدات والتقنيات السينمائية</div>
-                </div>
-                <div class="about-stat-card">
-                    <div class="about-stat-num">32%</div>
-                    <div class="about-stat-label"><strong>بيع أسرع للعقار</strong>العقارات المصورة احترافيًا تُباع أسرع</div>
-                </div>
-                <div class="about-stat-card">
-                    <div class="about-stat-num">1200%</div>
-                    <div class="about-stat-label"><strong>مشاركة أوسع</strong>المحتوى المرئي يُشارك أكثر من النص والصور</div>
-                </div>
+            <div class="about-card reveal">
+                <div class="about-card-icon">&#127963;</div>
+                <h4>متواجدون في الرياض</h4>
+                <p>نغطي جميع أحياء مدينة الرياض والمناطق المحيطة بها. فريقنا جاهز للوصول إلى موقع عقارك في الوقت المحدد بمعدات ومعدات سينمائية متقدمة.</p>
+            </div>
+            <div class="about-card reveal">
+                <div class="about-card-icon">&#128640;</div>
+                <h4>تقنيات متطورة</h4>
+                <p>نستخدم أحدث تقنيات التصوير من كاميرات HDR بدقة 4K وطائرات درون احترافية وأنظمة جولات افتراضية 360° لنقدم نتائج تتجاوز التوقعات.</p>
+            </div>
+        </div>
+
+        <div class="about-strip-stats">
+            <div class="about-stat-item reveal">
+                <div class="about-stat-val">4K</div>
+                <div class="about-stat-txt">دقة التصوير</div>
+            </div>
+            <div class="about-stat-item reveal">
+                <div class="about-stat-val">32%</div>
+                <div class="about-stat-txt">بيع أسرع للعقار</div>
+            </div>
+            <div class="about-stat-item reveal">
+                <div class="about-stat-val">1200%</div>
+                <div class="about-stat-txt">مشاركة أوسع</div>
+            </div>
+            <div class="about-stat-item reveal">
+                <div class="about-stat-val">300%</div>
+                <div class="about-stat-txt">زيارات أكثر جدية</div>
+            </div>
+        </div>
+
+        <div class="about-credentials reveal">
+            <div class="about-cred">
+                <span class="about-cred-icon">&#128196;</span>
+                سجل تجاري: 1009034486
+            </div>
+            <div class="about-cred">
+                <span class="about-cred-icon">&#128205;</span>
+                الرياض، المملكة العربية السعودية
+            </div>
+            <div class="about-cred">
+                <span class="about-cred-icon">&#128222;</span>
+                966530834579
+            </div>
+            <div class="about-cred">
+                <span class="about-cred-icon">&#9993;</span>
+                Alfaifiwf@gmail.com
             </div>
         </div>
     </section>
