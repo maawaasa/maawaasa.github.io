@@ -1054,6 +1054,47 @@
             line-height: 1.8;
         }
 
+        /* === FAQ SECTION === */
+        .faq-section { padding: 100px 0; max-width: 800px; margin: 0 auto; }
+        .faq-section .sec-header { text-align: center; margin-bottom: 50px; }
+        .faq-item {
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover { border-color: var(--gold-border); }
+        .faq-question {
+            padding: 22px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            transition: background 0.3s;
+        }
+        .faq-question:hover { background: var(--gold-glass); }
+        .faq-question .faq-toggle {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--gold-glass);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: var(--gold-dark);
+            transition: transform 0.3s; flex-shrink: 0;
+        }
+        .faq-item.open .faq-toggle { transform: rotate(45deg); }
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 24px;
+            color: var(--text-mid);
+            line-height: 1.9;
+            font-size: 0.95rem;
+        }
+        .faq-item.open .faq-answer { max-height: 300px; padding: 0 24px 22px; }
+
         /* === CTA BANNER === */
         .cta-banner {
             padding: 100px 50px;
@@ -1535,6 +1576,94 @@
 
     <div class="grid-bg"></div>
 
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "LocalBusiness",
+                "@id": "https://maawaasa.github.io/#business",
+                "name": "مأوى العقارية",
+                "alternateName": "MAWA Real Estate Photography",
+                "description": "شركة متخصصة في التصوير العقاري الاحترافي - تصوير فوتوغرافي HDR، فيديو سينمائي، تصوير درون 4K، وجولات افتراضية 360° في المملكة العربية السعودية",
+                "url": "https://maawaasa.github.io",
+                "telephone": "+966530834579",
+                "email": "Alfaifiwf@gmail.com",
+                "image": "https://maawaasa.github.io/assets/icons/camera-icon.svg",
+                "priceRange": "$$",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressCountry": "SA",
+                    "addressLocality": "السعودية"
+                },
+                "sameAs": [
+                    "https://wa.me/966530834579"
+                ],
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "خدمات التصوير العقاري",
+                    "itemListElement": [
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "التصوير الفوتوغرافي HDR",
+                                "description": "تصوير عقاري احترافي بتقنية HDR بدقة تصل إلى 4K مع معالجة ألوان احترافية"
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "الفيديو السينمائي",
+                                "description": "إنتاج فيديو سينمائي عقاري بتقنيات متقدمة مع تصحيح ألوان وموسيقى ملهمة"
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "تصوير الدرون 4K",
+                                "description": "لقطات جوية احترافية بدقة 4K تكشف الموقع الاستراتيجي للعقار ومحيطه"
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "الجولات الافتراضية 360°",
+                                "description": "جولة تفاعلية 360° تنقل العميل إلى قلب العقار بتجربة غامرة"
+                            }
+                        }
+                    ]
+                },
+                "openingHours": "Su-Th 09:00-18:00"
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://maawaasa.github.io/#organization",
+                "name": "مؤسسة مأوى المهارة التجارية",
+                "identifier": "1009034486",
+                "url": "https://maawaasa.github.io"
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://maawaasa.github.io/#website",
+                "url": "https://maawaasa.github.io",
+                "name": "مأوى العقارية",
+                "inLanguage": "ar-SA",
+                "publisher": { "@id": "https://maawaasa.github.io/#organization" }
+            },
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "https://maawaasa.github.io/" }
+                ]
+            }
+        ]
+    }
+    </script>
+
     <a href="https://wa.me/966530834579" target="_blank" class="whatsapp-float"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339.8 55.9 285.5 33.3 227.7 33.3c-119.8 0-217.4 97.6-217.4 217.4 0 38.3 10 75.7 29 108.6L9.5 457.4l100.4-26.3c31.7 17.3 67.3 26.4 103.6 26.4h.1c119.7 0 217.4-97.6 217.4-217.4 0-58.1-22.6-112.4-63.7-153.5zM227.7 429.8c-32.4 0-64-8.7-91.7-25.1l-6.6-3.9-68.3 17.9 18.2-66.6-4.3-6.8c-18-28.7-27.5-62-27.5-96.2 0-99.4 80.9-180.3 180.3-180.3 48.2 0 93.5 18.8 127.6 52.9 34.1 34.1 52.9 79.4 52.9 127.6-.1 99.3-81 180.2-180.3 180.2zm98.8-135c-5.4-2.7-32-15.8-36.9-17.6-5-1.8-8.6-2.7-12.2 2.7-3.6 5.4-14 17.6-17.2 21.2-3.2 3.6-6.3 4.1-11.7 1.4-5.4-2.7-22.8-8.4-43.4-26.8-16-14.3-26.8-32-30-37.4-3.2-5.4-.3-8.3 2.4-11 2.4-2.4 5.4-6.3 8.1-9.5 2.7-3.2 3.6-5.4 5.4-9.5 1.8-3.6.9-7.2-.5-9.9-1.4-2.7-12.2-29.4-16.7-40.3-4.4-10.5-8.9-9.1-12.2-9.3-3.2-.2-6.8-.2-10.4-.2-3.6 0-9.5 1.4-14.4 6.8-5 5.4-19 18.5-19 45.2s19.4 52.4 22.1 56c2.7 3.6 38.2 58.3 92.6 81.7 12.9 5.6 23 8.9 30.8 11.4 13 4.1 24.8 3.5 34.1 2.1 10.4-1.6 32-13.1 36.5-25.7s4.5-23.5 3.2-25.7c-1.4-2.4-5-3.6-10.4-6.3z"/></svg></a>
 
     <nav>
@@ -1551,6 +1680,7 @@
         <a href="#contact" class="nav-cta">احجز الآن</a>
     </nav>
 
+    <main>
     <!-- ==================== HERO ==================== -->
     <section class="hero" id="home">
         <div class="hero-tag">
@@ -1952,6 +2082,111 @@
     </section>
 
     <!-- ==================== CTA BANNER ==================== -->
+    <!-- ==================== FAQ ==================== -->
+    <section class="faq-section reveal" id="faq">
+        <div class="sec-header">
+            <div class="tag">أسئلة شائعة</div>
+            <h2>كل ما تحتاج معرفته عن <em>خدماتنا</em></h2>
+        </div>
+
+        <div class="faq-item open">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                ما هي خدمات مأوى العقارية؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">مأوى العقارية تقدم أربع خدمات رئيسية في مجال التصوير العقاري: التصوير الفوتوغرافي بتقنية HDR بدقة تصل إلى 4K، إنتاج الفيديو السينمائي بتقنيات متقدمة مع تصحيح ألوان، تصوير الدرون الجوي بدقة 4K، والجولات الافتراضية التفاعلية 360°. جميع خدماتنا مصممة خصيصًا لتعزيز القيمة البصرية للعقارات وتسريع عملية البيع أو التأجير.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                ما هي مدة تنفيذ خدمة التصوير؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">تختلف مدة التنفيذ حسب نوع الخدمة والباقة المختارة. الباقة الأساسية للتصوير الفوتوغرافي تُسلّم خلال يوم عمل واحد. خدمات الفيديو السينمائي والجولات الافتراضية تستغرق من 3 إلى 10 أيام عمل بحسب حجم العقار والباقة المطلوبة.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                ما الفرق بين الباقة الأساسية والاحترافية؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">الباقة الأساسية تشمل خدمة التصوير الأساسية بجودة عالية (مثل 25 صورة HDR أو فيديو 1-2 دقيقة). الباقة الاحترافية تشمل تغطية شاملة مع خدمات إضافية مثل تصوير الدرون 4K، التصوير الليلي، تصحيح ألوان متقدم، ونسخ لمواقع التواصل الاجتماعي.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                كيف أحجز جلسة تصوير لعقاري؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">يمكنك حجز جلسة التصوير بعدة طرق: من خلال نموذج الطلب على موقعنا، أو عبر الواتساب على الرقم 966530834579، أو بالاتصال المباشر. سيتم التواصل معك خلال 24 ساعة لتحديد الموعد والتفاصيل.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                هل تقدم مأوى خدمات خارج المملكة العربية السعودية؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">حاليًا تركز مأوى العقارية على تقديم خدماتها داخل المملكة العربية السعودية، مع إمكانية مناقشة مشاريع خاصة خارج المملكة caso by caso.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                ما هي سياسة الدفع والإلغاء؟
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">يتطلب تأكيد الحجز دفع عربون بنسبة 25% من إجمالي المبلغ. في حال الإلغاء قبل 24 ساعة من الموعد يُسترد 50% من العربون. بعد ذلك لا يُسترد أي مبلغ. يمكن الدفع بالتحويل البنكي أو عبر طرق الدفع الإلكترونية المتاحة.</div>
+        </div>
+    </section>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "ما هي خدمات مأوى العقارية؟",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "مأوى العقارية تقدم أربع خدمات رئيسية في مجال التصوير العقاري: التصوير الفوتوغرافي بتقنية HDR بدقة تصل إلى 4K، إنتاج الفيديو السينمائي بتقنيات متقدمة مع تصحيح ألوان، تصوير الدرون الجوي بدقة 4K، والجولات الافتراضية التفاعلية 360°. جميع خدماتنا مصممة خصيصًا لتعزيز القيمة البصرية للعقارات وتسريع عملية البيع أو التأجير."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "ما هي مدة تنفيذ خدمة التصوير؟",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "تختلف مدة التنفيذ حسب نوع الخدمة والباقة المختارة. الباقة الأساسية للتصوير الفوتوغرافي تُسلّم خلال يوم عمل واحد. خدمات الفيديو السينمائي والجولات الافتراضية تستغرق من 3 إلى 10 أيام عمل بحسب حجم العقار والباقة المطلوبة."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "ما الفرق بين الباقة الأساسية والاحترافية؟",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "الباقة الأساسية تشمل خدمة التصوير الأساسية بجودة عالية (مثل 25 صورة HDR أو فيديو 1-2 دقيقة). الباقة الاحترافية تشمل تغطية شاملة مع خدمات إضافية مثل تصوير الدرون 4K، التصوير الليلي، تصحيح ألوان متقدم، ونسخ لمواقع التواصل الاجتماعي."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "كيف أحجز جلسة تصوير لعقاري؟",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "يمكنك حجز جلسة التصوير بعدة طرق: من خلال نموذج الطلب على موقعنا، أو عبر الواتساب على الرقم 966530834579، أو بالاتصال المباشر. سيتم التواصل معك خلال 24 ساعة لتحديد الموعد والتفاصيل."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "ما هي سياسة الدفع والإلغاء؟",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "يتطلب تأكيد الحجز دفع عربون بنسبة 25% من إجمالي المبلغ. في حال الإلغاء قبل 24 ساعة من الموعد يُسترد 50% من العربون. بعد ذلك لا يُسترد أي مبلغ. يمكن الدفع بالتحويل البنكي أو عبر طرق الدفع الإلكترونية المتاحة."
+                }
+            }
+        ]
+    }
+    </script>
+
     <section class="cta-banner reveal">
         <div class="cta-inner">
             <h2>عقارك يستحق أن <em>يُرى</em> بأفضل صورة</h2>
@@ -1973,7 +2208,7 @@
             </div>
         </div>
         <div class="contact-wrapper reveal">
-            <div class="contact-info-row">
+            <address class="contact-info-row" style="font-style:normal;">
                 <div class="ci-item">
                     <div class="ci-icon">&#128222;</div>
                     <div>
@@ -1995,7 +2230,7 @@
                         <div class="ci-value"><a href="mailto:Alfaifiwf@gmail.com">Alfaifiwf@gmail.com</a></div>
                     </div>
                 </div>
-            </div>
+            </address>
             <form onsubmit="handleSubmit(event)">
                 <div class="contact-grid">
                     <input type="text" placeholder="الاسم" required>
@@ -2219,6 +2454,8 @@
     </div>
 
     <!-- FOOTER -->
+    </main>
+
     <footer>
         <div class="footer-inner">
             <div class="footer-brand">
