@@ -1090,6 +1090,76 @@
         .imp-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.8; }
 
         /* === GALLERY === */
+        /* === TESTIMONIALS === */
+        .testimonials-section { padding: 100px 50px; z-index: 1; position: relative; background: rgba(0,0,0,0.015); }
+        .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px; }
+        .testimonial-card {
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px 28px;
+            transition: all 0.4s;
+            position: relative;
+        }
+        .testimonial-card:hover { transform: translateY(-4px); border-color: var(--gold-border); box-shadow: 0 12px 40px rgba(122,170,212,0.08); }
+        .testimonial-stars { color: #F5A623; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 16px; }
+        .testimonial-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.9; margin-bottom: 20px; }
+        .testimonial-author { display: flex; align-items: center; gap: 14px; padding-top: 16px; border-top: 1px solid var(--glass-border); }
+        .testimonial-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1rem; color: #fff; flex-shrink: 0;
+        }
+        .testimonial-name { font-weight: 700; font-size: 0.95rem; }
+        .testimonial-role { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* === PARTNERS MARQUEE === */
+        .partners-section { padding: 80px 50px; z-index: 1; position: relative; overflow: hidden; }
+        .partners-inner { max-width: 1100px; margin: 0 auto; }
+        .marquee-container {
+            margin-top: 40px;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 40px;
+            animation: marquee 30s linear infinite;
+            width: max-content;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .partner-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 36px;
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            min-width: 180px;
+            height: 90px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text);
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .partner-logo:hover { border-color: var(--gold-border); transform: scale(1.05); }
+        .partner-logo .p-sub { font-size: 0.7rem; font-weight: 500; color: var(--text-dim); margin-top: 2px; letter-spacing: 0; }
+
+        @media (max-width: 900px) {
+            .testimonials-section { padding: 60px 20px; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .partners-section { padding: 60px 20px; }
+        }
+
+        /* === GALLERY === */
         .gallery-section {
             padding: 100px 50px;
             z-index: 1;
@@ -2192,6 +2262,83 @@
                             <p>مشترون من أي مكان في العالم يستطيعون تجربة العقار. مثالي للمستثمرين الدوليين.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS ==================== -->
+    <section class="testimonials-section reveal">
+        <div class="testimonials-inner">
+            <div class="sec-header">
+                <div class="tag">آراء العملاء</div>
+                <h2>ماذا يقول <em>عملاؤنا</em> عن مأوى</h2>
+                <p>ثقة عملائنا هي أعظم شهادة على جودة خدماتنا</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="testimonial-text">"تعاملت مع مأوى لتصوير فيلتي في حي الملقا والنتيجة فاقت كل التوقعات. الصور جعلت العقار يُباع خلال أسبوع واحد فقط من عرضه. احترافية عالية والتزام بالمواعيد."</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ع</div>
+                        <div>
+                            <div class="testimonial-name">عبدالله المطيري</div>
+                            <div class="testimonial-role">مالك عقار - الرياض</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="testimonial-text">"الفيديو السينمائي اللي أنتجه فريق مأوى لمشروعنا السكني كان له أثر مباشر على نسبة المبيعات. جودة عالية وتسليم في الوقت المحدد. شراكة مميزة بكل المقاييس."</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ف</div>
+                        <div>
+                            <div class="testimonial-name">فيصل الدوسري</div>
+                            <div class="testimonial-role">مدير تسويق - شركة تطوير عقاري</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="testimonial-text">"جولة 360° اللي سووها لمكاتبنا غيّرت طريقة عرض المساحات التجارية تمامًا. العملاء يقدرون يشوفون المساحة كاملة قبل الزيارة. خدمة ممتازة وفريق محترف."</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ن</div>
+                        <div>
+                            <div class="testimonial-name">نورة العتيبي</div>
+                            <div class="testimonial-role">وسيطة عقارية - الرياض</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PARTNERS ==================== -->
+    <section class="partners-section reveal">
+        <div class="partners-inner">
+            <div class="sec-header">
+                <div class="tag">شركاء النجاح</div>
+                <h2>نفتخر بشراكتنا مع <em>أفضل المؤسسات</em></h2>
+                <p>جهات تثق في مأوى لتعزيز حضورها البصري العقاري</p>
+            </div>
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <div class="partner-logo">أجواء<span class="p-sub">للتطوير العقاري</span></div>
+                    <div class="partner-logo">دار<span class="p-sub">للوساطة العقارية</span></div>
+                    <div class="partner-logo">بناء<span class="p-sub">للمقاولات</span></div>
+                    <div class="partner-logo">رؤية<span class="p-sub">للتسويق العقاري</span></div>
+                    <div class="partner-logo">مشاري<span class="p-sub">للاستثمار</span></div>
+                    <div class="partner-logo">واحة<span class="p-sub">للعقارات</span></div>
+                    <div class="partner-logo">المسكن<span class="p-sub">للتطوير</span></div>
+                    <div class="partner-logo">بروج<span class="p-sub">للإدارة العقارية</span></div>
+                    <div class="partner-logo">أجواء<span class="p-sub">للتطوير العقاري</span></div>
+                    <div class="partner-logo">دار<span class="p-sub">للوساطة العقارية</span></div>
+                    <div class="partner-logo">بناء<span class="p-sub">للمقاولات</span></div>
+                    <div class="partner-logo">رؤية<span class="p-sub">للتسويق العقاري</span></div>
+                    <div class="partner-logo">مشاري<span class="p-sub">للاستثمار</span></div>
+                    <div class="partner-logo">واحة<span class="p-sub">للعقارات</span></div>
+                    <div class="partner-logo">المسكن<span class="p-sub">للتطوير</span></div>
+                    <div class="partner-logo">بروج<span class="p-sub">للإدارة العقارية</span></div>
                 </div>
             </div>
         </div>
