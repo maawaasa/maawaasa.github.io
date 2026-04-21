@@ -3,11 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مأوى العقارية | MAWA Real Estate Photography</title>
+    <title>مأوى العقارية | تصوير عقاري احترافي | MAWA Real Estate Photography</title>
+    <meta name="description" content="مأوى العقارية - تصوير عقاري احترافي بجودة 4K. خدمات التصوير الفوتوغرافي HDR، الفيديو السينمائي، تصوير الدرون، والجولات الافتراضية 360° في المملكة العربية السعودية.">
+    <meta name="keywords" content="تصوير عقاري, تصوير درون, فيديو عقاري, جولات 360, تصوير HDR, مأوى العقارية, MAWA, تصوير عقارات السعودية">
+    <meta name="author" content="مأوى العقارية">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://maawaasa.github.io/">
+    <meta property="og:title" content="مأوى العقارية | تصوير عقاري احترافي">
+    <meta property="og:description" content="نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي والواقع الافتراضي.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://maawaasa.github.io/">
+    <meta property="og:site_name" content="مأوى العقارية">
+    <meta property="og:locale" content="ar_SA">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="مأوى العقارية | MAWA">
+    <meta name="twitter:description" content="تصوير عقاري احترافي بجودة 4K - HDR - 360°">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%237AAAD4'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='50' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+    <meta name="theme-color" content="#7AAAD4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
     <style>
+
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: #FAFAF8;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .preloader-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .preloader-bar {
+            width: 200px;
+            height: 3px;
+            background: var(--glass-border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .preloader-bar::after {
+            content: '';
+            display: block;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            border-radius: 10px;
+            animation: loading 1.2s ease-in-out infinite;
+        }
+        @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(122, 170, 212, 0.3);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(122, 170, 212, 0.4); }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1442,6 +1526,13 @@
 </head>
 <body>
 
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">MAWA</div>
+        <div class="preloader-bar"></div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
     <div class="grid-bg"></div>
 
     <a href="https://wa.me/966530834579" target="_blank" class="whatsapp-float"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339.8 55.9 285.5 33.3 227.7 33.3c-119.8 0-217.4 97.6-217.4 217.4 0 38.3 10 75.7 29 108.6L9.5 457.4l100.4-26.3c31.7 17.3 67.3 26.4 103.6 26.4h.1c119.7 0 217.4-97.6 217.4-217.4 0-58.1-22.6-112.4-63.7-153.5zM227.7 429.8c-32.4 0-64-8.7-91.7-25.1l-6.6-3.9-68.3 17.9 18.2-66.6-4.3-6.8c-18-28.7-27.5-62-27.5-96.2 0-99.4 80.9-180.3 180.3-180.3 48.2 0 93.5 18.8 127.6 52.9 34.1 34.1 52.9 79.4 52.9 127.6-.1 99.3-81 180.2-180.3 180.2zm98.8-135c-5.4-2.7-32-15.8-36.9-17.6-5-1.8-8.6-2.7-12.2 2.7-3.6 5.4-14 17.6-17.2 21.2-3.2 3.6-6.3 4.1-11.7 1.4-5.4-2.7-22.8-8.4-43.4-26.8-16-14.3-26.8-32-30-37.4-3.2-5.4-.3-8.3 2.4-11 2.4-2.4 5.4-6.3 8.1-9.5 2.7-3.2 3.6-5.4 5.4-9.5 1.8-3.6.9-7.2-.5-9.9-1.4-2.7-12.2-29.4-16.7-40.3-4.4-10.5-8.9-9.1-12.2-9.3-3.2-.2-6.8-.2-10.4-.2-3.6 0-9.5 1.4-14.4 6.8-5 5.4-19 18.5-19 45.2s19.4 52.4 22.1 56c2.7 3.6 38.2 58.3 92.6 81.7 12.9 5.6 23 8.9 30.8 11.4 13 4.1 24.8 3.5 34.1 2.1 10.4-1.6 32-13.1 36.5-25.7s4.5-23.5 3.2-25.7c-1.4-2.4-5-3.6-10.4-6.3z"/></svg></a>
@@ -1495,7 +1586,7 @@
     <section class="service-section" id="photo">
         <div class="service-inner reveal">
             <div class="service-head">
-                <div class="s-icon"><img src="camera-icon.svg" alt="Camera" style="width:44px;height:44px;"></div>
+                <div class="s-icon"><img src="assets/icons/camera-icon.svg" alt="Camera" style="width:44px;height:44px;"></div>
                 <div>
                     <h2>التصوير الفوتوغرافي <em>HDR</em></h2>
                     <div class="s-meta">
@@ -1573,7 +1664,7 @@
     <section class="service-section" id="video">
         <div class="service-inner reveal">
             <div class="service-head">
-                <div class="s-icon"><img src="vedio-icon.svg" alt="Video" style="width:44px;height:44px;"></div>
+                <div class="s-icon"><img src="assets/icons/vedio-icon.svg" alt="Video" style="width:44px;height:44px;"></div>
                 <div>
                     <h2>الفيديو <em>السينمائي</em></h2>
                     <div class="s-meta">
@@ -1651,7 +1742,7 @@
     <section class="service-section" id="drone">
         <div class="service-inner reveal">
             <div class="service-head">
-                <div class="s-icon"><img src="drone-icon.svg" alt="Drone" style="width:44px;height:44px;"></div>
+                <div class="s-icon"><img src="assets/icons/drone-icon.svg" alt="Drone" style="width:44px;height:44px;"></div>
                 <div>
                     <h2>تصوير <em>الدرون 4K</em></h2>
                     <div class="s-meta">
@@ -1699,7 +1790,7 @@
     <section class="service-section" id="vr">
         <div class="service-inner reveal">
             <div class="service-head">
-                <div class="s-icon"><img src="360-icon.svg" alt="360" style="width:44px;height:44px;"></div>
+                <div class="s-icon"><img src="assets/icons/360-icon.svg" alt="360" style="width:44px;height:44px;"></div>
                 <div>
                     <h2>الجولات الافتراضية <em>360°</em></h2>
                     <div class="s-meta">
@@ -1941,7 +2032,7 @@
                 <div class="pricing-card">
                     <div class="pricing-card-head">
                         <div class="pricing-card-icon">
-                            <img src="camera-icon.svg" alt="كاميرا">
+                            <img src="assets/icons/camera-icon.svg" alt="كاميرا">
                         </div>
                         <div>
                             <h3>التصوير الفوتوغرافي</h3>
@@ -1985,7 +2076,7 @@
                 <div class="pricing-card">
                     <div class="pricing-card-head">
                         <div class="pricing-card-icon">
-                            <img src="vedio-icon.svg" alt="فيديو">
+                            <img src="assets/icons/vedio-icon.svg" alt="فيديو">
                         </div>
                         <div>
                             <h3>الفيديو والجولات العقارية</h3>
@@ -2029,7 +2120,7 @@
                 <div class="pricing-card">
                     <div class="pricing-card-head">
                         <div class="pricing-card-icon">
-                            <img src="360-icon.svg" alt="360">
+                            <img src="assets/icons/360-icon.svg" alt="360">
                         </div>
                         <div>
                             <h3>الجولات الافتراضية 360°</h3>
@@ -2080,7 +2171,7 @@
                 <div class="pricing-card">
                     <div class="pricing-card-head">
                         <div class="pricing-card-icon">
-                            <img src="design-icon.svg" alt="تصميم">
+                            <img src="assets/icons/design-icon.svg" alt="تصميم">
                         </div>
                         <div>
                             <h3>التصميم والهوية</h3>
@@ -2161,15 +2252,37 @@
     </footer>
 
     <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+
         function revealOnScroll() {
-            document.querySelectorAll('.reveal').forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight - 80) {
-                    el.classList.add('active');
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach((el, i) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 80) {
+                    setTimeout(() => { el.classList.add('active'); }, i * 80);
                 }
             });
         }
         window.addEventListener('scroll', revealOnScroll);
         window.addEventListener('load', revealOnScroll);
+
+        const nav = document.querySelector('nav');
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(250,250,248,0.95)';
+                nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.06)';
+                backToTop.classList.add('visible');
+            } else {
+                nav.style.background = 'rgba(250,250,248,0.9)';
+                nav.style.boxShadow = 'none';
+                backToTop.classList.remove('visible');
+            }
+        });
 
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
@@ -2181,11 +2294,19 @@
 
         function handleSubmit(e) {
             e.preventDefault();
-            alert('شكراً لرسالتك! سنتواصل معك قريباً لتأكيد الحجز');
-            e.target.reset();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '&#10003; تم إرسال طلبك بنجاح';
+            btn.style.background = 'linear-gradient(135deg, #2ECC71, #27AE60)';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+                e.target.reset();
+            }, 3000);
         }
 
-        // === Pricing Overlay ===
         const pricingOverlay = document.getElementById('pricingOverlay');
         const pricingNavBtn = document.getElementById('pricingNavBtn');
         const pricingClose = document.getElementById('pricingClose');
