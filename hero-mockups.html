@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مأوى — نماذج الغلاف (10)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#020001;--sec:#101010;--red:#FF3637;--white:#F4F0EB;--gray:#A19B97;--border:#292626;
+  --f:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif;
+}
+body{background:var(--black);color:var(--white);font-family:var(--f);line-height:1.6}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* shared */
+.stage{position:relative;height:100vh;min-height:560px;overflow:hidden;border-bottom:1px solid var(--border)}
+.bg{position:absolute;inset:0;background-color:rgba(2,0,1,.55);background-image:url('assets/hero-bg.jpg');background-size:cover;background-position:center}
+.scrim{position:absolute;inset:0}
+.num{position:absolute;top:22px;left:24px;z-index:20;font-weight:600;font-size:.78rem;letter-spacing:1px;color:var(--white);background:rgba(2,0,1,.6);border:1px solid var(--border);padding:7px 14px;border-radius:30px;backdrop-filter:blur(8px)}
+.num b{color:var(--red)}
+.eyebrow{font-size:.72rem;letter-spacing:2.6px;color:var(--gray);text-transform:uppercase;font-weight:500;margin-bottom:16px}
+h1{font-weight:700;line-height:1.08;letter-spacing:-.5px;font-size:clamp(2.2rem,5.4vw,4.2rem)}
+h1 .red{color:var(--red)}
+.lead{color:var(--gray);font-size:1.02rem;max-width:540px}
+.btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:8px;font-weight:600;font-size:.98rem;cursor:pointer;transition:.25s}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#ff5051}
+.btn-out{background:transparent;color:var(--white);border:1px solid var(--border)}
+.btn-out:hover{border-color:var(--red);color:var(--red)}
+.tag{display:inline-flex;align-items:center;gap:10px;font-size:.82rem;color:var(--white);background:rgba(2,0,1,.5);border:1px solid var(--border);padding:8px 18px;border-radius:30px;backdrop-filter:blur(8px)}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+
+/* ============ v1 مركزي كلاسيكي ============ */
+.v1 .wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.v1 .lead{margin:18px auto 0}
+.v1 .stats{display:flex;gap:40px;margin-top:46px}
+.v1 .stats .n{font-weight:700;font-size:1.6rem;color:var(--red)}
+
+/* ============ v2 ملصق سفلي ============ */
+.v2 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:84px}
+.v2 .top{position:absolute;top:90px;right:24px;left:24px;display:flex;justify-content:space-between;align-items:center}
+.v2 .logo{font-weight:700;letter-spacing:4px;font-size:1.3rem}
+.v2 .logo b{color:var(--red)}
+.v2 .rule{width:60px;height:2px;background:var(--red);margin-bottom:22px}
+.v2 .lead{margin-top:16px}
+
+/* ============ v3 منقسم ============ */
+.v3{display:flex}
+.v3 .panel{width:46%;background:var(--black);position:relative;z-index:10;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;border-left:1px solid var(--border)}
+.v3 .panel .logo{font-weight:700;letter-spacing:4px;margin-bottom:40px}
+.v3 .panel .logo b{color:var(--red)}
+.v3 .img{flex:1;background-image:url('assets/hero-bg.jpg');background-size:cover;background-position:center}
+.v3 .scrim{display:none}
+
+/* ============ v4 طباعي ضخم ============ */
+.v4 .wrap{position:relative;z-index:10;height:100%;max-width:1320px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center}
+.v4 h1{font-size:clamp(3rem,9vw,7.5rem);line-height:.98}
+.v4 h1 .block{display:block}
+.v4 .meta{display:flex;gap:24px;align-items:center;margin-top:34px;flex-wrap:wrap}
+.v4 .meta .lead{margin:0}
+
+/* ============ v5 إطار فيديو ============ */
+.v5 .wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.v5 .bar{position:absolute;left:0;right:0;height:54px;background:var(--black);z-index:5}
+.v5 .bar.top{top:0}.v5 .bar.bot{bottom:0}
+.v5 h1{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:10px}
+.v5 .play{width:110px;height:110px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;margin:30px 0;cursor:pointer;transition:.25s;box-shadow:0 0 0 12px rgba(255,54,55,.15)}
+.v5 .play:hover{transform:scale(1.07)}
+.v5 .play svg{width:38px;height:38px;fill:#fff;margin-right:-5px}
+.v5 .pl{font-weight:600;letter-spacing:1px;color:var(--gray)}
+
+/* ============ v6 عنوان افتتاحي ============ */
+.v6 .scrim{background:linear-gradient(180deg,rgba(2,0,1,.2),rgba(2,0,1,.92))}
+.v6 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:90px 24px 70px;display:flex;flex-direction:column;justify-content:space-between}
+.v6 .toprow{display:flex;justify-content:space-between;align-items:center}
+.v6 .logo{font-weight:700;letter-spacing:4px}
+.v6 .logo b{color:var(--red)}
+.v6 .bottom h1{font-size:clamp(2.4rem,6vw,5rem)}
+.v6 .bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.v6 .bottom .lead{max-width:420px}
+
+/* ============ v7 إزاحة غير متماثلة ============ */
+.v7 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.v7 .card{border-right:3px solid var(--red);padding:8px 28px 8px 0;max-width:560px}
+.v7 .card .lead{margin-top:14px}
+
+/* ============ v8 أرقام بارزة ============ */
+.v8 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center}
+.v8 h1{font-size:clamp(2rem,5vw,3.6rem);margin-bottom:50px}
+.v8 .nums{display:flex;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.v8 .nums .it{flex:1;padding:30px 18px;border-left:1px solid var(--border)}
+.v8 .nums .it:first-child{border-left:none}
+.v8 .nums .v{font-weight:700;font-size:clamp(1.8rem,3.4vw,2.8rem);color:var(--red);line-height:1}
+.v8 .nums .l{color:var(--gray);font-size:.85rem;margin-top:8px}
+.v8 .btns{margin-top:40px}
+
+/* ============ v9 بطاقة معتمة ============ */
+.v9 .wrap{position:relative;z-index:10;height:100%;display:flex;align-items:center;justify-content:center;padding:0 24px}
+.v9 .panel{background:rgba(2,0,1,.72);border:1px solid var(--border);border-radius:14px;padding:48px 52px;max-width:620px;backdrop-filter:blur(10px)}
+.v9 .panel h1{font-size:clamp(2rem,4.6vw,3.4rem);margin-bottom:14px}
+.v9 .panel .corner{width:36px;height:3px;background:var(--red);margin-bottom:22px}
+
+/* ============ v10 سينمائي بأشرطة ============ */
+.v10 .bar{position:absolute;left:0;right:0;height:7vh;background:var(--black);z-index:8}
+.v10 .bar.t{top:0}.v10 .bar.b{bottom:0}
+.v10 .wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.v10 h1{font-size:clamp(2.2rem,5.4vw,4.4rem)}
+.v10 .sub{color:var(--gray);margin-top:14px;letter-spacing:1px}
+.v10 .scroll{position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);z-index:11;color:var(--gray);font-size:.72rem;letter-spacing:2px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.v10 .scroll::after{content:'';width:1px;height:46px;background:linear-gradient(var(--red),transparent)}
+
+/* ============ v11 شبكة أفلام ============ */
+.v11 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:70px}
+.v11 .strip{display:flex;gap:8px;margin-bottom:34px}
+.v11 .strip .fr{flex:1;height:92px;background-image:url('assets/hero-bg.jpg');background-size:cover;border:1px solid var(--border);border-radius:6px;position:relative}
+.v11 .strip .fr::after{content:'';position:absolute;inset:0;background:rgba(2,0,1,.45)}
+
+/* ============ v12 خلفية حية ============ */
+.v12 .bg{animation:kb 20s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.1)}}
+.v12 .wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.v12 .live{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.78rem;letter-spacing:2px;margin-bottom:22px}
+.v12 .live .dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:p2 1.4s infinite}
+@keyframes p2{0%,100%{opacity:1}50%{opacity:.2}}
+.v12 h1{font-size:clamp(2rem,5vw,4rem)}
+.v12 .pl{margin-top:26px;display:inline-flex;align-items:center;gap:10px;color:var(--gray)}
+
+/* ============ v13 شريط جانبي عمودي ============ */
+.v13{display:flex}
+.v13 .side{width:84px;background:var(--black);border-left:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:34px 0;z-index:10}
+.v13 .side .vlogo{writing-mode:vertical-rl;font-weight:700;letter-spacing:5px;font-size:1.1rem}
+.v13 .side .vlogo b{color:var(--red)}
+.v13 .side .vsoc{writing-mode:vertical-rl;color:var(--gray);font-size:.74rem;letter-spacing:3px}
+.v13 .main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 6vw;position:relative;z-index:5}
+
+/* ============ v14 طبقات متداخلة ============ */
+.v14 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center}
+.v14 .stack{position:relative;display:inline-block}
+.v14 .stack h1{position:relative;z-index:2}
+.v14 .ghost{position:absolute;top:0;right:0;z-index:1;color:var(--red);opacity:.55;transform:translate(-10px,10px);font-weight:700;font-size:clamp(2.2rem,5.4vw,4.2rem);line-height:1.08;letter-spacing:-.5px;pointer-events:none}
+
+/* ============ v15 مينيمال بأسهم ============ */
+.v15 .wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;gap:30px}
+.v15 .one{font-weight:500;font-size:clamp(1.5rem,3.6vw,2.4rem);color:var(--gray)}
+.v15 .one b{color:var(--white);font-weight:700}
+.v15 .arrow{font-size:3.2rem;color:var(--red);line-height:1;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+.v15 .corner-l{position:absolute;top:24px;right:24px;font-weight:700;letter-spacing:4px}
+.v15 .corner-l b{color:var(--red)}
+
+/* ============ v16 ثلاثة أعمدة ============ */
+.v16 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center}
+.v16 .cols{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.v16 .cols .c{padding:42px 22px;border-left:1px solid var(--border);font-size:clamp(1.8rem,4.6vw,3.2rem);font-weight:700;line-height:1}
+.v16 .cols .c:first-child{border-left:none}
+.v16 .cols .c.red{color:var(--red)}
+.v16 .cols .c small{display:block;font-size:.72rem;color:var(--gray);letter-spacing:2px;font-weight:500;margin-top:14px;text-transform:uppercase}
+.v16 .btns{margin-top:38px}
+
+/* ============ v17 ختم دائري ============ */
+.v17 .wrap{position:relative;z-index:10;height:100%;display:flex;align-items:center;gap:40px;max-width:1240px;margin:0 auto;padding:0 24px}
+.v17 .badge{width:130px;height:130px;flex-shrink:0;animation:spin 16s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.v17 .txt h1{font-size:clamp(1.9rem,4.4vw,3.4rem)}
+
+/* ============ v18 ترقيم/سبورة ============ */
+.v18 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center}
+.v18 .row{display:flex;align-items:flex-end;gap:34px}
+.v18 .big{font-size:clamp(5rem,16vw,13rem);font-weight:700;color:var(--red);line-height:.82;letter-spacing:-2px}
+.v18 .big small{display:block;font-size:.8rem;color:var(--gray);letter-spacing:3px;font-weight:500;margin-top:14px}
+.v18 .info h1{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:12px}
+.v18 .info .lead{margin-top:0}
+
+/* ============ v19 فهرس/كتالوج ============ */
+.v19 .wrap{position:relative;z-index:10;height:100%;max-width:1240px;margin:0 auto;padding:0 24px;display:flex;flex-direction:column;justify-content:center}
+.v19 .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:30px;flex-wrap:wrap;gap:12px}
+.v19 .toc{list-style:none;border-top:1px solid var(--border)}
+.v19 .toc li{display:flex;align-items:center;gap:18px;padding:18px 0;border-bottom:1px solid var(--border);font-size:clamp(1.05rem,2vw,1.5rem);font-weight:600;transition:color .25s}
+.v19 .toc li:hover{color:var(--red)}
+.v19 .toc li .i{color:var(--red);font-weight:700;font-size:.8rem;width:34px}
+.v19 .toc li .d{color:var(--gray);font-weight:400;font-size:.85rem;margin-right:auto}
+
+/* ============ v20 غلاف مجلة ============ */
+.v20{display:flex;flex-direction:column}
+.v20 .pic{height:52%;background-image:url('assets/hero-bg.jpg');background-size:cover;background-position:center;border-bottom:3px solid var(--red);position:relative}
+.v20 .pic .issue{position:absolute;top:22px;right:24px;font-size:.74rem;letter-spacing:3px;color:var(--white);background:rgba(2,0,1,.5);padding:6px 14px;border-radius:30px}
+.v20 .info{flex:1;background:var(--black);display:flex;flex-direction:column;justify-content:center;padding:0 6vw}
+.v20 .info h1{font-size:clamp(2rem,5vw,3.8rem)}
+.v20 .info .meta{display:flex;gap:22px;margin-top:18px;color:var(--gray);font-size:.9rem;flex-wrap:wrap}
+.v20 .info .meta span b{color:var(--red)}
+
+@media(max-width:760px){
+  .v3{flex-direction:column}
+  .v3 .panel{width:100%;border-left:none;border-bottom:1px solid var(--border);padding:60px 24px}
+  .v8 .nums{flex-wrap:wrap}
+  .v8 .nums .it{flex:1 1 45%;border-left:none;border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<!-- نموذج 1 — مركزي كلاسيكي -->
+<section class="stage v1">
+  <div class="bg"></div>
+  <div class="num"><b>01</b> · مركزي كلاسيكي</div>
+  <div class="wrap">
+    <div class="tag"><span class="dot"></span> استوديو التصوير العقاري · الرياض</div>
+    <div style="height:20px"></div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    <p class="lead">نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي والواقع الافتراضي، من قلب الرياض.</p>
+    <div class="btns">
+      <a class="btn btn-red">اطلب خدمة تصوير ←</a>
+      <a class="btn btn-out">▶ شاهد الشوريل</a>
+    </div>
+    <div class="stats"><div><div class="n">4K</div><div style="color:var(--gray);font-size:.85rem">دقة</div></div><div><div class="n">360°</div><div style="color:var(--gray);font-size:.85rem">جولات</div></div><div><div class="n">HDR</div><div style="color:var(--gray);font-size:.85rem">معالجة</div></div></div>
+  </div>
+</section>
+
+<!-- نموذج 2 — ملصق سفلي -->
+<section class="stage v2">
+  <div class="bg"></div>
+  <div class="scrim" style="background:linear-gradient(180deg,rgba(2,0,1,.1),rgba(2,0,1,.85))"></div>
+  <div class="num"><b>02</b> · ملصق سفلي</div>
+  <div class="top">
+    <div class="logo">MA<b>WA</b></div>
+    <div class="tag"><span class="dot"></span> استوديو التصوير · الرياض</div>
+  </div>
+  <div class="wrap">
+    <div class="rule"></div>
+    <div class="eyebrow">تصوير عقاري سينمائي</div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    <p class="lead">نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي والواقع الافتراضي.</p>
+    <div class="btns">
+      <a class="btn btn-red">اطلب خدمة تصوير ←</a>
+      <a class="btn btn-out">▶ الشوريل</a>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 3 — منقسم -->
+<section class="stage v3">
+  <div class="num"><b>03</b> · منقسم</div>
+  <div class="panel">
+    <div class="logo">MA<b>WA</b></div>
+    <div class="eyebrow">استوديو التصوير العقاري</div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    <p class="lead" style="margin-top:16px">نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي والواقع الافتراضي، من قلب الرياض.</p>
+    <div class="btns">
+      <a class="btn btn-red">اطلب خدمة تصوير ←</a>
+      <a class="btn btn-out">▶ الشوريل</a>
+    </div>
+  </div>
+  <div class="img"></div>
+</section>
+
+<!-- نموذج 4 — طباعي ضخم -->
+<section class="stage v4">
+  <div class="bg"></div>
+  <div class="num"><b>04</b> · طباعي ضخم</div>
+  <div class="wrap">
+    <div class="eyebrow">استوديو مأوى · الرياض</div>
+    <h1><span class="block">نصيغ</span><span class="block">المشهد،</span><span class="block red">لنرتقي.</span></h1>
+    <div class="meta">
+      <a class="btn btn-red">ابدأ مشروعك ←</a>
+      <p class="lead">تصوير عقاري سينمائي 4K · جولات 360° · درون · HDR.</p>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 5 — إطار فيديو -->
+<section class="stage v5">
+  <div class="bg"></div>
+  <div class="bar top"></div><div class="bar bot"></div>
+  <div class="num"><b>05</b> · إطار فيديو</div>
+  <div class="wrap">
+    <div class="eyebrow">مأوى العقارية · الشوريل</div>
+    <h1>قصص تُروى <span class="red">بإطار</span>.</h1>
+    <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <div class="pl">شاهد الشوريل · 90 ثانية</div>
+  </div>
+</section>
+
+<!-- نموذج 6 — عنوان افتتاحي -->
+<section class="stage v6">
+  <div class="bg"></div>
+  <div class="num"><b>06</b> · عنوان افتتاحي</div>
+  <div class="wrap">
+    <div class="toprow">
+      <div class="logo">MA<b>WA</b></div>
+      <div class="eyebrow" style="margin:0">EST. الرياض</div>
+    </div>
+    <div class="bottom">
+      <div>
+        <div class="eyebrow">تصوير عقاري سينمائي</div>
+        <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+      </div>
+      <div>
+        <p class="lead">نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي.</p>
+        <div class="btns"><a class="btn btn-red">اطلب الآن ←</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 7 — إزاحة غير متماثلة -->
+<section class="stage v7">
+  <div class="bg"></div>
+  <div class="scrim" style="background:linear-gradient(90deg,rgba(2,0,1,.85),rgba(2,0,1,.25))"></div>
+  <div class="num"><b>07</b> · إزاحة غير متماثلة</div>
+  <div class="wrap">
+    <div class="card">
+      <div class="eyebrow">استوديو مأوى</div>
+      <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+      <p class="lead">تصوير عقاري سينمائي 4K وجولات افتراضية من قلب الرياض.</p>
+      <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a><a class="btn btn-out">▶ الشوريل</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 8 — أرقام بارزة -->
+<section class="stage v8">
+  <div class="bg"></div>
+  <div class="num"><b>08</b> · أرقام بارزة</div>
+  <div class="wrap">
+    <div class="eyebrow">لماذا مأوى</div>
+    <h1>أرقام <span class="red">تُحدث الفرق</span> لعقارك.</h1>
+    <div class="nums">
+      <div class="it"><div class="v">4K</div><div class="l">دقة التصوير</div></div>
+      <div class="it"><div class="v">360°</div><div class="l">جولات افتراضية</div></div>
+      <div class="it"><div class="v">+32%</div><div class="l">بيع أسرع</div></div>
+      <div class="it"><div class="v">HDR</div><div class="l">معالجة احترافية</div></div>
+    </div>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة تصوير ←</a></div>
+  </div>
+</section>
+
+<!-- نموذج 9 — بطاقة معتمة -->
+<section class="stage v9">
+  <div class="bg"></div>
+  <div class="num"><b>09</b> · بطاقة معتمة</div>
+  <div class="wrap">
+    <div class="panel">
+      <div class="corner"></div>
+      <div class="eyebrow">استوديو التصوير العقاري · الرياض</div>
+      <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+      <p class="lead" style="margin-top:14px">نحوّل العقارات إلى تحف بصرية بأحدث تقنيات التصوير السينمائي والواقع الافتراضي.</p>
+      <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a><a class="btn btn-out">▶ الشوريل</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 10 — سينمائي بأشرطة -->
+<section class="stage v10">
+  <div class="bg"></div>
+  <div class="bar t"></div><div class="bar b"></div>
+  <div class="num"><b>10</b> · سينمائي بأشرطة</div>
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center">مأوى العقارية</div>
+    <h1>قصص <span class="red">بصريّة</span><br>ترتقي بالعقار.</h1>
+    <div class="sub">تصوير سينمائي 4K · جولات 360° · درون</div>
+  </div>
+  <div class="scroll">SCROLL</div>
+</section>
+
+<!-- نموذج 11 — شبكة أفلام -->
+<section class="stage v11">
+  <div class="bg"></div>
+  <div class="num"><b>11</b> · شبكة أفلام</div>
+  <div class="wrap">
+    <div class="strip"><div class="fr"></div><div class="fr"></div><div class="fr"></div><div class="fr"></div><div class="fr"></div></div>
+    <div class="eyebrow">مأوى · تصوير عقاري</div>
+    <h1>قصص <span class="red">بصريّة</span> لعقارك.</h1>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a><a class="btn btn-out">▶ الشوريل</a></div>
+  </div>
+</section>
+
+<!-- نموذج 12 — خلفية حية -->
+<section class="stage v12">
+  <div class="bg"></div>
+  <div class="num"><b>12</b> · خلفية حيّة (تحريك)</div>
+  <div class="wrap">
+    <div class="live"><span class="dot"></span> MAWA · LIVE</div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span>.</h1>
+    <a class="btn btn-red">▶ شاهد الشوريل</a>
+    <div class="pl">تصوير سينمائي 4K · الرياض</div>
+  </div>
+</section>
+
+<!-- نموذج 13 — شريط جانبي عمودي -->
+<section class="stage v13">
+  <div class="num"><b>13</b> · شريط جانبي عمودي</div>
+  <div class="side">
+    <div class="vlogo">MA<b>WA</b></div>
+    <div class="vsoc">INSTA · YOUTUBE · X</div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">استوديو التصوير العقاري</div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    <p class="lead" style="margin-top:16px">تصوير سينمائي 4K وجولات افتراضية من قلب الرياض.</p>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a><a class="btn btn-out">▶ الشوريل</a></div>
+  </div>
+</section>
+
+<!-- نموذج 14 — طبقات متداخلة -->
+<section class="stage v14">
+  <div class="bg"></div>
+  <div class="num"><b>14</b> · طبقات متداخلة</div>
+  <div class="wrap">
+    <div class="eyebrow">مأوى العقارية</div>
+    <div class="stack">
+      <div class="ghost">لنرتقي<br>بقيمة عقارك.</div>
+      <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    </div>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a></div>
+  </div>
+</section>
+
+<!-- نموذج 15 — مينيمال بأسهم -->
+<section class="stage v15">
+  <div class="bg"></div>
+  <div class="num"><b>15</b> · مينيمال بأسهم</div>
+  <div class="corner-l">MA<b>WA</b></div>
+  <div class="wrap">
+    <p class="one">عقارك يستحق <b>صورة</b> تليق به.</p>
+    <div class="arrow">↓</div>
+    <a class="btn btn-red">اكتشف أعمالنا</a>
+  </div>
+</section>
+
+<!-- نموذج 16 — ثلاثة أعمدة -->
+<section class="stage v16">
+  <div class="bg"></div>
+  <div class="num"><b>16</b> · ثلاثة أعمدة</div>
+  <div class="wrap">
+    <div class="cols">
+      <div class="c">نصيغ<small>CRAFT</small></div>
+      <div class="c red">المشهد<small>VISION</small></div>
+      <div class="c">عقارك<small>VALUE</small></div>
+    </div>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة تصوير ←</a><a class="btn btn-out">▶ الشوريل</a></div>
+  </div>
+</section>
+
+<!-- نموذج 17 — ختم دائري -->
+<section class="stage v17">
+  <div class="bg"></div>
+  <div class="num"><b>17</b> · ختم دائري</div>
+  <div class="wrap">
+    <svg class="badge" viewBox="0 0 200 200">
+      <defs><path id="circ" d="M 100,100 m -74,0 a 74,74 0 1,1 148,0 a 74,74 0 1,1 -148,0"/></defs>
+      <circle cx="100" cy="100" r="86" fill="none" stroke="#292626" stroke-width="1"/>
+      <text font-family="IBM Plex Sans" font-size="15" fill="#F4F0EB" letter-spacing="3"><textPath href="#circ" startOffset="0">MAWA · REAL ESTATE PHOTOGRAPHY · RIYADH · </textPath></text>
+      <circle cx="100" cy="100" r="14" fill="#FF3637"/>
+    </svg>
+    <div class="txt">
+      <div class="eyebrow">مأوى · منذ التأسيس</div>
+      <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+      <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 18 — ترقيم/سبورة -->
+<section class="stage v18">
+  <div class="bg"></div>
+  <div class="num"><b>18</b> · ترقيم / سبورة</div>
+  <div class="wrap">
+    <div class="row">
+      <div class="big">2026<small>EST. RIYADH</small></div>
+      <div class="info">
+        <div class="eyebrow">مشهد جديد لعقارك</div>
+        <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span>.</h1>
+        <p class="lead">تصوير عقاري سينمائي 4K · جولات 360°.</p>
+        <div class="btns"><a class="btn btn-red">اطلب الآن ←</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نموذج 19 — فهرس/كتالوج -->
+<section class="stage v19">
+  <div class="bg"></div>
+  <div class="num"><b>19</b> · فهرس / كتالوج</div>
+  <div class="wrap">
+    <div class="top">
+      <h1 style="font-size:clamp(1.8rem,4vw,3rem)">خدمات <span class="red">مأوى</span>.</h1>
+      <div class="eyebrow" style="margin:0">04 خدمات</div>
+    </div>
+    <ul class="toc">
+      <li><span class="i">01</span> تصوير فوتوغرافي HDR <span class="d">يبدأ من 850 ر.س</span> <span>←</span></li>
+      <li><span class="i">02</span> فيديو سينمائي <span class="d">يبدأ من 1,100 ر.س</span> <span>←</span></li>
+      <li><span class="i">03</span> تصوير درون 4K <span class="d">1,200 ر.س</span> <span>←</span></li>
+      <li><span class="i">04</span> جولات افتراضية 360° <span class="d">يبدأ من 950 ر.س</span> <span>←</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- نموذج 20 — غلاف مجلة -->
+<section class="stage v20">
+  <div class="num"><b>20</b> · غلاف مجلة</div>
+  <div class="pic"><div class="issue">N°01 · 2026</div></div>
+  <div class="info">
+    <div class="eyebrow">مأوى العقارية</div>
+    <h1>نصيغ المشهد،<br><span class="red">لنرتقي</span> بقيمة عقارك.</h1>
+    <div class="meta"><span><b>4K</b> دقة</span><span><b>360°</b> جولات</span><span><b>HDR</b> معالجة</span><span>الرياض · السعودية</span></div>
+    <div class="btns"><a class="btn btn-red">اطلب خدمة ←</a></div>
+  </div>
+</section>
+
+</body>
+</html>

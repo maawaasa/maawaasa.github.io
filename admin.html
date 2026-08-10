@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مأوى العقارية | نظام إدارة العقود</title>
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%237AAAD4'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='50' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
-    <meta name="theme-color" content="#7AAAD4">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23A4243B'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='50' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+    <meta name="theme-color" content="#A4243B">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js"></script>
@@ -16,9 +16,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --gold: #7AAAD4;
-            --gold-light: #C4D8F2;
-            --gold-dark: #588EB8;
+            --gold: #A4243B;
+            --gold-light: #C44A60;
+            --gold-dark: #7A1A2C;
             --burgundy: #8B1A1A;
             --bg: #FAFAF8;
             --glass: rgba(0, 0, 0, 0.025);
@@ -27,8 +27,8 @@
             --text: #1A1A1A;
             --text-dim: rgba(0,0,0,0.45);
             --text-mid: rgba(0,0,0,0.6);
-            --gold-glass: rgba(122, 170, 212, 0.06);
-            --gold-border: rgba(122, 170, 212, 0.12);
+            --gold-glass: rgba(164, 36, 59, 0.06);
+            --gold-border: rgba(164, 36, 59, 0.12);
             --success: #2ECC71;
             --warning: #F39C12;
             --danger: #E74C3C;
@@ -50,7 +50,7 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 30% 10%, rgba(122, 170, 212, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 10%, rgba(164, 36, 59, 0.04) 0%, transparent 50%),
                 radial-gradient(ellipse at 70% 90%, rgba(88, 142, 184, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
@@ -135,7 +135,7 @@
         }
 
         nav .nav-cta:hover {
-            box-shadow: 0 0 25px rgba(122, 170, 212, 0.3);
+            box-shadow: 0 0 25px rgba(164, 36, 59, 0.3);
             transform: translateY(-1px);
         }
 
@@ -216,7 +216,7 @@
         .stat-card:hover {
             border-color: var(--gold-border);
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(122, 170, 212, 0.1);
+            box-shadow: 0 10px 30px rgba(164, 36, 59, 0.1);
         }
 
         .stat-card .stat-icon {
@@ -284,7 +284,7 @@
         }
 
         .btn-gold:hover {
-            box-shadow: 0 0 30px rgba(122, 170, 212, 0.3);
+            box-shadow: 0 0 30px rgba(164, 36, 59, 0.3);
             transform: translateY(-2px);
         }
 
@@ -348,7 +348,7 @@
 
         .search-bar input[type="text"]:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(122, 170, 212, 0.08);
+            box-shadow: 0 0 15px rgba(164, 36, 59, 0.08);
         }
 
         .filter-select {
@@ -699,7 +699,7 @@
             border-color: var(--gold);
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: #fff;
-            box-shadow: 0 4px 15px rgba(122, 170, 212, 0.3);
+            box-shadow: 0 4px 15px rgba(164, 36, 59, 0.3);
         }
 
         .step-dot.done .dot-circle {
@@ -807,7 +807,7 @@
         .form-group select:focus,
         .form-group textarea:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(122, 170, 212, 0.08);
+            box-shadow: 0 0 15px rgba(164, 36, 59, 0.08);
         }
 
         .form-group textarea {
@@ -1720,7 +1720,7 @@
                         <div class="doc-party">
                             <div class="party-role">الطرف الأول (مقدم الخدمة)</div>
                             <div class="party-info-row"><span class="pi-label">الاسم</span><span class="pi-value">مأوى العقارية</span></div>
-                            <div class="party-info-row"><span class="pi-label">الجوال</span><span class="pi-value" dir="ltr">0530834579</span></div>
+                            <div class="party-info-row"><span class="pi-label">الجوال</span><span class="pi-value" dir="ltr">0531646152</span></div>
                             <div class="party-info-row"><span class="pi-label">النشاط</span><span class="pi-value">تصوير عقاري احترافي</span></div>
                         </div>
                         <div class="doc-party">
@@ -2349,7 +2349,7 @@
         }
 
         function shareClientForm() {
-            const baseURL = 'https://maawaasa.github.io/form.html';
+            const baseURL = 'https://maawaa.sa/form.html';
             const message = 'مرحبًا! يُسرّنا أن نقدم لك نموذج طلب خدمة التصوير العقاري عبر الرابط التالي:\n\n' + baseURL + '\n\nمأوى العقارية';
             const whatsappURL = 'https://wa.me/?text=' + encodeURIComponent(message);
             window.open(whatsappURL, '_blank');

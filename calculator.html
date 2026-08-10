@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة أسعار التصوير العقاري في الرياض | مأوى العقارية</title>
+<meta name="description" content="احسب سعر تصوير عقارك فوراً في الرياض — تصوير فوتوغرافي HDR، فيديو سينمائي، درون 4K وجولات 360°. حدّد نوع العقار وعدد الغرف واحصل على تقدير سعر فوري من مأوى العقارية.">
+<meta name="keywords" content="حاسبة أسعار تصوير عقاري, تسعير تصوير عقار الرياض, أسعار تصوير درون, مأوى العقارية">
+<link rel="canonical" href="https://maawaa.sa/calculator.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23020001'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23FF3637' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#020001">
+<meta property="og:title" content="حاسبة أسعار التصوير العقاري | مأوى العقارية">
+<meta property="og:description" content="احسب سعر تصوير عقارك في الرياض فوراً حسب نوع العقار وعدد الغرف والخدمات.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Service",
+  "name":"حاسبة أسعار التصوير العقاري - مأوى العقارية",
+  "serviceType":"تصوير عقاري احترافي",
+  "areaServed":{"@type":"City","name":"الرياض"},
+  "provider":{"@type":"LocalBusiness","name":"مأوى العقارية","telephone":"+966531646152","areaServed":"الرياض"},
+  "offers":{"@type":"AggregateOffer","priceCurrency":"SAR","lowPrice":"700","highPrice":"5000","offerCount":"5"}
+}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#020001;--sec:#101010;--red:#A4243B;--white:#F4F0EB;--gray:#A19B97;--border:#292626;
+  --surface:rgba(244,240,235,.03);--surface-2:rgba(244,240,235,.05);--green:#3DDC84;
+  --f:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif;
+}
+body{font-family:var(--f);background:var(--black);color:var(--white);line-height:1.7;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 40% at 80% 0%,rgba(164,36,59,.05),transparent 60%)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.topbar{border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;background:rgba(2,0,1,.88);backdrop-filter:blur(14px);z-index:50}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:700;letter-spacing:5px;font-size:1.3rem}
+.logo b{color:var(--red)}
+.back{font-size:.9rem;color:var(--gray);transition:color .25s}
+.back:hover{color:var(--red)}
+.head{padding:52px 0 28px;text-align:center}
+.eyebrow{font-size:.72rem;letter-spacing:2.6px;color:var(--gray);text-transform:uppercase;font-weight:500;margin-bottom:14px}
+.head h1{font-weight:700;font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.1;letter-spacing:-.5px}
+.head h1 .red{color:var(--red)}
+.head p{color:var(--gray);max-width:580px;margin:14px auto 0;font-size:.95rem}
+.calc{display:grid;grid-template-columns:1fr 360px;gap:24px;padding-bottom:70px;align-items:start}
+.col-steps{display:flex;flex-direction:column;gap:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.card h2{font-size:1.02rem;font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.card h2 .n{width:26px;height:26px;border-radius:8px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.card h2 .n.plus{background:var(--sec);border:1px solid var(--border);color:var(--gray)}
+.hint{color:var(--gray);font-size:.84rem;margin-bottom:16px}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.type-btn{background:var(--sec);border:1px solid var(--border);border-radius:12px;padding:14px 8px;cursor:pointer;text-align:center;transition:.22s;color:var(--white);font-family:var(--f);font-size:.92rem;font-weight:500}
+.type-btn .em{display:flex;justify-content:center;margin-bottom:7px;color:var(--gray);transition:color .22s}
+.type-btn .em svg{width:28px;height:28px}
+.type-btn:hover{border-color:var(--gray)}
+.type-btn.active{border-color:var(--red);background:rgba(164,36,59,.08);color:var(--white)}
+.type-btn.active .em{color:var(--white)}
+/* أنواع بلاتينية فاخرة (قصر/مزاد) */
+@keyframes platShine{to{background-position:200% center}}
+.type-btn[data-k="palace"],.type-btn[data-k="auction"]{position:relative;border:1px solid rgba(201,206,212,.4);background:linear-gradient(155deg,rgba(201,206,212,.1),rgba(20,22,26,.55));overflow:hidden}
+.type-btn[data-k="palace"] .em,.type-btn[data-k="auction"] .em{color:#C9CED4}
+.type-btn[data-k="palace"]::before,.type-btn[data-k="auction"]::before{content:'فاخر';position:absolute;top:5px;left:6px;font-size:.5rem;letter-spacing:1.5px;font-weight:700;background:linear-gradient(110deg,#9AA1A8,#FFFFFF 50%,#9AA1A8);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:platShine 5s linear infinite;z-index:2}
+.type-btn[data-k="palace"].active,.type-btn[data-k="auction"].active{border-color:#C9CED4;background:linear-gradient(155deg,rgba(201,206,212,.18),rgba(20,22,26,.55));box-shadow:0 0 0 1px rgba(201,206,212,.35),0 8px 22px rgba(201,206,212,.14)}
+.type-btn[data-k="palace"].active .em,.type-btn[data-k="auction"].active .em{color:#EEF1F4}
+.rooms-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.rooms-val{font-weight:700;font-size:1.5rem;color:var(--red)}
+.rooms-val small{color:var(--gray);font-size:.78rem;font-weight:400;margin-right:6px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:var(--border);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--red);cursor:pointer;border:3px solid var(--black);box-shadow:0 0 0 1px var(--red)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--red);cursor:pointer;border:3px solid var(--black)}
+.rooms-n-a{color:var(--gray);font-size:.9rem}
+.rooms-num{display:flex;align-items:center;gap:8px}
+.rooms-num input[type=number]{width:74px;background:var(--black);border:1px solid var(--border);border-radius:9px;color:var(--white);padding:9px 12px;font-family:var(--f);font-size:1.25rem;font-weight:700;text-align:center;outline:none;transition:border-color .2s}
+.rooms-num input[type=number]:focus{border-color:var(--red)}
+.rooms-num span{color:var(--gray);font-size:.9rem}
+.incl-note{margin-top:16px;background:rgba(29,157,87,.08);border:1px solid rgba(29,157,87,.28);border-radius:10px;padding:11px 14px}
+.incl-note .incl-t{display:flex;align-items:center;gap:7px;color:#1ad08a;font-size:.8rem;font-weight:700;margin-bottom:5px}
+.incl-note .incl-t svg{width:15px;height:15px}
+.incl-note .incl-b{color:var(--text);font-size:.82rem;line-height:1.6}
+.incl-note .incl-b b{color:#1ad08a;font-weight:600}
+.svcs{display:flex;flex-direction:column;gap:10px}
+.svc{display:flex;align-items:center;gap:14px;background:var(--sec);border:1px solid var(--border);border-radius:12px;padding:13px 15px;cursor:pointer;transition:.22s}
+.svc:hover{border-color:var(--gray)}
+.svc.on{border-color:var(--red);background:rgba(164,36,59,.06)}
+.svc .ic{width:32px;display:flex;align-items:center;justify-content:center;color:var(--gray);transition:color .22s;flex-shrink:0}
+.svc .ic svg{width:20px;height:20px}
+.svc.on .ic{color:var(--red)}
+.svc .nm{flex:1;font-weight:500;font-size:.95rem}
+.svc .nm small{display:block;color:var(--gray);font-size:.76rem;font-weight:400}
+.svc .px{font-weight:600;color:var(--gray);font-size:.88rem}
+.svc.on .px{color:var(--white)}
+.chk{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.svc.on .chk{background:var(--red);border-color:var(--red)}
+.svc.on .chk::after{content:'✓';color:#fff;font-size:.75rem;font-weight:700}
+.svc[data-dis="1"]{opacity:.45;cursor:not-allowed}
+.seg{display:flex;gap:8px;background:var(--sec);border:1px solid var(--border);border-radius:12px;padding:5px}
+.seg button{flex:1;background:transparent;border:none;color:var(--gray);font-family:var(--f);font-weight:500;padding:10px;border-radius:8px;cursor:pointer;transition:.2s;font-size:.9rem}
+.seg button.active{background:var(--red);color:#fff}
+.pkg-compare{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.78rem;color:var(--gray)}
+.pkg-compare div{background:var(--sec);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.pkg-compare b{color:var(--white);display:block;margin-bottom:3px}
+.addons{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.addon{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:.9rem}
+.addon input[type=checkbox]{width:18px;height:18px;accent-color:var(--red)}
+.addon .px{margin-right:auto;color:var(--gray)}
+.brochure{display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--gray);background:var(--sec);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:4px}
+.brochure input{width:54px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);padding:6px;text-align:center;font-family:var(--f)}
+.summary{position:sticky;top:80px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.summary h3{font-size:1rem;font-weight:600;margin-bottom:3px}
+.s-hint{color:var(--gray);font-size:.8rem;margin-bottom:16px}
+.lines{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;min-height:40px}
+.line{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:.9rem;padding-bottom:9px;border-bottom:1px dashed var(--border)}
+.line .l{color:var(--gray);flex:1}
+.line .l .out{display:block;color:var(--gray);opacity:.7;font-size:.74rem;margin-top:1px}
+.line .v{font-weight:600;white-space:nowrap}
+.line.disc .l,.line.disc .v{color:var(--green)}
+.line.empty{color:var(--gray);justify-content:center;border:none;font-size:.84rem}
+.subwrap{padding:12px 0;border-top:1px solid var(--border);margin-bottom:6px}
+.subwrap .rw{display:flex;justify-content:space-between;font-size:.82rem;color:var(--gray);padding:3px 0}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-top:1px solid var(--border);margin-bottom:6px}
+.total .t-l{font-weight:600}
+.total .t-v{font-weight:700;font-size:2rem;color:var(--red);transition:color .2s}
+.bump{animation:bump .35s ease}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 14px}
+.fields .field{grid-column:span 1}
+.fields .field.full{grid-column:span 2}
+.fields input{width:100%;background:var(--black);border:1px solid var(--border);border-radius:9px;color:var(--white);padding:11px 13px;font-family:var(--f);font-size:.9rem;outline:none;transition:border-color .2s}
+.fields input:focus{border-color:var(--red)}
+.fields input::placeholder{color:var(--gray)}
+.note-mini{font-size:.73rem;color:var(--gray);margin-bottom:12px}
+/* علامة الخصم المُفعّل (مشجّعة) */
+.disc-active{display:none;align-items:center;gap:9px;background:linear-gradient(135deg,#A4243B,#C44A60);color:#fff;padding:11px 14px;border-radius:11px;font-size:.82rem;font-weight:600;margin-bottom:12px;box-shadow:0 8px 22px rgba(164,36,59,.32);animation:discPop .5s cubic-bezier(.2,1.5,.4,1)}
+.disc-active .ds-ic{font-size:1.1rem;animation:discSparkle 1.6s ease-in-out infinite}
+.disc-active .ds-amt{font-weight:800;margin-right:auto}
+.disc-active .ds-msg{font-size:.72rem;opacity:.92}
+@keyframes discPop{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+@keyframes discSparkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.2) rotate(12deg)}}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:10px;font-family:var(--f);font-weight:600;font-size:.96rem;cursor:pointer;transition:.25s;border:none}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#C44A60}
+.btn-out{background:transparent;color:var(--white);border:1px solid var(--border);margin-top:9px}
+.btn-out:hover{border-color:var(--red);color:var(--red)}
+.btn-row{display:flex;gap:9px}
+.btn-row .btn{margin:0}
+.disclaimer{text-align:center;color:var(--gray);font-size:.76rem;margin-top:18px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--sec);border:1px solid var(--green);color:var(--white);padding:12px 22px;border-radius:30px;font-size:.88rem;opacity:0;transition:.3s;z-index:300;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== مستند عرض السعر الرسمي ===== */
+.qoverlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);overflow:auto;padding:28px 14px}
+.qoverlay.open{display:block}
+.qbar{max-width:820px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.qbar>span{color:var(--white);font-weight:600;font-size:.95rem}
+.qbar .acts{display:flex;gap:8px;flex-wrap:wrap}
+.qbar button{background:var(--sec);border:1px solid var(--border);color:var(--white);padding:9px 15px;border-radius:8px;cursor:pointer;font-family:var(--f);font-size:.84rem;transition:.2s}
+.qbar button:hover{border-color:var(--red);color:var(--red)}
+.qbar button.primary{background:var(--red);border-color:var(--red);color:#fff}
+.qbar button.primary:hover{background:#C44A60;color:#fff}
+.qdoc{max-width:794px;margin:0 auto;background:#FBFAF6;color:#181412;padding:44px 48px;font-family:var(--f);position:relative;border-radius:8px;overflow:hidden;line-height:1.6}
+.qdoc .wm{position:absolute;font-size:18rem;font-weight:800;color:rgba(164,36,59,.04);top:30%;left:50%;transform:translate(-50%,-50%);z-index:0;letter-spacing:-1rem;pointer-events:none}
+.qdoc>*{position:relative;z-index:1}
+.qdoc header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #A4243B;padding-bottom:18px;margin-bottom:24px}
+.qdoc .brand{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:#181412}
+.qdoc .brand b{color:#A4243B}
+.qdoc .brand small{display:block;font-size:.74rem;font-weight:500;color:#6b6661;letter-spacing:1px;margin-top:2px}
+.qdoc .qmeta{text-align:left}
+.qdoc .qt{font-size:1.3rem;font-weight:700;color:#A4243B}
+.qdoc .qn,.qdoc .qd{font-size:.8rem;color:#6b6661;margin-top:3px}
+.qdoc .parties{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.qdoc .parties>div{background:#fff;border:1px solid #ece8e0;border-radius:8px;padding:13px 15px}
+.qdoc .parties small{color:#8a857f;font-size:.72rem;text-transform:uppercase;letter-spacing:1px}
+.qdoc .parties b{display:block;font-size:1rem;margin:3px 0}
+.qdoc .parties .sub{font-size:.8rem;color:#6b6661}
+.qdoc table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:.88rem}
+.qdoc table th{background:#181412;color:#FBFAF6;padding:11px 12px;text-align:right;font-weight:600;font-size:.82rem}
+.qdoc table td{padding:11px 12px;border-bottom:1px solid #ece8e0;vertical-align:top}
+.qdoc table td.amt{white-space:nowrap;font-weight:700;text-align:left;font-variant-numeric:tabular-nums}
+.qdoc table tbody tr:nth-child(even){background:#faf7f1}
+.qdoc .det{color:#8a857f;font-size:.78rem}
+.qdoc .offersbox{background:#fff7f7;border:1px solid #ffd9dc;border-radius:8px;padding:12px 15px;margin-bottom:14px}
+.qdoc .offersbox .oh{font-size:.78rem;color:#A4243B;font-weight:700;margin-bottom:6px}
+.qdoc .offersbox div{font-size:.82rem;color:#5a4540;padding:2px 0}
+.qdoc .totals-box{display:grid;grid-template-columns:1.5fr 1fr;gap:0;margin:0 0 20px;border:1px solid #ece8e0;border-radius:12px;overflow:hidden;box-shadow:0 1px 0 #f3efe7}
+.qdoc .totals-box .tb-break{background:#fff;padding:12px 20px 10px}
+.qdoc .totals-box .tb-final{background:#181412;color:#FBFAF6;padding:18px 22px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:3px}
+.qdoc .totals-box .tb-label{font-size:.76rem;color:#b4aea5;letter-spacing:.5px}
+.qdoc .totals-box .tb-net{font-weight:800;font-size:1.75rem;color:#A4243B;line-height:1.1}
+.qdoc .totals-box .tb-sub{font-size:.64rem;color:#8a857f;margin-top:3px}
+.qdoc .totals-box .trow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:.9rem;border-bottom:1px dashed #ece8e0}
+.qdoc .totals-box .trow:last-child{border-bottom:none}
+.qdoc .totals-box .trow span:last-child{font-variant-numeric:tabular-nums}
+.qdoc .totals-box .strike{text-decoration:line-through;color:#b4aea5}
+.qdoc .totals-box .trow.sub{color:#8a857f}
+.qdoc .totals-box .disc{color:#0f7a44}
+.qdoc .totals-box .save-badge{display:block;background:#eafaf1;color:#0f7a44;border:1px solid #c9ecd8;border-radius:8px;padding:6px 12px;font-size:.76rem;margin:7px 0;text-align:center;font-weight:600}
+.qdoc .totals-box .save-badge b{font-weight:800}
+.qdoc .terms{background:#fff;border:1px solid #ece8e0;border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.qdoc .terms b{font-size:.85rem;display:block;margin-bottom:6px}
+.qdoc .terms ul{margin:0;padding-right:18px;font-size:.78rem;color:#5a554f}
+.qdoc .terms li{margin-bottom:3px}
+.qdoc .note-row{font-size:.82rem;color:#6b6661;background:#fff;border:1px dashed #ece8e0;border-radius:8px;padding:11px 15px;margin-bottom:18px}
+.qdoc footer{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;border-top:1px solid #ece8e0;padding-top:16px}
+.qdoc .sign{text-align:center;width:160px}
+.qdoc .sign .line{border-top:1px solid #6b6661;margin-bottom:5px;height:34px}
+.qdoc .sign small{font-size:.74rem;color:#8a857f}
+.qdoc .contact{text-align:left;font-size:.76rem;color:#6b6661;line-height:1.7}
+.qdoc .contact b{color:#A4243B}
+.qdoc .qlogo{height:32px;width:auto;display:block;margin-bottom:4px}
+.qdoc .qstatus{display:inline-block;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:6px}
+.qdoc .qstatus.unpaid{background:#ffe9eb;color:#c0232b}
+.qdoc .qstatus.paid{background:#e3f6ec;color:#137a44}
+.qdoc .qr-wrap{position:absolute;top:44px;left:48px;text-align:center}
+.qdoc .qr{width:78px;height:78px;display:block;border:1px solid #ece8e0;border-radius:6px;background:#fff;padding:3px}
+.qdoc .qr-wrap small{display:block;font-size:.66rem;color:#8a857f;margin-top:3px}
+.qdoc .sign canvas{border:1px dashed #d8d3c9;border-radius:6px;background:#fff;touch-action:none;cursor:crosshair;display:block;width:100%;height:56px}
+.qdoc .sign .sig-btns{margin-top:4px}
+.qdoc .sign .sig-btns button{background:#f3efe7;border:1px solid #e0dcd3;color:#6b6661;font-size:.72rem;padding:3px 10px;border-radius:6px;cursor:pointer;font-family:var(--f)}
+.qbar .tmpl{display:flex;gap:3px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:3px}
+.qbar .tmpl button{background:transparent;border:none;color:var(--gray);font-family:var(--f);font-size:.8rem;padding:6px 11px;border-radius:6px;cursor:pointer;transition:.2s}
+.qbar .tmpl button.active{background:var(--red);color:#fff}
+@media print{
+  body{background:#fff}
+  .topbar,.head,.calc,.disclaimer,#toast{display:none!important}
+  .qoverlay{position:static;background:#fff;display:block!important;padding:0;overflow:visible}
+  .qbar{display:none!important}
+  .qdoc{box-shadow:none;margin:0;max-width:100%;border-radius:0}
+}
+@media(max-width:560px){.qdoc{padding:28px 20px}.qdoc .parties{grid-template-columns:1fr}.qdoc .totals-box{grid-template-columns:1fr}}
+@media(max-width:900px){.calc{grid-template-columns:1fr}.summary{position:static}}
+@media(max-width:520px){.types{grid-template-columns:repeat(2,1fr)}.fields{grid-template-columns:1fr}.fields .field.full{grid-column:span 1}.pkg-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="logo">MA<b>WA</b></a>
+    <a href="index.html" class="back">→ العودة للموقع</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="head">
+    <div class="eyebrow">حاسبة أسعار ذكية</div>
+    <h1>احسب <span class="red">سعر تصوير</span> عقارك فوراً.</h1>
+    <p>اختر نوع العقار وعدد الغرف والخدمات، واحصل على تقدير سعر فوري مع تفاصيل المُخرجات. السعر تقديري مبني على تسعيرة مأوى المعتمدة في الرياض.</p>
+  </div>
+
+  <div class="calc">
+    <div class="col-steps">
+
+      <div class="card">
+        <h2><span class="n">1</span> نوع العقار</h2>
+        <div class="hint">يحدّد التسعيرة الأساسية لكل خدمة.</div>
+        <div class="types" id="types"></div>
+      </div>
+
+      <div class="card" id="roomsCard">
+        <h2><span class="n">2</span> <span id="roomsTitle">عدد الغرف</span></h2>
+        <div class="hint">السعر يزداد كلما زادت الغرف (مساحة أكبر = تغطية أوسع). أدخل الرقم أو اسحب الشريط.</div>
+        <div class="rooms-row">
+          <span class="rooms-n-a" id="roomsNA" style="display:none">لا ينطبق على هذا النوع</span>
+          <div class="rooms-num"><input type="number" id="roomsNum" min="1" max="6" value="2"><span id="roomsUnit">غرف</span></div>
+        </div>
+        <input type="range" id="rooms" min="1" max="6" value="2" style="margin-top:14px">
+        <div class="incl-note" id="inclNote">
+          <div class="incl-t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> كل ذلك مشمول في سعر التصوير — دون أي رسوم إضافية:</div>
+          <div class="incl-b"><b>دورات المياه</b> · <b>الباب الرئيسي للوحدة</b> · <b>صورة خارجية للعمارة/الواجهة</b></div>
+        </div>
+      </div>
+
+      <!-- تعدد الوحدات (شقق/فلل) -->
+      <div class="card" id="unitsCard">
+        <h2><span class="n">2.5</span> وحدات متعددة (شقق/فلل)</h2>
+        <div class="hint">خصم تدريجي لتصوير أكثر من وحدة — أعلى إذا كانت في نفس الموقع.</div>
+        <div class="rooms-row"><span style="color:var(--gray);font-size:.85rem">عدد الوحدات المتشابهة</span>
+          <div class="rooms-num"><input type="number" id="unitsNum" min="1" max="20" value="1"><span>وحدة</span></div>
+        </div>
+        <input type="range" id="units" min="1" max="20" value="1" style="margin-top:14px">
+        <label class="loc-toggle" style="display:flex;align-items:center;gap:10px;margin-top:14px;font-size:.85rem;cursor:pointer;color:var(--gray)"><input type="checkbox" id="sameLoc" checked style="width:18px;height:18px;accent-color:var(--red)"> كل الوحدات في نفس الموقع (خصم أعلى)</label>
+        <div id="unitsNote" style="margin-top:10px;font-size:.78rem;color:var(--red);min-height:1em"></div>
+      </div>
+
+      <div class="card">
+        <h2><span class="n">3</span> الخدمات المطلوبة</h2>
+        <div class="hint">اختر خدمة واحدة أو أكثر. عند اختيار 3 خدمات تصوير أو أكثر يُطبَّق خصم باقة مجمّعة تلقائياً.</div>
+        <div class="svcs" id="svcs"></div>
+      </div>
+
+      <div class="card">
+        <h2><span class="n plus">+</span> خدمات التصميم (اختياري)</h2>
+        <div class="hint">أضف خدمات تصميم وهوية لعقارك.</div>
+        <div class="addons">
+          <label class="addon"><input type="checkbox" id="d-logo"> تصميم شعار عقاري <span class="px">1,200 ر.س</span></label>
+          <label class="addon"><input type="checkbox" id="d-sign"> تصميم لوحة خارجية <span class="px">700 ر.س</span></label>
+          <div class="brochure">بروشور PDF: <input type="number" id="d-pages" min="0" max="200" value="0"> صفحة × 100 ر.س <span style="margin-right:auto;color:var(--gray)" id="d-pages-v">0 ر.س</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="n">4</span> الباقة والإضافات</h2>
+        <div class="hint" style="margin-top:12px;margin-bottom:8px">الباقة (تؤثر على التصوير والفيديو)</div>
+        <div class="seg" id="pkg">
+          <button data-pkg="basic" class="active">أساسية</button>
+          <button data-pkg="pro">احترافية (+45%)</button>
+        </div>
+        <div class="pkg-compare">
+          <div><b>أساسية</b>تصوير + معالجة ألوان + تسليم بدقة عالية</div>
+          <div><b>احترافية</b>+ درون 4K + تصوير ليلي + تصحيح متقدم + نسخ سوشيال</div>
+        </div>
+        <div class="addons" style="margin-top:16px">
+          <label class="addon"><input type="checkbox" id="ao-night"> تصوير ليلي فاخر <span class="px">+500 ر.س</span></label>
+          <label class="addon"><input type="checkbox" id="ao-social"> نسخ لمواقع التواصل <span class="px">+300 ر.س</span></label>
+          <label class="addon"><input type="checkbox" id="ao-rush"> تسليم عاجل (24 ساعة) <span class="px">+25%</span></label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="summary">
+      <h3>ملخّص التسعيرة</h3>
+      <div class="s-hint" id="sumMeta">—</div>
+      <div class="lines" id="lines"></div>
+      <div class="disc-active" id="discBadge"></div>
+      <div class="total"><span class="t-l">الإجمالي التقديري</span><span class="t-v" id="total">0</span></div>
+      <div class="note-mini">* السعر تقديري وقد يختلف حسب تفاصيل العقار. العرض النهائي يُحدَّد عند التواصل.</div>
+
+      <div class="fields">
+        <div class="field full"><input type="text" id="custName" placeholder="الاسم *" autocomplete="name"></div>
+        <div class="field"><input type="tel" id="custPhone" placeholder="الجوال *" autocomplete="tel" style="direction:ltr;text-align:right"></div>
+        <div class="field"><input type="email" id="custEmail" placeholder="بريد (اختياري)" autocomplete="email" style="direction:ltr;text-align:right"></div>
+        <div class="field full"><input type="text" id="custCompany" placeholder="اسم الشركة/الجهة (اختياري — يظهر في عرض السعر)"></div>
+        <div class="field"><input type="number" id="custDiscount" min="0" max="100" placeholder="خصم إضافي % (اختياري للموظف)"></div>
+        <div class="field"><input type="text" id="custNotes" placeholder="ملاحظة تظهر في العرض (اختياري)"></div>
+      </div>
+
+      <button class="btn btn-red" id="waBtn"><span id="waIco"></span> اطلب هذا العرض عبر واتساب</button>
+      <button class="btn btn-out" id="quoteBtn" style="margin-top:9px">📄 إصدار عرض سعر رسمي (PDF/طباعة)</button>
+      <div class="btn-row">
+        <button class="btn btn-out" id="shareBtn">🔗 نسخ رابط التسعيرة</button>
+      </div>
+      <a class="btn btn-out" href="index.html#pricing" style="margin-top:9px">عرض جدول الأسعار الكامل</a>
+    </div>
+  </div>
+
+  <p class="disclaimer">© 2026 مأوى العقارية — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- مستند عرض السعر الرسمي -->
+<div class="qoverlay" id="quoteOverlay">
+  <div class="qbar">
+    <span>عرض سعر رسمي — مأوى العقارية</span>
+    <div class="acts">
+      <button class="primary" id="pdfBtn">⬇ تحميل PDF</button>
+      <button id="printBtn">🖨 طباعة</button>
+      <button id="closeQuote">✕ إغلاق</button>
+    </div>
+  </div>
+  <div class="qdoc" id="quoteDoc">
+    <div class="wm">MAWA</div>
+    <header>
+      <div class="brand">MA<b>WA</b><small>مأوى العقارية · تصوير عقاري</small></div>
+      <div class="qmeta">
+        <div class="qt">عرض سعر</div>
+        <div class="qn">رقم: <b id="qNum">—</b></div>
+        <div class="qd" id="qDate">—</div>
+        <div class="qd">الصلاحية: <b id="qValid">—</b></div>
+      </div>
+    </header>
+
+    <div class="parties">
+      <div>
+        <small>مقدّم من</small>
+        <b>مؤسسة مأوى المهارية التجارية</b>
+        <div class="sub">سجل تجاري 1009034486 · الرياض</div>
+      </div>
+      <div>
+        <small>مقدّم إلى</small>
+        <b id="qTo">—</b>
+        <div class="sub" id="qToSub">—</div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th style="width:28px">#</th><th>الخدمة</th><th>التفاصيل / المُخرجات</th><th style="text-align:left">المبلغ (ر.س)</th></tr></thead>
+      <tbody id="qRows"></tbody>
+    </table>
+
+    <div class="offersbox" id="qOffers" style="display:none"></div>
+
+    <div class="totals-box">
+      <div class="tb-break">
+        <div class="trow sub"><span>الإجمالي قبل الخصم</span><span class="strike" id="qGross">0</span></div>
+        <div class="trow disc" id="qDiscRow" style="display:none"><span>إجمالي الخصومات</span><span id="qDisc">0</span></div>
+        <div class="save-badge" id="qSaveRow" style="display:none">🎁 وفّرت <b id="qSave">0</b> على هذا العرض</div>
+        <div class="trow" id="qRushRow" style="display:none"><span>رسوم تسليم عاجل (+25%)</span><span id="qRush">0</span></div>
+      </div>
+      <div class="tb-final">
+        <span class="tb-label">الإجمالي النهائي</span>
+        <span class="tb-net" id="qNet">0</span>
+        <span class="tb-sub">سعر نهائي · غير خاضع لضريبة القيمة المضافة</span>
+      </div>
+    </div>
+
+    <div class="note-row" id="qNoteRow" style="display:none"><b>ملاحظة: </b><span id="qNote"></span></div>
+
+    <div class="terms">
+      <b>الشروط والأحكام</b>
+      <ul>
+        <li>صلاحية هذا العرض 30 يوماً من تاريخ الإصدار.</li>
+        <li>تأكيد الحجز يتطلب سداد عربون 25% من الإجمالي.</li>
+        <li>نطاق الخدمة: داخل مدينة الرياض فقط.</li>
+        <li>الأسعار نهائية وغير خاضعة لضريبة القيمة المضافة.</li>
+        <li>في حال الإلغاء قبل 24 ساعة من الموعد يُسترد 50% من العربون.</li>
+      </ul>
+    </div>
+
+    <footer>
+      <div class="sign"><div class="line"></div><small>توقيع/ختم مأوى العقارية</small></div>
+      <div class="contact">
+        <b>مأوى العقارية</b><br>
+        +966 53 164 6152 · واتساب<br>
+        Alfaafiwf@gmail.com<br>
+        الرياض، المملكة العربية السعودية
+      </div>
+      <div class="sign"><div class="line"></div><small>توقيع/ختم العميل</small></div>
+    </footer>
+  </div>
+</div>
+
+<script>
+/* ===== أنواع العقار ===== */
+const TYPES = {
+  studio:   { label:'استوديو', rooms:[1,1,1], unit:'غرفة', formKey:'apartment' },
+  apartment:{ label:'شقة',     rooms:[1,6,2], unit:'غرف', formKey:'apartment' },
+  villa:    { label:'فيلا',    rooms:[3,12,6], unit:'غرف', formKey:'villa' },
+  office:   { label:'مكتب',    rooms:[1,8,3], unit:'غرف', formKey:'office' },
+  land:     { label:'أرض',     rooms:[0,0,0], unit:'', formKey:'land' },
+  project:  { label:'مشروع',   rooms:[2,20,4], unit:'وحدة', formKey:'compound' },
+  palace:   { label:'قصر',     rooms:[5,30,12], unit:'غرف', formKey:'other', custom:true },
+  auction:  { label:'مزاد',    rooms:[0,0,0], unit:'', formKey:'land', custom:true },
+};
+
+/* تسعيرة مضبوطة على ورقة مأوى (b=أساسي، r=زيادة لكل غرفة). النقاط المرجعية:
+   شقة تصوير: غرفة1=850، غرفة3=1100 | فيلا تصوير: 6غرف=2000 | جولة فيلا=1600 | درون=1200 | 360 شقة1=1300/3=1600 | 360 فيلا6=2500 | 360 مشروع=3200 | فيديو إعلاني=2000 */
+const PRICING = {
+  photo:{ studio:{b:700,r:0}, apartment:{b:725,r:125}, villa:{b:1370,r:105}, office:{b:680,r:110}, land:{b:900,r:0}, project:{b:2500,r:0} },
+  video:{ studio:{b:900,r:0}, apartment:{b:1020,r:80}, villa:{b:1090,r:85}, office:{b:950,r:80}, land:{b:0,r:0}, project:{b:2000,r:0} },
+  drone:{ flat:1200 },
+  vr360:{ studio:{b:950,r:0}, apartment:{b:1150,r:150}, villa:{b:1720,r:130}, office:{b:1250,r:100}, land:{b:0,r:0}, project:{b:3200,r:0} },
+  ad:{ flat:2000 },
+};
+const SERVICES = {
+  photo:{ label:'تصوير فوتوغرافي HDR', sub:'صور داخلية وخارجية معالجة' },
+  video:{ label:'فيديو سينمائي', sub:'جولة سينمائية + تصحيح ألوان' },
+  drone:{ label:'تصوير درون 4K', sub:'لقطات جوية شاملة التصاريح' },
+  vr360:{ label:'جولة افتراضية 360°', sub:'تجربة تفاعلية غامرة' },
+  ad:   { label:'فيديو إعلاني تسويقي', sub:'برومو لمواقع التواصل' },
+};
+const DISABLED = { land:['video','vr360'] };
+
+/* ===== أيقونات SVG ===== */
+const S='fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+const ICONS={
+  type:{
+    studio:`<svg viewBox="0 0 24 24" ${S}><path d="M4 21h16"/><rect x="7" y="9" width="10" height="12"/><path d="M10 13h4M12 17v2"/></svg>`,
+    apartment:`<svg viewBox="0 0 24 24" ${S}><path d="M4 21h16"/><rect x="6" y="5" width="12" height="16"/><path d="M9 9h2M13 9h2M9 13h2M13 13h2M9 17h2M13 17h2"/></svg>`,
+    villa:`<svg viewBox="0 0 24 24" ${S}><path d="M4 21h16"/><path d="M3 11l9-6 9 6"/><path d="M6 10v11h12V10"/><path d="M10 21v-5h4v5"/></svg>`,
+    office:`<svg viewBox="0 0 24 24" ${S}><path d="M4 21h16"/><rect x="8" y="3" width="8" height="18"/><path d="M11 7h2M11 11h2M11 15h2"/></svg>`,
+    land:`<svg viewBox="0 0 24 24" ${S}><path d="M3 20h18"/><path d="M3 17l5-7 4 5 3-4 6 6"/><circle cx="17" cy="6" r="1.6"/></svg>`,
+    project:`<svg viewBox="0 0 24 24" ${S}><path d="M3 21h18"/><rect x="3" y="11" width="7" height="10"/><rect x="14" y="6" width="7" height="15"/><path d="M6 15h1M6 18h1M17 10h1M17 13h1M17 16h1"/></svg>`,
+    palace:`<svg viewBox="0 0 24 24" ${S}><path d="M2 21h20"/><path d="M4 21V11l8-5 8 5v10"/><path d="M2 11l10-7 10 7"/><path d="M9 21v-6h6v6"/><path d="M12 4V1"/></svg>`,
+    auction:`<svg viewBox="0 0 24 24" ${S}><path d="M16 4l4 4-5 5-4-4z"/><path d="M11 9l-7 7v3h3l7-7"/><path d="M14 6l4 4"/><path d="M3 21h10"/></svg>`,
+  },
+  svc:{
+    photo:`<svg viewBox="0 0 24 24" ${S}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="3.5"/></svg>`,
+    video:`<svg viewBox="0 0 24 24" ${S}><rect x="2.5" y="6" width="19" height="12" rx="1.5"/><path d="M2.5 10h19M2.5 14h19M7 6v12M17 6v12"/></svg>`,
+    drone:`<svg viewBox="0 0 24 24" ${S}><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9.5 9.5L6 6M14.5 9.5L18 6M9.5 14.5L6 18M14.5 14.5L18 18"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg>`,
+    vr360:`<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18"/></svg>`,
+    ad:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.4L21 11l-6.6 2.6L12 20l-2.4-6.4L3 11l6.6-2.6z"/></svg>`,
+  },
+  chat:`<svg viewBox="0 0 24 24" width="18" height="18" ${S}><path d="M21 11.5a8 8 0 0 1-11.8 7L3 20l1.6-6A8 8 0 1 1 21 11.5z"/></svg>`,
+  link:`<svg viewBox="0 0 24 24" width="16" height="16" ${S}><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>`,
+};
+
+/* ===== الحالة ===== */
+const state={ type:'apartment', rooms:2, units:1, sameLoc:true, sel:new Set(['photo']), pkg:'basic', night:false, social:false, rush:false, logo:false, sign:false, pages:0, name:'', phone:'', email:'', company:'', customDiscount:0, qnote:'', isCustom:false };
+const $=id=>document.getElementById(id);
+const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
+      roomsUnit=$('roomsUnit'), roomsNA=$('roomsNA'), roomsTitle=$('roomsTitle'),
+      unitsEl=$('units'), unitsNum=$('unitsNum'), inclNote=$('inclNote'),
+      linesEl=$('lines'), totalEl=$('total'), sumMeta=$('sumMeta');
+
+/* ===== رسم ===== */
+function renderTypes(){
+  typesEl.innerHTML=Object.entries(TYPES).map(([k,t])=>
+    `<button class="type-btn ${k===state.type?'active':''}" data-k="${k}"><span class="em">${ICONS.type[k]||''}</span>${t.label}</button>`).join('');
+  typesEl.querySelectorAll('.type-btn').forEach(b=>b.onclick=()=>{state.type=b.dataset.k; onTypeChange(); recalc(); syncUrl();});
+}
+function renderServices(){
+  const dis=DISABLED[state.type]||[];
+  svcsEl.innerHTML=Object.entries(SERVICES).map(([k,s])=>{
+    const d=dis.includes(k);
+    return `<div class="svc ${state.sel.has(k)?'on':''}" data-k="${k}" ${d?'data-dis="1"':''}>
+      <span class="ic">${ICONS.svc[k]||''}</span>
+      <span class="nm">${s.label}<small>${d?'غير متاح لهذا النوع':s.sub}</small></span>
+      <span class="px" data-px="${k}">—</span><span class="chk"></span></div>`;
+  }).join('');
+  svcsEl.querySelectorAll('.svc').forEach(el=>{
+    if(el.dataset.dis) return;
+    el.onclick=()=>{const k=el.dataset.k; state.sel.has(k)?state.sel.delete(k):state.sel.add(k); el.classList.toggle('on'); recalc(); syncUrl();};
+  });
+}
+function onTypeChange(){
+  typesEl.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b.dataset.k===state.type));
+  const t=TYPES[state.type]; const [min,max,def]=t.rooms; const no=max===0;
+  roomsNA.style.display=no?'inline':'none'; roomsNum.parentElement.style.display=no?'none':'flex'; roomsEl.style.display=no?'none':'block';
+  roomsTitle.textContent= state.type==='project'?'عدد الوحدات':'عدد الغرف';
+  if(!no){ roomsEl.min=min; roomsEl.max=max; roomsNum.min=min; roomsNum.max=max; state.rooms=Math.min(Math.max(def,min),max); roomsEl.value=state.rooms; roomsNum.value=state.rooms; roomsUnit.textContent=t.unit; }
+  inclNote.style.display = (!t.custom && !no) ? '' : 'none';
+  $('unitsCard').style.display = (state.type==='apartment'||state.type==='villa') ? '' : 'none';
+  renderServices();
+}
+
+/* ===== حساب سعر خدمة ===== */
+function priceOf(svc){
+  const p=PRICING[svc];
+  if('flat' in p) return p.flat;
+  const t=p[state.type]; if(!t) return 0;
+  const r=TYPES[state.type].rooms[1]===0?0:state.rooms;
+  const base=t.b+t.r*r;
+  const mult=(svc==='photo'||svc==='video')?(state.pkg==='pro'?1.45:1):1;
+  return Math.round(base*mult);
+}
+/* مُخرجات تقريبية لكل خدمة */
+function deliverableOf(svc){
+  const r=state.rooms;
+  if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?8:10+r; return `≈ ${n} صورة HDR`; }
+  if(svc==='video'){ const sec=45+r*12; return `≈ فيديو ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} دقيقة`; }
+  if(svc==='drone') return `≈ 10–15 لقطة جوية`;
+  if(svc==='vr360') return `≈ ${r+2} نقطة 360°`;
+  if(svc==='ad') return `برومو 30–60 ثانية`;
+  return '';
+}
+const fmt=n=>n.toLocaleString('en-US');
+
+/* ===== خصم الوحدات المتعددة (سلّم تدريجي) ===== */
+function multiDiscRate(units, sameLoc){
+  if(sameLoc){ if(units>=4) return 0.20; if(units===3) return 0.15; if(units===2) return 0.10; return 0; }
+  else       { if(units>=4) return 0.10; if(units===3) return 0.08; if(units===2) return 0.05; return 0; }
+}
+
+/* ===== عدّاد متحرّك ===== */
+let curTotal=0, rafId=null;
+function animateTotal(to){
+  cancelAnimationFrame(rafId);
+  const from=curTotal, start=performance.now(), dur=450;
+  totalEl.classList.remove('bump'); void totalEl.offsetWidth; totalEl.classList.add('bump');
+  function step(now){ const t=Math.min(1,(now-start)/dur); const v=Math.round(from+(to-from)*(1-Math.pow(1-t,3))); totalEl.textContent=fmt(v); if(t<1) rafId=requestAnimationFrame(step); else curTotal=to; }
+  rafId=requestAnimationFrame(step);
+}
+
+/* ===== إعادة الحساب ===== */
+let lastTotal=0;
+const PERUNIT=['photo','video','vr360'];
+function recalc(){
+  const t=TYPES[state.type]; const dis=DISABLED[state.type]||[]; const custom=!!t.custom;
+  const isMulti = !custom && (state.type==='apartment'||state.type==='villa') && state.units>1;
+
+  // تسميات أسعار الخدمات
+  svcsEl.querySelectorAll('.svc').forEach(el=>{
+    const k=el.dataset.k, px=el.querySelector('.px');
+    if(el.dataset.dis){px.textContent='—';return;}
+    if(custom){ px.textContent='عرض حسب المشروع'; return; }
+    const v=priceOf(k); px.textContent=v>0?fmt(v)+' ر.س':'حسب الطلب';
+  });
+
+  // الأنواع المخصّصة (قصر/مزاد): بدون أرقام
+  if(custom){
+    const chosen=[...state.sel].filter(k=>!dis.includes(k));
+    sumMeta.textContent=`${t.label} · عرض حسب المشروع · باقة ${state.pkg==='pro'?'احترافية':'أساسية'}`;
+    linesEl.innerHTML = chosen.length ? chosen.map(k=>`<div class="line"><span class="l">${SERVICES[k].label}</span><span class="v">حسب المشروع</span></div>`).join('') : '<div class="line empty">اختر خدمة واحدة على الأقل</div>';
+    totalEl.classList.remove('bump'); totalEl.textContent='حسب المشروع'; totalEl.style.fontSize='1.4rem';
+    state.isCustom=true; curTotal=0; lastTotal=0;
+    return;
+  }
+  state.isCustom=false; totalEl.style.fontSize='';
+
+  const items=[]; let perUnitScaled=0; const mainForBundle=[];
+  state.sel.forEach(k=>{
+    if(dis.includes(k)) return; const p=priceOf(k); if(p<=0) return;
+    if(isMulti && PERUNIT.includes(k)){
+      const scaled=p*state.units; perUnitScaled+=scaled;
+      items.push([`${SERVICES[k].label} — ${state.units} وحدات`, scaled, deliverableOf(k)+' لكل وحدة']);
+    } else {
+      items.push([SERVICES[k].label, p, deliverableOf(k)]);
+      if(PERUNIT.includes(k)) mainForBundle.push(p);
+    }
+  });
+  if(state.logo) items.push(['تصميم شعار عقاري',1200,'']);
+  if(state.sign) items.push(['تصميم لوحة خارجية',700,'']);
+  if(state.pages>0) items.push([`بروشور PDF — ${state.pages} صفحة`,state.pages*100,'']);
+  if(state.night) items.push(['تصوير ليلي فاخر',500,'']);
+  if(state.social) items.push(['نسخ لمواقع التواصل',300,'']);
+
+  let bundleDiscount=0, multiDiscount=0;
+  if(isMulti){ multiDiscount=Math.round(perUnitScaled*multiDiscRate(state.units,state.sameLoc)); }
+  else if(mainForBundle.length>=3){ bundleDiscount=Math.round(mainForBundle.reduce((a,b)=>a+b,0)*0.10); }
+
+  const totalDisc=bundleDiscount+multiDiscount;
+  let sub=items.reduce((s,[,v])=>s+v,0)-totalDisc;
+  if(state.rush) items.push(['رسوم تسليم عاجل (+25%)', Math.round(sub*0.25)]);
+  const total=Math.max(0, items.reduce((s,[,v])=>s+v,0)-totalDisc);
+
+  let meta=`${t.label}${TYPES[state.type].rooms[1]!==0?(' · '+state.rooms+' '+t.unit):''} · باقة ${state.pkg==='pro'?'احترافية':'أساسية'}`;
+  if(isMulti) meta+=` · ${state.units} وحدات (${state.sameLoc?'نفس الموقع':'مواقع مختلفة'})`;
+  else if(mainForBundle.length>=3) meta+=' · باقة مجمّعة';
+  sumMeta.textContent=meta;
+
+  if(items.length===0){ linesEl.innerHTML='<div class="line empty">اختر خدمة واحدة على الأقل لرؤية السعر</div>'; }
+  else{
+    let html=items.map(([l,v,out])=>`<div class="line"><span class="l">${l}${out?`<span class="out">${out}</span>`:''}</span><span class="v">${fmt(v)} ر.س</span></div>`).join('');
+    if(bundleDiscount>0) html+=`<div class="line disc"><span class="l">خصم الباقة المجمّعة (3 خدمات ‑10٪)</span><span class="v">−${fmt(bundleDiscount)} ر.س</span></div>`;
+    if(multiDiscount>0) html+=`<div class="line disc"><span class="l">خصم الوحدات المتعددة (${Math.round(multiDiscRate(state.units,state.sameLoc)*100)}٪ — ${state.sameLoc?'نفس الموقع':'مواقع مختلفة'})</span><span class="v">−${fmt(multiDiscount)} ر.س</span></div>`;
+    linesEl.innerHTML=html;
+  }
+  // ملاحظة الوحدات
+  const un=$('unitsNote');
+  if(isMulti){ const rate=multiDiscRate(state.units,state.sameLoc); un.textContent = rate>0 ? `خصم ${Math.round(rate*100)}٪ مطبَّق على خدمات التصوير (${state.units} وحدات)` : 'أضف وحدة أخرى لتفعيل الخصم'; }
+  else un.textContent='';
+  // علامة الخصم المُفعّل (مشجّعة)
+  const db=$('discBadge'); const saved=bundleDiscount+multiDiscount;
+  if(saved>0 && !state.isCustom){
+    db.style.display='flex';
+    db.innerHTML=`<span class="ds-ic">🎉</span><span class="ds-amt">وفّرت ${fmt(saved)} ر.س</span><span class="ds-msg">${multiDiscount>0?'خصم الوحدات مفعّل!':'خصم الباقة مفعّل!'}</span>`;
+    db.style.animation='none'; void db.offsetWidth; db.style.animation='';
+  }else{ db.style.display='none'; }
+  animateTotal(total);
+  lastTotal=total;
+}
+
+/* ===== الباقة والإضافات ===== */
+$('pkg').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('pkg').querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); state.pkg=b.dataset.pkg; recalc(); syncUrl();});
+$('ao-night').onchange=e=>{state.night=e.target.checked; recalc(); syncUrl();};
+$('ao-social').onchange=e=>{state.social=e.target.checked; recalc(); syncUrl();};
+$('ao-rush').onchange=e=>{state.rush=e.target.checked; recalc(); syncUrl();};
+$('d-logo').onchange=e=>{state.logo=e.target.checked; recalc(); syncUrl();};
+$('d-sign').onchange=e=>{state.sign=e.target.checked; recalc(); syncUrl();};
+$('d-pages').oninput=e=>{state.pages=Math.max(0,+e.target.value||0); $('d-pages-v').textContent=fmt(state.pages*100)+' ر.س'; recalc(); syncUrl();};
+roomsEl.oninput=e=>{state.rooms=+e.target.value; roomsNum.value=state.rooms; recalc(); syncUrl();};
+roomsNum.oninput=e=>{let v=Math.max(+roomsNum.min||1,Math.min(+roomsNum.max||99,+e.target.value||1)); state.rooms=v; roomsEl.value=v; recalc(); syncUrl();};
+unitsEl.oninput=e=>{state.units=+e.target.value; unitsNum.value=state.units; recalc(); syncUrl();};
+unitsNum.oninput=e=>{let v=Math.max(+unitsNum.min||1,Math.min(+unitsNum.max||99,+e.target.value||1)); state.units=v; unitsEl.value=v; recalc(); syncUrl();};
+$('sameLoc').onchange=e=>{state.sameLoc=e.target.checked; recalc(); syncUrl();};
+['custName','custPhone','custEmail'].forEach(id=>$(id).addEventListener('input',e=>{state[id.replace('cust','').toLowerCase()]=e.target.value;}));
+$('custCompany').addEventListener('input',e=>state.company=e.target.value);
+$('custNotes').addEventListener('input',e=>state.qnote=e.target.value);
+$('custDiscount').addEventListener('input',e=>state.customDiscount=Math.max(0,Math.min(100,+e.target.value||0)));
+
+/* ===== رابط مشاركة التسعيرة ===== */
+function syncUrl(){
+  const p=new URLSearchParams();
+  p.set('t',state.type); p.set('r',state.rooms);
+  p.set('u',state.units); p.set('loc',state.sameLoc?'1':'0');
+  p.set('s',[...state.sel].join(','));
+  p.set('p',state.pkg);
+  const a=[]; if(state.night)a.push('n'); if(state.social)a.push('s'); if(state.rush)a.push('r');
+  p.set('a',a.join(','));
+  const d=[]; if(state.logo)d.push('l'); if(state.sign)d.push('g'); if(state.pages>0)d.push('p'+state.pages);
+  p.set('d',d.join(','));
+  history.replaceState(null,'',location.pathname+'?'+p.toString());
+}
+function loadUrl(){
+  const p=new URLSearchParams(location.search);
+  if(!p.get('t')) return;
+  if(TYPES[p.get('t')]) state.type=p.get('t');
+  const r=+p.get('r'); if(r) state.rooms=r;
+  if(p.get('u')) state.units=Math.max(1,+p.get('u'));
+  if(p.get('loc')==='0') state.sameLoc=false;
+  if(p.get('s')){ state.sel=new Set(p.get('s').split(',').filter(Boolean)); }
+  if(p.get('p')) state.pkg=p.get('p');
+  const a=(p.get('a')||'').split(','); state.night=a.includes('n'); state.social=a.includes('s'); state.rush=a.includes('r');
+  const d=(p.get('d')||'').split(','); state.logo=d.includes('l'); state.sign=d.includes('g');
+  const pg=d.find(x=>x.startsWith('p')); state.pages=pg?+pg.slice(1)||0:0;
+}
+
+/* ===== toast ===== */
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ===== زر مشاركة الرابط ===== */
+$('shareBtn').innerHTML = ICONS.link + ' نسخ رابط التسعيرة';
+$('shareBtn').onclick=async()=>{
+  syncUrl();
+  try{ await navigator.clipboard.writeText(location.href); toast('✓ تم نسخ رابط التسعيرة'); }
+  catch{ toast('انسخ الرابط من شريط المتصفح'); }
+};
+
+/* ===== حفظ في Supabase (تدفّق إلى لوحة الإدارة كطلب جديد) ===== */
+async function saveLead(total){
+  try{
+    const sb = (typeof getSupabase==='function') ? getSupabase() : null;
+    if(!sb) return false;
+    const t=TYPES[state.type]; const dis=DISABLED[state.type]||[];
+    const svcStr=[...state.sel].filter(k=>!dis.includes(k)).map(k=>SERVICES[k].label).join('، ')||'—';
+    const breakdown=[...linesEl.querySelectorAll('.line:not(.empty)')].map(l=>l.querySelector('.l').childNodes[0].textContent.trim()+': '+l.querySelector('.v').textContent).join(' | ');
+    const { data:client } = await sb.from('clients').insert([{ full_name:state.name||'عميل من الحاسبة', phone_number:state.phone||'', email:state.email||null }]).select().single();
+    await sb.from('contracts').insert([{
+      client_id: client.id,
+      service_type: svcStr,
+      total_amount: total,
+      contract_date: new Date().toISOString().split('T')[0],
+      status: 'new',
+      property_type: t.formKey,
+      rooms_count: TYPES[state.type].rooms[1]===0?null:state.rooms,
+      notes: 'طلب من الحاسبة — '+breakdown+` | باقة ${state.pkg}`
+    }]);
+    return true;
+  }catch(e){ console.warn('حفظ الحاسبة فشل:', e); return false; }
+}
+
+/* ===== زر واتساب ===== */
+$('waIco').innerHTML = ICONS.chat;
+$('waBtn').onclick=async()=>{
+  const dis=DISABLED[state.type]||[];
+  const hasSel=[...state.sel].some(k=>!dis.includes(k));
+  if(!hasSel){ toast('اختر خدمة واحدة على الأقل'); return; }
+  if(!state.name.trim()||!state.phone.trim()){ toast('أدخل الاسم والجوال أولاً'); return; }
+  const btn=$('waBtn'); const orig=btn.innerHTML; btn.innerHTML='جاري الإرسال...'; btn.disabled=true;
+  await saveLead(lastTotal);
+  const t=TYPES[state.type];
+  if(state.isCustom){
+    const svcs=[...state.sel].filter(k=>!dis.includes(k)).map(k=>SERVICES[k].label).join('، ');
+    const meta=`الاسم: ${state.name}%0Aالجوال: ${state.phone}${state.company?('%0Aالجهة: '+state.company):''}%0Aنوع المشروع: ${t.label}`;
+    const msg=`مرحباً مأوى العقارية، أرغب بعرض سعر مخصّص (من الحاسبة):%0A%0A${meta}%0Aالخدمات: ${svcs}%0A%0Aالمشروع من النوع الذي يتطلب معاينة وتسعيراً مخصّصاً. أرجو التواصل لتحديد الموعد والتفاصيل.`;
+    window.open(`https://wa.me/966531646152?text=${msg}`,'_blank');
+  }else{
+    const lines=[...linesEl.querySelectorAll('.line:not(.empty):not(.disc)')].map(l=>'• '+l.querySelector('.l').childNodes[0].textContent.trim()+': '+l.querySelector('.v').textContent);
+    const meta=`الاسم: ${state.name}%0Aالجوال: ${state.phone}${state.email?('%0Aالبريد: '+state.email):''}${state.company?('%0Aالجهة: '+state.company):''}%0Aنوع العقار: ${t.label}${TYPES[state.type].rooms[1]!==0?(' | عدد '+t.unit+': '+state.rooms):''}${(state.type==='apartment'||state.type==='villa')&&state.units>1?(' | عدد الوحدات: '+state.units+(state.sameLoc?' (نفس الموقع)':' (مواقع مختلفة)')):''}%0Aالباقة: ${state.pkg==='pro'?'احترافية':'أساسية'}`;
+    const msg=`مرحباً مأوى العقارية، أرغب بطلب عرض سعر (من الحاسبة):%0A%0A${meta}%0A%0A${lines.join('%0A')}%0A%0Aالإجمالي التقديري: ${fmt(lastTotal)} ر.س%0A%0Aأرجو تأكيد التفاصيل والموعد.`;
+    window.open(`https://wa.me/966531646152?text=${msg}`,'_blank');
+  }
+  btn.innerHTML=orig; btn.disabled=false; toast('✓ تم إرسال طلبك وحفظه');
+};
+
+/* ===== مستند عرض السعر الرسمي ===== */
+function buildQuoteData(){
+  const dis=DISABLED[state.type]||[]; const t=TYPES[state.type];
+  const custom=!!t.custom;
+  const isMulti=!custom && (state.type==='apartment'||state.type==='villa') && state.units>1;
+  const rows=[]; let gross=0, mainSum=0, mainCount=0; let perUnitScaled=0;
+  const add=(label,det,amt)=>{ rows.push({label,det,amt}); gross+=amt; };
+  state.sel.forEach(k=>{
+    if(dis.includes(k)) return; const p=priceOf(k);
+    if(custom){ if(p<=0) add(SERVICES[k].label, deliverableOf(k)||'عرض مخصص', -1); return; }
+    if(p<=0) return;
+    if(isMulti && PERUNIT.includes(k)){ const scaled=p*state.units; perUnitScaled+=scaled; add(`${SERVICES[k].label} — ${state.units} وحدات`, deliverableOf(k)+' لكل وحدة', scaled); mainSum+=p; mainCount++; }
+    else { add(SERVICES[k].label, deliverableOf(k), p); if(PERUNIT.includes(k)){ mainSum+=p; mainCount++; } }
+  });
+  if(!custom){
+    if(state.logo) add('تصميم شعار عقاري','',1200);
+    if(state.sign) add('تصميم لوحة خارجية','',700);
+    if(state.pages>0) add(`بروشور PDF — ${state.pages} صفحة`,'',state.pages*100);
+    if(state.night) add('تصوير ليلي فاخر','',500);
+    if(state.social) add('نسخ لمواقع التواصل','',300);
+  }
+  const offers=[]; let bundle=0, multi=0;
+  if(custom){ return {rows,gross:0,bundle:0,custom:0,rush:0,net:0,offers:[],totalDisc:0,isCustom:true}; }
+  if(isMulti){ multi=Math.round(perUnitScaled*multiDiscRate(state.units,state.sameLoc)); offers.push(`خصم الوحدات المتعددة (${Math.round(multiDiscRate(state.units,state.sameLoc)*100)}٪ — ${state.sameLoc?'نفس الموقع':'مواقع مختلفة'}): −${fmt(multi)} ر.س`); }
+  else if(mainCount>=3){ bundle=Math.round(mainSum*0.10); offers.push(`خصم الباقة المجمّعة (3 خدمات تصوير أو أكثر): −${fmt(bundle)} ر.س`); }
+  const afterDisc=gross-multi-bundle;
+  let customD=0;
+  if(state.customDiscount>0){ customD=Math.round(afterDisc*state.customDiscount/100); offers.push(`خصم إضافي ${state.customDiscount}%: −${fmt(customD)} ر.س`); }
+  const afterAll=afterDisc-customD;
+  const rush=state.rush?Math.round(afterAll*0.25):0;
+  return {rows,gross,bundle,multi,custom:customD,rush,net:afterAll+rush,offers,totalDisc:multi+bundle+customD,isCustom:false};
+}
+function openQuote(){
+  const dis=DISABLED[state.type]||[]; const d=buildQuoteData();
+  const hasSel=[...state.sel].some(k=>!dis.includes(k));
+  if(!hasSel && !(state.logo||state.sign||state.pages>0)){ toast('اختر خدمة واحدة على الأقل'); return; }
+  const to=state.company?state.company:(state.name||'العميل الكريم');
+  $('qTo').textContent=to;
+  $('qToSub').textContent=state.company?(state.name?('السيد/ة '+state.name):'عرض سعر تجاري'):(state.phone||'');
+  const now=new Date();
+  const num='MAWA-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+String(now.getHours()).padStart(2,'0')+String(now.getMinutes()).padStart(2,'0');
+  $('qNum').textContent=num;
+  $('qDate').textContent='التاريخ: '+now.toLocaleDateString('en-GB');
+  const valid=new Date(now.getTime()+30*864e5);
+  $('qValid').textContent=valid.toLocaleDateString('en-GB');
+  $('qRows').innerHTML=d.rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.label}</td><td class="det">${r.det||'—'}</td><td class="amt">${r.amt<0?'حسب المشروع':fmt(r.amt)}</td></tr>`).join('');
+  const ob=$('qOffers');
+  if(d.offers.length){ ob.style.display='block'; ob.innerHTML='<div class="oh">العروض المطبَّقة</div>'+d.offers.map(o=>`<div>${o}</div>`).join(''); } else ob.style.display='none';
+  if(d.isCustom){
+    $('qGross').textContent='حسب المشروع'; $('qNet').textContent='حسب المشروع';
+    $('qDiscRow').style.display='none'; $('qSaveRow').style.display='none'; $('qRushRow').style.display='none';
+  } else {
+    $('qGross').textContent=fmt(d.gross)+' ر.س';
+    const dr=$('qDiscRow'), sr=$('qSaveRow');
+    if(d.totalDisc>0){dr.style.display='flex'; $('qDisc').textContent='−'+fmt(d.totalDisc)+' ر.س'; sr.style.display='block'; $('qSave').textContent=fmt(d.totalDisc)+' ر.س';}
+    else {dr.style.display='none'; sr.style.display='none';}
+    const rr=$('qRushRow'); if(d.rush>0){rr.style.display='flex'; $('qRush').textContent='+'+fmt(d.rush)+' ر.س';} else rr.style.display='none';
+    $('qNet').textContent=fmt(d.net)+' ر.س';
+  }
+  const nr=$('qNoteRow'); if(state.qnote&&state.qnote.trim()){nr.style.display='block'; $('qNote').textContent=state.qnote;} else nr.style.display='none';
+  $('quoteOverlay').classList.add('open'); document.body.style.overflow='hidden';
+}
+$('quoteBtn').onclick=openQuote;
+$('closeQuote').onclick=()=>{$('quoteOverlay').classList.remove('open'); document.body.style.overflow='';};
+$('printBtn').onclick=()=>window.print();
+$('pdfBtn').onclick=()=>{
+  toast('جاري تجهيز ملف PDF...');
+  const opt={margin:0,filename:'عرض-سعر-مأوى-'+$('qNum').textContent+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
+  html2pdf().set(opt).from($('quoteDoc')).save().then(()=>toast('✓ تم تجهيز ملف PDF')).catch(()=>toast('تعذّر إنشاء الملف'));
+};
+
+/* ===== init ===== */
+loadUrl();
+renderTypes(); onTypeChange();
+// طبّق قيم الـURL على عناصر الإدخال بعد الرسم
+$('ao-night').checked=state.night; $('ao-social').checked=state.social; $('ao-rush').checked=state.rush;
+$('d-logo').checked=state.logo; $('d-sign').checked=state.sign; $('d-pages').value=state.pages||0; $('d-pages-v').textContent=fmt(state.pages*100)+' ر.س';
+$('units').value=state.units; $('unitsVal').innerHTML=state.units+'<small> وحدة</small>'; $('sameLoc').checked=state.sameLoc;
+$('pkg').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.pkg===state.pkg));
+recalc(); syncUrl();
+</script>
+</body>
+</html>

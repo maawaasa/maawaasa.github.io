@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://maawaasa.github.io/sitemap.xml
+Sitemap: https://maawaa.sa/sitemap.xml
