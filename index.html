@@ -1098,6 +1098,32 @@ document.getElementById('leadForm').addEventListener('submit', e => {
   btn.style.background = 'linear-gradient(135deg,#2ECC71,#27AE60)';
   setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; e.target.reset(); }, 3000);
 });
+
+/* عدّاد متحرّك للأرقام عند الظهور */
+function countUp(el, target, prefix, suffix, dur) {
+  const start = performance.now();
+  (function tick(now) {
+    const t = Math.min(1, (now - start) / dur);
+    const v = Math.round(target * (1 - Math.pow(1 - t, 3)));
+    el.textContent = prefix + v + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+  })(performance.now());
+}
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.querySelectorAll('.v').forEach((el, i) => {
+      const m = el.textContent.trim().match(/^(\D*)(\d+)(\D*)$/);
+      if (!m) return;
+      const prefix = m[1] || '', target = +m[2], suffix = m[3] || '';
+      el.textContent = prefix + '0' + suffix;
+      setTimeout(() => countUp(el, target, prefix, suffix, 1600), i * 200 + 300);
+    });
+    countObs.disconnect();
+  });
+}, { threshold: 0.3 });
+const aboutStatsEl = document.querySelector('.about-stats');
+if (aboutStatsEl) countObs.observe(aboutStatsEl);
 </script>
 
 </body>
