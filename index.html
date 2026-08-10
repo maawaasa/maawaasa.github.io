@@ -374,22 +374,91 @@ footer{border-top:1px solid var(--line);padding:64px 0 32px;background:var(--sur
 .lux-cta.ghost:hover{background:rgba(201,206,212,.08);box-shadow:none}
 
 @media(max-width:760px){
-  .nav-links{display:none;position:absolute;top:100%;right:0;left:0;background:rgba(18,17,16,.97);backdrop-filter:blur(20px);flex-direction:column;padding:24px;gap:18px;border-bottom:1px solid var(--line)}
+  .wrap{padding:0 20px}
+  .nav-links{display:none;position:absolute;top:100%;right:0;left:0;background:rgba(2,0,1,.97);backdrop-filter:blur(20px);flex-direction:column;padding:20px;gap:14px;border-bottom:1px solid var(--line)}
   .nav-links.open{display:flex}
+  .nav-links a{font-size:1.05rem;padding:8px 0}
   .nav-burger{display:flex}
   .nav-cta{display:none}
-  .hero-stats{gap:28px}
-  .work-grid{grid-template-columns:1fr;grid-auto-rows:200px}
+  .nav.scrolled{padding:10px 0}
+  .nav-logo{font-size:1.2rem}
+  .hero{padding:60px 0 36px;min-height:88vh}
+  .hero-tag{font-size:.66rem;letter-spacing:1.5px;margin-bottom:18px}
+  .hero-tag::before,.hero-tag::after{width:24px}
+  .hero h1{font-size:clamp(1.8rem,8vw,2.6rem)}
+  .hero-desc{font-size:.95rem;margin-bottom:24px}
+  .hero-stats{gap:18px;flex-wrap:wrap;justify-content:center}
+  .hero-stat .num{font-size:1.5rem}
+  .hero-stat .label{font-size:.78rem}
+  .scroll-cue{display:none}
+  .about,.services,.pricing,.work,.showreel,.videos,.bts,.process,.faq,.contact{padding:56px 0}
+  .luxury{padding:56px 0}
+  .partners{padding:36px 0}
+  .testi{padding:48px 0}
+  .about-top{grid-template-columns:1fr;gap:18px}
+  .about-stats{grid-template-columns:1fr 1fr;gap:14px;padding-top:28px}
+  .about-stat .v{font-size:1.6rem}
+  .about-stat .t{font-size:.8rem}
+  .about-creds{gap:8px;margin-top:24px}
+  .cred{font-size:.76rem;padding:7px 13px}
+  .cred svg{width:13px;height:13px}
+  .stats-source{font-size:.7rem}
+  .sec-title{font-size:clamp(1.5rem,7vw,2rem)}
+  .sec-head{margin-bottom:32px}
+  .sec-lead{font-size:.9rem}
+  .svc-grid{grid-template-columns:1fr;gap:14px}
+  .svc-card{padding:22px}
+  .svc-ico{width:44px;height:44px;margin-bottom:16px}
+  .svc-card h3{font-size:1.2rem}
+  .svc-card p{font-size:.88rem}
+  .price-grid{grid-template-columns:1fr;gap:14px}
+  .price-card{padding:22px}
+  .price-head{margin-bottom:16px;padding-bottom:14px;gap:12px}
+  .price-head .price-ico{width:40px;height:40px}
+  .price-head h3{font-size:1.1rem}
+  .price-row{padding:9px 8px}
+  .p-name{font-size:.88rem}
+  .p-detail{font-size:.74rem}
+  .p-price{font-size:.92rem}
+  .lux-grid{grid-template-columns:1fr;gap:16px}
+  .lux-card .lux-visual{height:200px}
+  .lux-body{padding:24px 20px}
+  .lux-card h3{font-size:1.35rem}
+  .lux-card>p{font-size:.88rem}
+  .lux-includes li{font-size:.84rem;padding:6px 0}
+  .lux-cta{font-size:.88rem;padding:12px 18px}
+  .work-grid{grid-template-columns:1fr;grid-auto-rows:180px}
   .work-item.tall{grid-row:span 1}
   .work-item.wide{grid-column:span 1}
   .vid-grid,.bts-grid{grid-template-columns:1fr}
-  .testi-card{flex:0 0 300px}
+  .vid-group-head h3{font-size:1.2rem}
+  .vid-body h4{font-size:.95rem}
+  .proc-grid{grid-template-columns:1fr;gap:20px}
+  .proc-step::before{display:none}
+  .proc-step{padding-top:0;padding-right:52px}
+  .proc-step .p-num{width:38px;height:38px;font-size:.88rem;top:0}
+  .proc-step h3{font-size:1.1rem}
+  .proc-step p{font-size:.88rem}
+  .testi-card{flex:0 0 270px}
+  .testi-text{font-size:.9rem}
+  .faq-list{max-width:100%}
+  .faq-item .faq-q{font-size:.92rem;padding:16px 18px}
+  .faq-item.open .faq-a{padding:0 18px 18px}
+  .faq-a p{font-size:.86rem}
+  .contact-grid{grid-template-columns:1fr;gap:20px}
+  .contact-info h3{font-size:1.3rem}
+  .ci-item{padding:14px 0}
+  .contact-form{padding:22px 18px}
+  .field input,.field select,.field textarea{padding:13px 14px;font-size:1rem}
   .form-row{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr}
-  .about-stats{grid-template-columns:1fr 1fr}
-  .about-creds{gap:10px}
-  .cred{font-size:.8rem}
-  .scroll-cue{display:none}
+  .btn{padding:13px 22px;font-size:.92rem}
+  .foot-grid{grid-template-columns:1fr;gap:24px;margin-bottom:32px}
+  .foot-brand .f-logo{font-size:1.6rem}
+  .foot-bottom{flex-direction:column;gap:14px;text-align:center}
+  .foot-social a{width:36px;height:36px}
+  .incl-note{padding:9px 12px}
+  .incl-note .incl-b{font-size:.76rem}
+  .incl-note .incl-t{font-size:.74rem}
 }
 </style>
 </head>
