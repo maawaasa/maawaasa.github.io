@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حاسبة أسعار التصوير العقاري في الرياض | مأوى العقارية</title>
-<meta name="description" content="احسب سعر تصوير عقارك فوراً في الرياض — تصوير فوتوغرافي HDR، فيديو سينمائي، درون 4K وجولات 360°. حدّد نوع العقار وعدد الغرف واحصل على تقدير سعر فوري من مأوى العقارية.">
-<meta name="keywords" content="حاسبة أسعار تصوير عقاري, تسعير تصوير عقار الرياض, أسعار تصوير درون, مأوى العقارية">
+<title>حاسبة أسعار التصوير العقاري في الرياض | مأوى للتصوير العقاري</title>
+<meta name="description" content="احسب سعر تصوير عقارك فوراً في الرياض — تصوير فوتوغرافي HDR، فيديو سينمائي، درون 4K وجولات 360°. حدّد نوع العقار وعدد الغرف واحصل على تقدير سعر فوري من مأوى للتصوير العقاري.">
+<meta name="keywords" content="حاسبة أسعار تصوير عقاري, تسعير تصوير عقار الرياض, أسعار تصوير درون, مأوى للتصوير العقاري">
 <link rel="canonical" href="https://maawaa.sa/calculator.html">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23020001'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23FF3637' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#020001">
-<meta property="og:title" content="حاسبة أسعار التصوير العقاري | مأوى العقارية">
+<meta property="og:title" content="حاسبة أسعار التصوير العقاري | مأوى للتصوير العقاري">
 <meta property="og:description" content="احسب سعر تصوير عقارك في الرياض فوراً حسب نوع العقار وعدد الغرف والخدمات.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,10 +22,10 @@
 {
   "@context":"https://schema.org",
   "@type":"Service",
-  "name":"حاسبة أسعار التصوير العقاري - مأوى العقارية",
+  "name":"حاسبة أسعار التصوير العقاري - مأوى للتصوير العقاري",
   "serviceType":"تصوير عقاري احترافي",
   "areaServed":{"@type":"City","name":"الرياض"},
-  "provider":{"@type":"LocalBusiness","name":"مأوى العقارية","telephone":"+966531646152","areaServed":"الرياض"},
+  "provider":{"@type":"LocalBusiness","name":"مأوى للتصوير العقاري","telephone":"+966531646152","areaServed":"الرياض"},
   "offers":{"@type":"AggregateOffer","priceCurrency":"SAR","lowPrice":"700","highPrice":"5000","offerCount":"5"}
 }
 </script>
@@ -168,11 +168,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .qbar button.primary{background:var(--red);border-color:var(--red);color:#fff}
 .qbar button.primary:hover{background:#C44A60;color:#fff}
 .qdoc{max-width:794px;margin:0 auto;background:#FBFAF6;color:#181412;padding:44px 48px;font-family:var(--f);position:relative;border-radius:8px;overflow:hidden;line-height:1.6}
-.qdoc .wm{position:absolute;font-size:18rem;font-weight:800;color:rgba(164,36,59,.04);top:30%;left:50%;transform:translate(-50%,-50%);z-index:0;letter-spacing:-1rem;pointer-events:none}
+.qdoc .wm{position:absolute;width:360px;max-width:62%;height:auto;top:48%;left:50%;transform:translate(-50%,-50%);z-index:0;opacity:.05;pointer-events:none}
+.qdoc .wm img{width:100%;height:auto;display:block}
 .qdoc>*{position:relative;z-index:1}
 .qdoc header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #A4243B;padding-bottom:18px;margin-bottom:24px}
-.qdoc .brand{font-size:1.8rem;font-weight:800;letter-spacing:4px;color:#181412}
-.qdoc .brand b{color:#A4243B}
+.qdoc .brand{display:flex;align-items:center;gap:10px}
 .qdoc .brand small{display:block;font-size:.74rem;font-weight:500;color:#6b6661;letter-spacing:1px;margin-top:2px}
 .qdoc .qmeta{text-align:left}
 .qdoc .qt{font-size:1.3rem;font-weight:700;color:#A4243B}
@@ -245,7 +245,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 <div class="topbar">
   <div class="wrap">
-    <a href="index.html" class="logo">MA<b>WA</b></a>
+    <a href="index.html" class="logo"><img src="assets/logo-mark.svg" alt="مأوى" style="height:28px;width:auto"></a>
     <a href="index.html" class="back">→ العودة للموقع</a>
   </div>
 </div>
@@ -341,8 +341,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <div class="field"><input type="tel" id="custPhone" placeholder="الجوال *" autocomplete="tel" style="direction:ltr;text-align:right"></div>
         <div class="field"><input type="email" id="custEmail" placeholder="بريد (اختياري)" autocomplete="email" style="direction:ltr;text-align:right"></div>
         <div class="field full"><input type="text" id="custCompany" placeholder="اسم الشركة/الجهة (اختياري — يظهر في عرض السعر)"></div>
-        <div class="field"><input type="number" id="custDiscount" min="0" max="100" placeholder="خصم إضافي % (اختياري للموظف)"></div>
-        <div class="field"><input type="text" id="custNotes" placeholder="ملاحظة تظهر في العرض (اختياري)"></div>
+        <div class="field full"><input type="text" id="custNotes" placeholder="ملاحظة تظهر في العرض (اختياري)"></div>
       </div>
 
       <button class="btn btn-red" id="waBtn"><span id="waIco"></span> اطلب هذا العرض عبر واتساب</button>
@@ -354,7 +353,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     </div>
   </div>
 
-  <p class="disclaimer">© 2026 مأوى العقارية — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.</p>
+  <p class="disclaimer">© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -362,7 +361,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 <!-- مستند عرض السعر الرسمي -->
 <div class="qoverlay" id="quoteOverlay">
   <div class="qbar">
-    <span>عرض سعر رسمي — مأوى العقارية</span>
+    <span>عرض سعر رسمي — مأوى للتصوير العقاري</span>
     <div class="acts">
       <button class="primary" id="pdfBtn">⬇ تحميل PDF</button>
       <button id="printBtn">🖨 طباعة</button>
@@ -370,9 +369,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     </div>
   </div>
   <div class="qdoc" id="quoteDoc">
-    <div class="wm">MAWA</div>
+    <div class="wm"><img src="assets/logo-mark-dark.svg" alt=""></div>
     <header>
-      <div class="brand">MA<b>WA</b><small>مأوى العقارية · تصوير عقاري</small></div>
+      <div class="brand"><img src="assets/logo-mark-dark.svg" alt="مأوى" style="height:30px;width:auto;vertical-align:middle;margin-left:8px"><small>مأوى للتصوير العقاري · تصوير عقاري</small></div>
       <div class="qmeta">
         <div class="qt">عرض سعر</div>
         <div class="qn">رقم: <b id="qNum">—</b></div>
@@ -429,9 +428,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     </div>
 
     <footer>
-      <div class="sign"><div class="line"></div><small>توقيع/ختم مأوى العقارية</small></div>
+      <div class="sign"><div class="line"></div><small>توقيع/ختم مأوى للتصوير العقاري</small></div>
       <div class="contact">
-        <b>مأوى العقارية</b><br>
+        <b>مأوى للتصوير العقاري</b><br>
         +966 53 164 6152 · واتساب<br>
         info@maawaa.sa<br>
         الرياض، المملكة العربية السعودية
@@ -497,7 +496,7 @@ const ICONS={
 };
 
 /* ===== الحالة ===== */
-const state={ type:'apartment', rooms:2, units:1, sameLoc:true, sel:new Set(['photo']), pkg:'basic', night:false, social:false, rush:false, logo:false, sign:false, pages:0, name:'', phone:'', email:'', company:'', customDiscount:0, qnote:'', isCustom:false };
+const state={ type:'apartment', rooms:2, units:1, sameLoc:true, sel:new Set(['photo']), pkg:'basic', night:false, social:false, rush:false, logo:false, sign:false, pages:0, name:'', phone:'', email:'', company:'', qnote:'', isCustom:false };
 const $=id=>document.getElementById(id);
 const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
       roomsUnit=$('roomsUnit'), roomsNA=$('roomsNA'), roomsTitle=$('roomsTitle'),
@@ -668,7 +667,7 @@ $('sameLoc').onchange=e=>{state.sameLoc=e.target.checked; recalc(); syncUrl();};
 ['custName','custPhone','custEmail'].forEach(id=>$(id).addEventListener('input',e=>{state[id.replace('cust','').toLowerCase()]=e.target.value;}));
 $('custCompany').addEventListener('input',e=>state.company=e.target.value);
 $('custNotes').addEventListener('input',e=>state.qnote=e.target.value);
-$('custDiscount').addEventListener('input',e=>state.customDiscount=Math.max(0,Math.min(100,+e.target.value||0)));
+
 
 /* ===== رابط مشاركة التسعيرة ===== */
 function syncUrl(){
@@ -744,12 +743,12 @@ $('waBtn').onclick=async()=>{
   if(state.isCustom){
     const svcs=[...state.sel].filter(k=>!dis.includes(k)).map(k=>SERVICES[k].label).join('، ');
     const meta=`الاسم: ${state.name}%0Aالجوال: ${state.phone}${state.company?('%0Aالجهة: '+state.company):''}%0Aنوع المشروع: ${t.label}`;
-    const msg=`مرحباً مأوى العقارية، أرغب بعرض سعر مخصّص (من الحاسبة):%0A%0A${meta}%0Aالخدمات: ${svcs}%0A%0Aالمشروع من النوع الذي يتطلب معاينة وتسعيراً مخصّصاً. أرجو التواصل لتحديد الموعد والتفاصيل.`;
+    const msg=`مرحباً مأوى للتصوير العقاري، أرغب بعرض سعر مخصّص (من الحاسبة):%0A%0A${meta}%0Aالخدمات: ${svcs}%0A%0Aالمشروع من النوع الذي يتطلب معاينة وتسعيراً مخصّصاً. أرجو التواصل لتحديد الموعد والتفاصيل.`;
     window.open(`https://wa.me/966531646152?text=${msg}`,'_blank');
   }else{
     const lines=[...linesEl.querySelectorAll('.line:not(.empty):not(.disc)')].map(l=>'• '+l.querySelector('.l').childNodes[0].textContent.trim()+': '+l.querySelector('.v').textContent);
     const meta=`الاسم: ${state.name}%0Aالجوال: ${state.phone}${state.email?('%0Aالبريد: '+state.email):''}${state.company?('%0Aالجهة: '+state.company):''}%0Aنوع العقار: ${t.label}${TYPES[state.type].rooms[1]!==0?(' | عدد '+t.unit+': '+state.rooms):''}${(state.type==='apartment'||state.type==='villa')&&state.units>1?(' | عدد الوحدات: '+state.units+(state.sameLoc?' (نفس الموقع)':' (مواقع مختلفة)')):''}%0Aالباقة: ${state.pkg==='pro'?'احترافية':'أساسية'}`;
-    const msg=`مرحباً مأوى العقارية، أرغب بطلب عرض سعر (من الحاسبة):%0A%0A${meta}%0A%0A${lines.join('%0A')}%0A%0Aالإجمالي التقديري: ${fmt(lastTotal)} ر.س%0A%0Aأرجو تأكيد التفاصيل والموعد.`;
+    const msg=`مرحباً مأوى للتصوير العقاري، أرغب بطلب عرض سعر (من الحاسبة):%0A%0A${meta}%0A%0A${lines.join('%0A')}%0A%0Aالإجمالي التقديري: ${fmt(lastTotal)} ر.س%0A%0Aأرجو تأكيد التفاصيل والموعد.`;
     window.open(`https://wa.me/966531646152?text=${msg}`,'_blank');
   }
   btn.innerHTML=orig; btn.disabled=false; toast('✓ تم إرسال طلبك وحفظه');
@@ -781,11 +780,8 @@ function buildQuoteData(){
   if(isMulti){ multi=Math.round(perUnitScaled*multiDiscRate(state.units,state.sameLoc)); offers.push(`خصم الوحدات المتعددة (${Math.round(multiDiscRate(state.units,state.sameLoc)*100)}٪ — ${state.sameLoc?'نفس الموقع':'مواقع مختلفة'}): −${fmt(multi)} ر.س`); }
   else if(mainCount>=3){ bundle=Math.round(mainSum*0.10); offers.push(`خصم الباقة المجمّعة (3 خدمات تصوير أو أكثر): −${fmt(bundle)} ر.س`); }
   const afterDisc=gross-multi-bundle;
-  let customD=0;
-  if(state.customDiscount>0){ customD=Math.round(afterDisc*state.customDiscount/100); offers.push(`خصم إضافي ${state.customDiscount}%: −${fmt(customD)} ر.س`); }
-  const afterAll=afterDisc-customD;
-  const rush=state.rush?Math.round(afterAll*0.25):0;
-  return {rows,gross,bundle,multi,custom:customD,rush,net:afterAll+rush,offers,totalDisc:multi+bundle+customD,isCustom:false};
+  const rush=state.rush?Math.round(afterDisc*0.25):0;
+  return {rows,gross,bundle,multi,rush,net:afterDisc+rush,offers,totalDisc:multi+bundle,isCustom:false};
 }
 function openQuote(){
   const dis=DISABLED[state.type]||[]; const d=buildQuoteData();

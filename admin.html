@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مأوى العقارية | نظام إدارة العقود</title>
+    <title>مأوى للتصوير العقاري | نظام إدارة العقود</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23A4243B'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='50' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
     <meta name="theme-color" content="#A4243B">
@@ -192,6 +192,47 @@
             gap: 20px;
             margin-bottom: 50px;
         }
+
+        .settings-card {
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px;
+        }
+
+        .settings-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .settings-card-head h3 { margin: 0; font-size: 1.1rem; color: var(--gold-dark); }
+
+        .settings-hint { font-size: 0.8rem; color: var(--text-dim); }
+
+        .settings-textarea {
+            width: 100%;
+            min-height: 320px;
+            resize: vertical;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            line-height: 2;
+            color: var(--text-mid);
+            background: #fbfaf8;
+            box-sizing: border-box;
+        }
+
+        .settings-textarea:focus { outline: none; border-color: var(--gold); }
+
+        .settings-actions { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+
+        .settings-msg { margin-top: 14px; font-size: 0.9rem; color: var(--gold-dark); }
 
         .stat-card {
             background: #fff;
@@ -1341,12 +1382,13 @@
     <div class="grid-bg"></div>
 
     <nav>
-        <div class="logo">MAWA</div>
+        <div class="logo"><img src="assets/logo-mark.svg" alt="مأوى" style="height:28px;width:auto"></div>
         <div class="nav-sep"></div>
         <span class="nav-page-title">نظام العقود</span>
         <ul class="nav-links">
             <li><a onclick="showDashboard()">الرئيسية</a></li>
             <li><a onclick="showNewContract()">عقد جديد</a></li>
+            <li><a onclick="showSettings()">الشروط</a></li>
         </ul>
         <button class="nav-cta" onclick="showNewContract()">+ عقد جديد</button>
     </nav>
@@ -1361,7 +1403,7 @@
                 <span>&#128196;</span>
                 نظام إدارة العقود
             </div>
-            <h1>عقود <em>مأوى العقارية</em></h1>
+            <h1>عقود <em>مأوى للتصوير العقاري</em></h1>
             <p>أنشئ وأدِر عقود خدمات التصوير العقاري بسهولة واحترافية</p>
         </div>
 
@@ -1701,8 +1743,8 @@
             <div class="contract-document" id="contractDocument">
                 <div class="contract-doc-header">
                     <div class="doc-brand">
-                        <div class="doc-logo">MAWA</div>
-                        <div class="doc-brand-sub">مأوى العقارية<br>لتصوير العقارات</div>
+                        <div class="doc-logo"><img src="assets/logo-mark-dark.svg" alt="مأوى" style="height:34px;width:auto"></div>
+                        <div class="doc-brand-sub">مأوى للتصوير العقاري</div>
                     </div>
                     <div class="doc-contract-num">
                         <div class="doc-num-label">رقم العقد</div>
@@ -1719,7 +1761,7 @@
                     <div class="doc-parties">
                         <div class="doc-party">
                             <div class="party-role">الطرف الأول (مقدم الخدمة)</div>
-                            <div class="party-info-row"><span class="pi-label">الاسم</span><span class="pi-value">مأوى العقارية</span></div>
+                            <div class="party-info-row"><span class="pi-label">الاسم</span><span class="pi-value">مأوى للتصوير العقاري</span></div>
                             <div class="party-info-row"><span class="pi-label">الجوال</span><span class="pi-value" dir="ltr">0531646152</span></div>
                             <div class="party-info-row"><span class="pi-label">النشاط</span><span class="pi-value">تصوير عقاري احترافي</span></div>
                         </div>
@@ -1783,23 +1825,12 @@
 
                     <div class="doc-section">
                         <div class="doc-section-title"><span class="ds-num" id="termsNum">5</span> الشروط والأحكام</div>
-                        <div class="doc-terms">
-                            <div class="term-item">يقر الطرفان بأهليتهما الكاملة للتعاقد والالتزام بجميع بنود هذا العقد.</div>
-                            <div class="term-item">يلتزم الطرف الأول (مأوى العقارية) بتقديم خدمات التصوير العقاري بالمواصفات المتفق عليها وبالجودة الاحترافية المعتادة.</div>
-                            <div class="term-item">يلتزم الطرف الثاني (العميل) بتوفير الموقع في حالة جاهزة للتصوير في الموعد المحدد، بما في ذلك الترتيب والتنظيف.</div>
-                            <div class="term-item">في حال تأخر العميل عن الموعد المحدد بأكثر من ساعة دون إبلاغ مسبق، يحق لمأوى إعادة جدولة التصوير.</div>
-                            <div class="term-item">يتم تسليم المحتوى النهائي خلال المدة المتفق عليها من تاريخ التصوير، وترسل عبر البريد الإلكتروني أو الرقم المذكور.</div>
-                            <div class="term-item">جميع حقوق الملكية الفكرية للمحتوى المصوّر تعود لمأوى العقارية حتى سداد المبلغ كاملاً، وبعدها تنتقل للعميل.</div>
-                            <div class="term-item">لا يجوز استخدام المحتوى المصوّر لأغراض غير مشروعة أو مخالفة للأنظمة المعمول بها.</div>
-                            <div class="term-item">في حال إلغاء العقد من قبل العميل قبل 24 ساعة من الموعد، يُستردد 50% من المبلغ المدفوع. بعد ذلك لا يُستردد أي مبلغ.</div>
-                            <div class="term-item">يحق لمأوى استخدام صور وفيديوهات العقار كعينات من أعمالها التسويقية ما لم يتفق الطرفان على خلاف ذلك.</div>
-                            <div class="term-item">أي نزاع ينشأ عن هذا العقد يحال للجهات المختصة في المملكة العربية السعودية.</div>
-                        </div>
+                        <div class="doc-terms" id="viewTermsBody"></div>
                     </div>
 
                     <div class="doc-signatures">
                         <div class="doc-sig-box">
-                            <div class="sig-role">مقدم الخدمة — مأوى العقارية</div>
+                            <div class="sig-role">مقدم الخدمة — مأوى للتصوير العقاري</div>
                             <div class="doc-stamp">ختم<br>مأوى<br>العقارية</div>
                             <div class="sig-line">التوقيع: .............................</div>
                         </div>
@@ -1811,7 +1842,7 @@
                     </div>
 
                     <div class="doc-footer">
-                        <span>مأوى العقارية — تصوير عقاري احترافي</span>
+                        <span>مأوى للتصوير العقاري — تصوير عقاري احترافي</span>
                         <span>جميع الحقوق محفوظة &copy; <span id="viewYear">2026</span></span>
                     </div>
                 </div>
@@ -1819,11 +1850,39 @@
         </div>
         <!-- END VIEW -->
 
+        <!-- ===== SETTINGS (الشروط) ===== -->
+        <div class="dashboard-page hidden" id="settingsPage">
+
+            <div class="page-header">
+                <div class="page-tag">
+                    <span>&#128221;</span>
+                    إعدادات العقد
+                </div>
+                <h1>الشروط <em>والأحكام</em></h1>
+                <p>عدّل بنود الشروط التي تظهر تلقائياً في عقودك وملفات PDF</p>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-card-head">
+                    <h3>&#128196; بنود الشروط والأحكام</h3>
+                    <span class="settings-hint">كل سطر = بند مستقل (مُرقّم تلقائياً)</span>
+                </div>
+                <textarea id="termsEditor" rows="14" class="settings-textarea" placeholder="اكتب كل بند في سطر منفصل..."></textarea>
+                <div class="settings-actions">
+                    <button class="btn btn-gold" onclick="saveTerms()">&#128190; حفظ الشروط</button>
+                    <button class="btn btn-ghost" onclick="loadTermsIntoEditor()">&#128260; استعادة الافتراضي</button>
+                </div>
+                <div id="termsSaveMsg" class="settings-msg"></div>
+            </div>
+
+        </div>
+        <!-- END SETTINGS -->
+
     </div>
 
     <footer>
-        <div class="f-logo">MAWA</div>
-        <p>مأوى العقارية &mdash; نظام إدارة العقود &copy; 2026</p>
+        <div class="f-logo"><img src="assets/logo-mark.svg" alt="مأوى" style="height:30px;width:auto"></div>
+        <p>مأوى للتصوير العقاري &mdash; نظام إدارة العقود &copy; 2026</p>
     </footer>
 
     <script>
@@ -1831,6 +1890,20 @@
         let editingId = null;
         let currentViewId = null;
         const selectedServices = {};
+
+        const DEFAULT_TERMS = [
+            'يقر الطرفان بأهليتهما الكاملة للتعاقد والالتزام بجميع بنود هذا العقد.',
+            'يلتزم الطرف الأول (مأوى للتصوير العقاري) بتقديم خدمات التصوير العقاري بالمواصفات المتفق عليها وبالجودة الاحترافية المعتادة.',
+            'يلتزم الطرف الثاني (العميل) بتوفير الموقع في حالة جاهزة للتصوير في الموعد المحدد، بما في ذلك الترتيب والتنظيف.',
+            'في حال تأخر العميل عن الموعد المحدد بأكثر من ساعة دون إبلاغ مسبق، يحق لمأوى إعادة جدولة التصوير.',
+            'يتم تسليم المحتوى النهائي خلال المدة المتفق عليها من تاريخ التصوير، وترسل عبر البريد الإلكتروني أو الرقم المذكور.',
+            'جميع حقوق الملكية الفكرية للمحتوى المصوّر تعود لمأوى للتصوير العقاري حتى سداد المبلغ كاملاً، وبعدها تنتقل للعميل.',
+            'لا يجوز استخدام المحتوى المصوّر لأغراض غير مشروعة أو مخالفة للأنظمة المعمول بها.',
+            'في حال إلغاء العقد من قبل العميل قبل 24 ساعة من الموعد، يُسترد 50% من المبلغ المدفوع. بعد ذلك لا يُسترد أي مبلغ.',
+            'يحق لمأوى استخدام صور وفيديوهات العقار كعينات من أعمالها التسويقية ما لم يتفق الطرفان على خلاف ذلك.',
+            'أي نزاع ينشأ عن هذا العقد يحال للجهات المختصة في المملكة العربية السعودية.'
+        ];
+        let currentTerms = [];
 
         function sb() { return getSupabase(); }
 
@@ -1972,6 +2045,7 @@
             document.getElementById('dashboardPage').classList.remove('hidden');
             document.getElementById('formPage').classList.remove('active');
             document.getElementById('viewPage').classList.remove('active');
+            document.getElementById('settingsPage').classList.add('hidden');
             resetForm();
             updateStats();
             renderContracts();
@@ -1979,6 +2053,15 @@
         }
 
         function showDashboard() { goToDashboard(); }
+
+        function showSettings() {
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('formPage').classList.remove('active');
+            document.getElementById('viewPage').classList.remove('active');
+            document.getElementById('settingsPage').classList.remove('hidden');
+            loadTermsIntoEditor();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function showNewContract() {
             editingId = null;
@@ -2091,6 +2174,25 @@
             document.getElementById('contractSummary').innerHTML = '<div class="summary-section-title">&#128100; بيانات العميل</div><div class="summary-row"><span class="s-label">الاسم</span><span class="s-value">' + document.getElementById('clientName').value + '</span></div><div class="summary-row"><span class="s-label">الجوال</span><span class="s-value" dir="ltr">' + document.getElementById('clientPhone').value + '</span></div>' + (document.getElementById('clientEmail').value ? '<div class="summary-row"><span class="s-label">البريد</span><span class="s-value" dir="ltr">' + document.getElementById('clientEmail').value + '</span></div>' : '') + '<div class="summary-section-title">&#127968; بيانات العقار</div><div class="summary-row"><span class="s-label">النوع</span><span class="s-value">' + getPropertyTypeLabel(document.getElementById('propertyType').value) + '</span></div><div class="summary-row"><span class="s-label">الموقع</span><span class="s-value">' + document.getElementById('propertyLocation').value + '</span></div>' + (document.getElementById('propertyArea').value ? '<div class="summary-row"><span class="s-label">المساحة</span><span class="s-value">' + document.getElementById('propertyArea').value + '</span></div>' : '') + '<div class="summary-section-title">&#128247; الخدمات</div>' + svcList + '<div class="summary-section-title">&#128176; التسعير</div><div class="summary-row"><span class="s-label">إجمالي المبلغ</span><span class="s-value" style="color:var(--gold-dark);font-size:1.1rem;">' + parseFloat(price).toLocaleString('ar-SA') + ' ر.س</span></div><div class="summary-row"><span class="s-label">العربون (25%)</span><span class="s-value" style="color:var(--danger);">' + (parseFloat(price) * 0.25).toLocaleString('ar-SA') + ' ر.س</span></div><div class="summary-row"><span class="s-label">طريقة الدفع</span><span class="s-value">' + getPaymentLabel(document.getElementById('paymentMethod').value) + '</span></div>' + (advance ? '<div class="summary-row"><span class="s-label">المقدم</span><span class="s-value">' + parseFloat(advance).toLocaleString('ar-SA') + ' ر.س</span></div><div class="summary-row"><span class="s-label">المتبقي</span><span class="s-value">' + remaining.toLocaleString('ar-SA') + ' ر.س</span></div>' : '') + (document.getElementById('contractNotes').value ? '<div class="summary-section-title">&#128221; ملاحظات</div><div class="summary-row"><span class="s-value">' + document.getElementById('contractNotes').value + '</span></div>' : '');
         }
 
+        async function generateContractNumber(sbClient) {
+            const year = new Date().getFullYear();
+            const prefix = 'MWA-' + year + '-';
+            let maxNum = 0;
+            try {
+                const { data, error } = await sbClient
+                    .from('contracts')
+                    .select('contract_number')
+                    .like('contract_number', prefix + '%')
+                    .order('contract_number', { ascending: false })
+                    .limit(1);
+                if (!error && data && data[0]) {
+                    const m = (data[0].contract_number || '').match(/(\d+)\s*$/);
+                    if (m) maxNum = parseInt(m[1], 10) || 0;
+                }
+            } catch (e) { console.warn('generateContractNumber error:', e); }
+            return prefix + String(maxNum + 1).padStart(4, '0');
+        }
+
         async function saveContract() {
             try {
                 const sbClient = sb();
@@ -2145,6 +2247,7 @@
 
                     const { data: contractData, error: contractError } = await sbClient.from('contracts').insert([{
                         client_id: clientData.id,
+                        contract_number: await generateContractNumber(sbClient),
                         service_type: svcList,
                         total_amount: parseFloat(document.getElementById('totalPrice').value) || 0,
                         delivery_days: 10,
@@ -2242,7 +2345,11 @@
 
                 const notesSection = document.getElementById('viewNotesSection');
                 notesSection.style.display = 'none';
-                document.getElementById('termsNum').textContent = c.notes ? '5' : '4';
+                if (c.notes) {
+                    notesSection.style.display = 'block';
+                    document.getElementById('viewNotes').textContent = c.notes;
+                }
+                renderTermsInView();
 
                 document.getElementById('dashboardPage').classList.add('hidden');
                 document.getElementById('formPage').classList.remove('active');
@@ -2348,9 +2455,63 @@
             });
         }
 
+        function loadTermsIntoEditor() {
+            const el = document.getElementById('termsEditor');
+            if (el) el.value = currentTerms.length > 0 ? currentTerms.join('\n') : DEFAULT_TERMS.join('\n');
+        }
+
+        async function loadTerms() {
+            currentTerms = DEFAULT_TERMS.slice();
+            try {
+                const cached = localStorage.getItem('mawa_terms');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    if (Array.isArray(parsed) && parsed.length > 0) currentTerms = parsed;
+                }
+                const { data, error } = await sb().from('terms').select('content').order('sort_order', { ascending: true });
+                if (!error && data && data.length > 0) {
+                    currentTerms = data.map(t => t.content).filter(Boolean);
+                    localStorage.setItem('mawa_terms', JSON.stringify(currentTerms));
+                }
+            } catch (e) { console.error('loadTerms error:', e); }
+        }
+
+        function renderTermsInView() {
+            const container = document.getElementById('viewTermsBody');
+            if (!container) return;
+            const terms = currentTerms.length > 0 ? currentTerms : DEFAULT_TERMS;
+            container.innerHTML = terms.map(t => '<div class="term-item">' + t.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</div>').join('');
+            const termsNumEl = document.getElementById('termsNum');
+            if (termsNumEl) termsNumEl.textContent = document.getElementById('viewNotesSection') && document.getElementById('viewNotesSection').style.display !== 'none' ? '5' : '4';
+        }
+
+        async function saveTerms() {
+            const el = document.getElementById('termsEditor');
+            const msg = document.getElementById('termsSaveMsg');
+            const raw = el.value.split('\n').map(s => s.trim()).filter(Boolean);
+            if (raw.length === 0) { if (msg) msg.textContent = '⚠️ اكتب بند واحد على الأقل قبل الحفظ'; return; }
+            currentTerms = raw.slice();
+            localStorage.setItem('mawa_terms', JSON.stringify(currentTerms));
+            try {
+                const sbc = sb();
+                if (sbc) {
+                    await sbc.from('terms').delete().gte('id', 0);
+                    const rows = currentTerms.map((content, i) => ({ content, sort_order: i + 1 }));
+                    const { error } = await sbc.from('terms').insert(rows);
+                    if (error) throw error;
+                }
+            } catch (e) {
+                console.warn('حفظ الشروط في القاعدة لم ينجح، حُفظت محلياً:', e);
+            }
+            if (msg) {
+                msg.textContent = '✅ تم حفظ ' + currentTerms.length + ' بنداً — ستظهر في العقود الجديدة فوراً';
+                setTimeout(function() { msg.textContent = ''; }, 4000);
+            }
+        }
+
         function shareClientForm() {
             const baseURL = 'https://maawaa.sa/form.html';
-            const message = 'مرحبًا! يُسرّنا أن نقدم لك نموذج طلب خدمة التصوير العقاري عبر الرابط التالي:\n\n' + baseURL + '\n\nمأوى العقارية';
+            const message = 'مرحبًا! يُسرّنا أن نقدم لك نموذج طلب خدمة التصوير العقاري عبر الرابط التالي:\n\n' + baseURL + '\n\nمأوى للتصوير العقاري';
             const whatsappURL = 'https://wa.me/?text=' + encodeURIComponent(message);
             window.open(whatsappURL, '_blank');
         }
@@ -2359,6 +2520,9 @@
             alert('سيتم دعم التصدير بعد ربط قاعدة البيانات');
         }
 
+        loadTerms().then(function() {
+            renderTermsInView();
+        });
         updateStats();
         renderContracts();
         renderNewRequests();
