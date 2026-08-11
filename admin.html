@@ -1331,13 +1331,18 @@
         }
 
         @media print {
+            @page { size: A4; margin: 12mm; }
             body { background: #fff; }
             body::before, .grid-bg, nav, .whatsapp-float, footer,
             .view-actions-bar, .view-page > .form-back { display: none !important; }
             .app-container { padding: 0 !important; max-width: 100% !important; }
-            .contract-document { border: none; box-shadow: none; border-radius: 0; }
+            .contract-document { border: none; box-shadow: none; border-radius: 0; max-width: 190mm; margin: 0 auto; min-height: 271mm; }
             .contract-doc-body { padding: 20px 30px; }
             .contract-doc-header { padding: 20px 30px; }
+            .contract-doc-body > * { page-break-inside: avoid; }
+            .contract-doc-body table { page-break-inside: auto; }
+            .contract-doc-body tr { page-break-inside: avoid; }
+            .doc-signatures { page-break-inside: avoid; }
             .dashboard-page, .form-page { display: none !important; }
             .view-page { display: block !important; }
         }
@@ -2441,7 +2446,7 @@
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
             const btn = document.querySelector('.view-actions-bar');

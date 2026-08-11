@@ -230,12 +230,16 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .qbar .tmpl button{background:transparent;border:none;color:var(--gray);font-family:var(--f);font-size:.8rem;padding:6px 11px;border-radius:6px;cursor:pointer;transition:.2s}
 .qbar .tmpl button.active{background:var(--red);color:#fff}
 @media print{
-  body{background:#fff}
-  .topbar,.head,.calc,.disclaimer,#toast{display:none!important}
-  .qoverlay{position:static;background:#fff;display:block!important;padding:0;overflow:visible}
-  .qbar{display:none!important}
-  .qdoc{box-shadow:none;margin:0;max-width:100%;border-radius:0}
-}
+   @page{size:A4;margin:12mm}
+   body{background:#fff}
+   .topbar,.head,.calc,.disclaimer,#toast{display:none!important}
+   .qoverlay{position:static;background:#fff;display:block!important;padding:0;overflow:visible}
+   .qbar{display:none!important}
+   .qdoc{box-shadow:none;margin:0 auto;max-width:190mm;min-height:271mm;border-radius:0;padding:32px 36px}
+   .qdoc>*{page-break-inside:avoid}
+   .qdoc table{page-break-inside:auto}
+   .qdoc tr{page-break-inside:avoid}
+ }
 @media(max-width:560px){.qdoc{padding:28px 20px}.qdoc .parties{grid-template-columns:1fr}.qdoc .totals-box{grid-template-columns:1fr}}
 @media(max-width:900px){.calc{grid-template-columns:1fr}.summary{position:static}}
 @media(max-width:520px){.types{grid-template-columns:repeat(2,1fr)}.fields{grid-template-columns:1fr}.fields .field.full{grid-column:span 1}.pkg-compare{grid-template-columns:1fr}}
@@ -818,7 +822,7 @@ $('closeQuote').onclick=()=>{$('quoteOverlay').classList.remove('open'); documen
 $('printBtn').onclick=()=>window.print();
 $('pdfBtn').onclick=()=>{
   toast('جاري تجهيز ملف PDF...');
-  const opt={margin:0,filename:'عرض-سعر-مأوى-'+$('qNum').textContent+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
+  const opt={margin:[10,10,10,10],filename:'عرض-سعر-مأوى-'+$('qNum').textContent+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['avoid-all','css','legacy']}};
   html2pdf().set(opt).from($('quoteDoc')).save().then(()=>toast('✓ تم تجهيز ملف PDF')).catch(()=>toast('تعذّر إنشاء الملف'));
 };
 
