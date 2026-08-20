@@ -1380,9 +1380,95 @@
             .step-dot .dot-label { font-size: 0.65rem; }
             .form-card { padding: 25px 20px; }
         }
+
+        /* ===== LOGIN ===== */
+        .login-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: radial-gradient(ellipse at center, #0a0a0a, #000);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .login-overlay.hidden { display: none; }
+        .login-card {
+            background: rgba(20,20,20,.95); backdrop-filter: blur(20px);
+            border: 1px solid rgba(164,36,59,.3); border-radius: 20px;
+            padding: 44px 38px; max-width: 400px; width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,.5);
+        }
+        .login-card .login-logo {
+            text-align: center; margin-bottom: 28px;
+        }
+        .login-card .login-logo img { height: 48px; }
+        .login-card h2 {
+            text-align: center; color: #fff; font-size: 1.4rem;
+            margin-bottom: 6px; font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+        .login-card .login-sub {
+            text-align: center; color: var(--text-dim);
+            font-size: .85rem; margin-bottom: 28px;
+        }
+        .login-card .login-field {
+            margin-bottom: 16px;
+        }
+        .login-card .login-field label {
+            display: block; font-size: .8rem; color: var(--text-mid);
+            margin-bottom: 6px;
+        }
+        .login-card .login-field input {
+            width: 100%; box-sizing: border-box;
+            background: rgba(255,255,255,.05); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 14px 16px; color: #fff;
+            font-size: .95rem; font-family: inherit;
+            transition: border-color .2s;
+        }
+        .login-card .login-field input:focus {
+            outline: none; border-color: var(--gold);
+        }
+        .login-card .login-btn {
+            width: 100%; box-sizing: border-box;
+            background: var(--gold); color: #fff; border: none;
+            border-radius: 12px; padding: 14px; font-size: 1rem;
+            font-weight: 700; cursor: pointer; transition: all .2s;
+            font-family: inherit; margin-top: 8px;
+        }
+        .login-card .login-btn:hover { background: #C44A60; }
+        .login-card .login-btn:disabled { opacity: .6; cursor: wait; }
+        .login-card .login-error {
+            background: rgba(220,38,38,.12); border: 1px solid rgba(220,38,38,.3);
+            color: #f87171; border-radius: 10px; padding: 10px 14px;
+            font-size: .82rem; margin-bottom: 16px; display: none;
+        }
+        .login-card .login-error.show { display: block; }
+        .nav-logout {
+            font-size: .85rem; color: var(--text-mid); cursor: pointer;
+            transition: color .2s; padding: 6px 12px; border-radius: 8px;
+        }
+        .nav-logout:hover { color: #f87171; }
+        .nav-user {
+            font-size: .82rem; color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== LOGIN OVERLAY ===== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card">
+            <div class="login-logo"><img src="assets/logo-mark.svg" alt="مأوى"></div>
+            <h2>نظام إدارة مأوى</h2>
+            <p class="login-sub">سجّل دخولك للوصول إلى لوحة التحكم</p>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-field">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="loginEmail" placeholder="partner@maawaa.sa" autocomplete="email" style="direction:ltr;text-align:right">
+            </div>
+            <div class="login-field">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" style="direction:ltr;text-align:right">
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
+        </div>
+    </div>
 
     <div class="grid-bg"></div>
 
@@ -1395,7 +1481,8 @@
             <li><a onclick="showNewContract()">عقد جديد</a></li>
             <li><a onclick="showSettings()">الشروط</a></li>
         </ul>
-        <button class="nav-cta" onclick="showNewContract()">+ عقد جديد</button>
+        <span class="nav-user" id="navUser"></span>
+        <a class="nav-logout" onclick="handleLogout()">خروج</a>
     </nav>
 
     <div class="app-container" id="app">
@@ -1891,6 +1978,86 @@
     </footer>
 
     <script>
+        /* ===== AUTH ===== */
+        let currentUser = null;
+
+        async function checkAuth() {
+            const sbc = getSupabase();
+            if (!sbc) return false;
+            const { data: { session } } = await sbc.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                showApp();
+                return true;
+            }
+            showLogin();
+            return false;
+        }
+
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.querySelector('nav').style.display = 'none';
+            document.getElementById('app').style.display = 'none';
+        }
+
+        function showApp() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.querySelector('nav').style.display = '';
+            document.getElementById('app').style.display = '';
+            const email = currentUser?.email || '';
+            const name = email.split('@')[0];
+            document.getElementById('navUser').textContent = name;
+        }
+
+        async function handleLogin() {
+            const btn = document.getElementById('loginBtn');
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errEl = document.getElementById('loginError');
+            errEl.classList.remove('show');
+
+            if (!email || !password) {
+                errEl.textContent = 'أدخل البريد وكلمة المرور';
+                errEl.classList.add('show');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'جاري الدخول...';
+
+            try {
+                const sbc = getSupabase();
+                const { data, error } = await sbc.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                currentUser = data.user;
+                showApp();
+                updateStats();
+                renderContracts();
+                renderNewRequests();
+                loadTerms();
+            } catch (err) {
+                errEl.textContent = 'خطأ في الدخول: ' + (err.message || 'تحقق من بياناتك');
+                errEl.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'تسجيل الدخول';
+            }
+        }
+
+        async function handleLogout() {
+            const sbc = getSupabase();
+            if (sbc) await sbc.auth.signOut();
+            currentUser = null;
+            showLogin();
+            document.getElementById('loginPassword').value = '';
+        }
+
+        document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+        });
+
         let currentStep = 1;
         let editingId = null;
         let currentViewId = null;
@@ -2525,12 +2692,14 @@
             alert('سيتم دعم التصدير بعد ربط قاعدة البيانات');
         }
 
-        loadTerms().then(function() {
-            renderTermsInView();
+        checkAuth().then(function(authed) {
+            if (authed) {
+                loadTerms().then(function() { renderTermsInView(); });
+                updateStats();
+                renderContracts();
+                renderNewRequests();
+            }
         });
-        updateStats();
-        renderContracts();
-        renderNewRequests();
 
         document.addEventListener('click', function() {
             document.querySelectorAll('.status-dropdown').forEach(d => d.classList.remove('show'));

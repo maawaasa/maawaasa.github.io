@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة مأوى | نظام الموظفين والحسابات</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23A4243B'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#F6F6F8;
+  --surface:#FFFFFF;
+  --surface-2:#FAFAFB;
+  --text:#191A1E;
+  --text-mid:rgba(25,26,30,.62);
+  --text-dim:rgba(25,26,30,.42);
+  --accent:#A4243B;
+  --accent-hover:#C44A60;
+  --accent-soft:rgba(164,36,59,.08);
+  --accent-line:rgba(164,36,59,.25);
+  --ok:#1F8A4C;
+  --ok-soft:rgba(31,138,76,.1);
+  --warn:#B07C1F;
+  --warn-soft:rgba(176,124,31,.12);
+  --danger:#C0392B;
+  --danger-soft:rgba(192,57,43,.1);
+  --line:#E9E9ED;
+  --line-2:rgba(25,26,30,.06);
+  --radius:16px;
+  --shadow:0 6px 24px rgba(25,26,30,.06);
+  --shadow-lg:0 18px 50px rgba(25,26,30,.1);
+  --font:'IBM Plex Sans Arabic',sans-serif;
+  --sidebar-w:250px;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+::selection{background:var(--accent-soft)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#D8D8DE;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#C2C2CA}
+
+/* ═══════════ LOGIN ═══════════ */
+.login-overlay{position:fixed;inset:0;z-index:2000;background:linear-gradient(160deg,#FBF7F4,#F4EEF0);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-overlay.hidden{display:none}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow-lg);padding:44px 38px;width:min(410px,100%);text-align:center}
+.login-logo{width:74px;height:74px;border-radius:20px;background:linear-gradient(135deg,#A4243B,#7A1226);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#fff;font-weight:700;font-size:2rem}
+.login-card h2{font-size:1.5rem;font-weight:700;margin-bottom:6px}
+.login-sub{color:var(--text-mid);font-size:.9rem;margin-bottom:30px}
+.login-field{text-align:right;margin-bottom:16px}
+.login-field label{display:block;font-size:.82rem;font-weight:600;color:var(--text-mid);margin-bottom:7px}
+.login-field input{width:100%;padding:13px 16px;border:1px solid var(--line);border-radius:12px;font-family:inherit;font-size:.95rem;background:var(--surface-2);outline:none;transition:border-color .25s,box-shadow .25s}
+.login-field input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);background:#fff}
+.login-btn{width:100%;margin-top:8px;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .25s,transform .25s}
+.login-btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.login-err{color:var(--danger);font-size:.83rem;margin-top:12px;display:none}
+.login-err.show{display:block}
+.login-hint{margin-top:18px;font-size:.76rem;color:var(--text-dim)}
+
+/* ═══════════ SHELL ═══════════ */
+.shell{display:none;min-height:100vh}
+.shell.on{display:block}
+
+.sidebar{position:fixed;top:0;right:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-left:1px solid var(--line);z-index:100;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.sb-head{padding:22px 22px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.sb-logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#A4243B,#7A1226);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;flex-shrink:0}
+.sb-title{font-weight:700;font-size:1.02rem;line-height:1.3}
+.sb-title small{display:block;font-weight:400;font-size:.72rem;color:var(--text-dim)}
+.sb-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.sb-label{font-size:.68rem;font-weight:600;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;padding:14px 12px 6px}
+.sb-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:11px;color:var(--text-mid);font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:right}
+.sb-item svg{width:19px;height:19px;flex-shrink:0}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.sb-item .soon{margin-right:auto;font-size:.62rem;font-weight:600;background:var(--line);color:var(--text-dim);padding:2px 8px;border-radius:20px}
+.sb-foot{padding:16px 20px;border-top:1px solid var(--line)}
+.sb-user{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.sb-user-name{font-size:.88rem;font-weight:600;line-height:1.3}
+.sb-user-name small{display:block;font-weight:400;color:var(--text-dim);font-size:.72rem}
+.sb-logout{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:none;color:var(--text-mid);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.sb-logout:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+.sb-logout svg{width:16px;height:16px}
+
+.main{margin-right:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:15px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.burger{display:none;background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:40px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.burger span{display:block;width:16px;height:1.6px;background:var(--text)}
+.topbar-title{font-size:1.15rem;font-weight:700}
+.topbar-title small{display:block;font-weight:400;color:var(--text-dim);font-size:.75rem}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.tb-date{font-size:.8rem;color:var(--text-mid);background:var(--surface);border:1px solid var(--line);padding:7px 14px;border-radius:30px}
+.content{flex:1;padding:30px;max-width:1200px;width:100%}
+
+/* ═══════════ COMPONENTS ═══════════ */
+.page{display:none;animation:pageIn .35s ease}
+.page.on{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.page-head{margin-bottom:26px}
+.page-head h1{font-size:1.55rem;font-weight:700}
+.page-head h1 em{font-style:normal;color:var(--accent)}
+.page-head p{color:var(--text-mid);font-size:.92rem;margin-top:4px}
+.page-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:inherit;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:11px;cursor:pointer;transition:all .22s;border:none}
+.btn svg{width:17px;height:17px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-soft{background:var(--accent-soft);color:var(--accent)}
+.btn-soft:hover{background:var(--accent-line)}
+.btn-sm{padding:7px 14px;font-size:.8rem;border-radius:9px}
+.btn-danger-soft{background:var(--danger-soft);color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:30px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.card .c-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card .c-icon svg{width:21px;height:21px}
+.card .c-num{font-size:1.65rem;font-weight:700;line-height:1.2}
+.card .c-label{color:var(--text-mid);font-size:.83rem;margin-top:3px}
+.card.accent .c-icon{background:var(--accent-soft);color:var(--accent)}
+.card.accent .c-num{color:var(--accent)}
+.card.okc .c-icon{background:var(--ok-soft);color:var(--ok)}
+.card.warnc .c-icon{background:var(--warn-soft);color:var(--warn)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:26px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.panel-head h2{font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.panel-head h2 svg{width:19px;height:19px;color:var(--accent)}
+.panel-body{padding:24px}
+
+table.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:.76rem;font-weight:600;color:var(--text-dim);text-align:right;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);letter-spacing:.3px;white-space:nowrap}
+.tbl td{padding:14px 18px;border-bottom:1px solid var(--line-2);font-size:.88rem;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface-2)}
+.tbl .t-name{display:flex;align-items:center;gap:11px;font-weight:600}
+.tbl .t-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex-shrink:0}
+
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.chip-accent{background:var(--accent-soft);color:var(--accent)}
+.chip-ok{background:var(--ok-soft);color:var(--ok)}
+.chip-warn{background:var(--warn-soft);color:var(--warn)}
+.chip-dim{background:var(--line);color:var(--text-mid)}
+.chip-danger{background:var(--danger-soft);color:var(--danger)}
+
+.empty{padding:56px 20px;text-align:center;color:var(--text-mid)}
+.empty svg{width:46px;height:46px;color:var(--text-dim);margin-bottom:12px;opacity:.5}
+.empty h3{font-size:1.02rem;margin-bottom:4px;color:var(--text)}
+.empty p{font-size:.85rem}
+
+/* modal */
+.modal-ov{position:fixed;inset:0;z-index:1000;background:rgba(25,26,30,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.on{display:flex;animation:pageIn .25s ease}
+.modal{background:var(--surface);border-radius:20px;width:min(560px,100%);max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 26px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.modal-head h3{font-size:1.08rem;font-weight:700}
+.modal-x{background:var(--surface-2);border:1px solid var(--line);width:36px;height:36px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-mid);transition:all .2s}
+.modal-x:hover{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
+.modal-body{padding:26px}
+.modal-foot{display:flex;gap:10px;justify-content:flex-start;padding:18px 26px;border-top:1px solid var(--line)}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-size:.83rem;font-weight:600;color:var(--text-mid);margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;padding:12px 15px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:.92rem;background:var(--surface-2);outline:none;transition:border-color .25s,box-shadow .25s;color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);background:#fff}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field .hint{font-size:.72rem;color:var(--text-dim);margin-top:5px}
+
+/* toast */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:3000;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-right:3.5px solid var(--ok);border-radius:12px;padding:13px 18px;font-size:.87rem;font-weight:600;box-shadow:var(--shadow-lg);animation:toastIn .3s cubic-bezier(.2,.7,.3,1)}
+.toast.err{border-right-color:var(--danger)}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* module cards (dashboard) */
+.mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);cursor:pointer;transition:all .3s cubic-bezier(.2,.7,.3,1);position:relative;overflow:hidden;text-align:right}
+.mod:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--accent-line)}
+.mod .m-icon{width:48px;height:48px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.mod .m-icon svg{width:22px;height:22px}
+.mod h3{font-size:1.02rem;font-weight:700;margin-bottom:4px}
+.mod p{font-size:.8rem;color:var(--text-mid)}
+.mod .m-soon{position:absolute;top:16px;left:16px;font-size:.65rem;font-weight:600;background:var(--line);color:var(--text-dim);padding:3px 10px;border-radius:20px}
+.mod.locked{opacity:.62}
+.mod.locked:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow)}
+
+/* progress (leave balance) */
+.prog{background:var(--line);border-radius:20px;height:8px;overflow:hidden;min-width:90px}
+.prog>i{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent-hover));transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.prog>i.full{background:var(--ok)}
+.prog-wrap{display:flex;align-items:center;gap:10px}
+.prog-wrap small{font-size:.74rem;color:var(--text-mid);white-space:nowrap}
+
+/* ledger compact */
+#page-ledger .tbl td{padding:9px 16px;font-size:.84rem}
+#page-ledger .tbl th{padding:10px 16px}
+#page-ledger .cards{margin-bottom:20px}
+#page-ledger .card{padding:16px 18px}
+#page-ledger .card .c-icon{width:38px;height:38px;border-radius:11px;margin-bottom:10px}
+#page-ledger .card .c-icon svg{width:17px;height:17px}
+#page-ledger .card .c-num{font-size:1.35rem}
+#page-ledger .card .c-label{font-size:.78rem}
+#page-ledger .page-head{margin-bottom:18px}
+#page-ledger .page-head h1{font-size:1.35rem}
+#page-ledger .panel{margin-bottom:18px}
+#page-ledger .panel-head{padding:13px 20px}
+#page-ledger .panel-head h2{font-size:.95rem}
+.ledger-more-row td{padding:0!important}
+.ledger-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--surface-2);border:none;border-top:1px solid var(--line);color:var(--accent);font-family:inherit;font-weight:700;font-size:.84rem;cursor:pointer;transition:background .2s}
+.ledger-toggle:hover{background:var(--accent-soft)}
+
+/* login + sidebar logo (wide mark 2:1) */
+.login-logo{padding:0!important;display:flex!important;align-items:center;justify-content:center}
+.login-logo img{height:auto!important;width:52px!important;max-width:60%}
+.sb-logo{padding:0 8px!important;display:flex!important;align-items:center;justify-content:center}
+.sb-logo img{height:auto!important;width:34px!important}
+
+/* ═══════ calendar ═══════ */
+.cal-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.cal-nav{display:flex;align-items:center;gap:8px}
+.cal-nav button{background:var(--surface);border:1px solid var(--line);border-radius:10px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-mid);transition:all .2s}
+.cal-nav button:hover{border-color:var(--accent);color:var(--accent)}
+.cal-title{font-size:1.05rem;font-weight:700;min-width:170px;text-align:center}
+.cal-view-btns{display:flex;gap:6px}
+.cal-vbtn{padding:8px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text-mid);font-family:inherit;font-weight:600;font-size:.82rem;cursor:pointer;transition:all .2s}
+.cal-vbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--text-mid)}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px}
+.cal-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dow{text-align:center;font-size:.74rem;font-weight:700;color:var(--text-dim);padding:8px 0;letter-spacing:.5px}
+.cal-cell{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:96px;padding:8px;display:flex;flex-direction:column;gap:5px;transition:all .2s;position:relative}
+.cal-cell.other{opacity:.42}
+.cal-cell.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.cal-cell.drop-target{border-color:var(--accent);background:var(--accent-soft)}
+.cal-dnum{font-size:.78rem;font-weight:700;color:var(--text-mid);display:flex;align-items:center;justify-content:space-between}
+.cal-cell.today .cal-dnum{color:var(--accent)}
+.cal-ev{font-size:.72rem;padding:4px 8px;border-radius:7px;cursor:grab;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.5;transition:transform .15s,box-shadow .15s;user-select:none}
+.cal-ev:active{cursor:grabbing}
+.cal-ev:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(25,26,30,.14);white-space:normal}
+.cal-ev.shoot{background:var(--accent-soft);color:var(--accent);border-right:3px solid var(--accent)}
+.cal-ev.done{background:var(--ok-soft);color:var(--ok);border-right:3px solid var(--ok)}
+.cal-ev.cancelled{background:var(--danger-soft);color:var(--danger);border-right:3px solid var(--danger);text-decoration:line-through}
+.cal-ev.leave{background:var(--warn-soft);color:var(--warn);border-right:3px solid var(--warn);cursor:default}
+.cal-ev .ev-time{font-weight:700;margin-left:4px}
+.cal-add{position:absolute;bottom:6px;left:6px;width:24px;height:24px;border-radius:50%;border:none;background:var(--surface-2);color:var(--text-dim);font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.cal-cell:hover .cal-add{opacity:1}
+.cal-add:hover{background:var(--accent);color:#fff}
+
+/* week view */
+.cal-week{display:grid;grid-template-columns:60px repeat(7,1fr);gap:4px}
+.cal-whead{font-size:.74rem;font-weight:700;color:var(--text-dim);text-align:center;padding:6px}
+.cal-whour{font-size:.68rem;color:var(--text-dim);text-align:center;padding:4px 0;border-top:1px solid var(--line-2)}
+.cal-wcell{border-top:1px solid var(--line-2);border-left:1px solid var(--line-2);min-height:38px;position:relative}
+.cal-wcell.drop-target{background:var(--accent-soft)}
+.cal-wday-col{display:grid;grid-row:span 1}
+.cal-week-grid{display:contents}
+
+@media(max-width:760px){
+  .cal-cell{min-height:64px;padding:5px}
+  .cal-ev{font-size:.62rem;padding:3px 5px}
+  .cal-title{min-width:120px;font-size:.9rem}
+}
+
+/* responsive */
+.scrim{position:fixed;inset:0;z-index:99;background:rgba(25,26,30,.4);display:none}
+.scrim.on{display:block}
+@media(max-width:1024px){
+  .sidebar{transform:translateX(100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow-lg)}
+  .main{margin-right:0}
+  .burger{display:flex}
+}
+@media(max-width:640px){
+  .content{padding:18px}
+  .field-row{grid-template-columns:1fr}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .topbar{padding:12px 18px}
+  .tb-date{display:none}
+  .tbl th:nth-child(4),.tbl td:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div class="login-overlay" id="loginOv">
+  <div class="login-card">
+    <div class="login-logo"><img src="assets/logo-mark.svg" alt="مأوى" style="height:44px;width:auto"></div>
+    <h2>إدارة مأوى</h2>
+    <div class="login-sub">نظام الموظفين والحسابات والإجازات</div>
+    <form id="loginForm">
+      <div class="login-field">
+        <label for="logEmail">البريد الإلكتروني</label>
+        <input type="email" id="logEmail" dir="ltr" autocomplete="username" required>
+      </div>
+      <div class="login-field">
+        <label for="logPass">كلمة المرور</label>
+        <input type="password" id="logPass" dir="ltr" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="login-btn" id="loginBtn">تسجيل الدخول</button>
+      <div class="login-err" id="loginErr"></div>
+    </form>
+    <div class="login-hint">الدخول مخصص لفريق مأوى فقط</div>
+  </div>
+</div>
+
+<!-- ═══════════ SHELL ═══════════ -->
+<div class="shell" id="shell">
+<div class="scrim" id="scrim"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-head">
+    <div class="sb-logo"><img src="assets/logo-mark.svg" alt="مأوى" style="height:26px;width:auto"></div>
+    <div class="sb-title">إدارة مأوى<small>نظام التشغيل الداخلي</small></div>
+  </div>
+  <nav class="sb-nav">
+    <button class="sb-item active" data-page="dashboard" onclick="go('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      الرئيسية
+    </button>
+    <div class="sb-label">الفريق</div>
+    <button class="sb-item" data-page="employees" onclick="go('employees')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      الموظفون
+    </button>
+    <button class="sb-item" data-page="leaves" onclick="go('leaves')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      الإجازات
+    </button>
+    <div class="sb-label">التشغيل</div>
+    <button class="sb-item" data-page="calendar" onclick="go('calendar')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="m9 16 2 2 4-4"/></svg>
+      التقويم والجدولة
+    </button>
+    <button class="sb-item" data-page="contracts" onclick="openContracts()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg>
+      العقود والطلبات
+    </button>
+    <div class="sb-label">المالية</div>
+    <button class="sb-item" data-page="accounting" onclick="go('accounting')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      المحاسبة والتوزيع
+    </button>
+    <button class="sb-item" data-page="expenses" onclick="go('expenses')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      المصاريف
+    </button>
+    <button class="sb-item" data-page="ledger" onclick="go('ledger')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      دفتر الحسابات
+    </button>
+    <button class="sb-item" data-page="stamp" onclick="go('stamp')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13H15a1 1 0 0 1-1-1v-1.34a4.5 4.5 0 0 0 1.5-3.86A5 5 0 0 0 10.6 2.1 5 5 0 0 0 8.5 6.8a4.5 4.5 0 0 0 1.5 3.86V12a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 0-2.5 2.5V19h16v-3.5c0-.66-.26-1.3-.73-1.77z"/></svg>
+      الختم والتوثيق
+      <span class="soon">مرحلة 5</span>
+    </button>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAvatar">؟</div>
+      <div class="sb-user-name" id="sbUserName">جارٍ التحميل...<small>فريق مأوى</small></div>
+    </div>
+    <button class="sb-logout" onclick="handleLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      تسجيل الخروج
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-right">
+      <button class="burger" id="burger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+      <div class="topbar-title" id="pageTitle">الرئيسية<small>نظرة عامة على الفريق والعمليات</small></div>
+    </div>
+    <div class="topbar-left">
+      <div class="tb-date" id="tbDate"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════ DASHBOARD ═══════ -->
+    <section class="page on" id="page-dashboard">
+      <div class="page-head">
+        <h1>أهلاً بك في <em>نظام إدارة مأوى</em></h1>
+        <p>مركز تشغيل الفريق — موظفون، إجازات، جدولة، وحسابات في مكان واحد</p>
+      </div>
+
+      <div class="cards">
+        <div class="card accent">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="c-num" id="stEmployees">0</div>
+          <div class="c-label">أعضاء الفريق</div>
+        </div>
+        <div class="card warnc">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+          <div class="c-num" id="stPendingLeaves">0</div>
+          <div class="c-label">طلبات إجازة معلقة</div>
+        </div>
+        <div class="card okc">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="m9 16 2 2 4-4"/></svg></div>
+          <div class="c-num" id="stOnLeave">0</div>
+          <div class="c-label">في إجازة حالياً</div>
+        </div>
+        <div class="card">
+          <div class="c-icon" style="background:rgba(122,170,212,.14);color:#588EB8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="c-num" id="stActive">0</div>
+          <div class="c-label">على رأس العمل</div>
+        </div>
+      </div>
+
+      <div class="page-head" style="margin-bottom:16px"><h1 style="font-size:1.15rem">الوحدات</h1></div>
+      <div class="mods">
+        <div class="mod" onclick="go('employees')">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>الموظفون</h3><p>الملفات، الأدوار، وأرصدة الإجازات</p>
+        </div>
+        <div class="mod" onclick="go('leaves')">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <h3>الإجازات</h3><p>طلبات، موافقات، وأرصدة الفريق</p>
+        </div>
+        <div class="mod" onclick="openContracts()">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></div>
+          <h3>العقود</h3><p>فتح نظام العقود والطلبات الحالي</p>
+        </div>
+        <div class="mod" onclick="go('calendar')">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="m9 16 2 2 4-4"/></svg></div>
+          <h3>التقويم والجدولة</h3><p>مواعيد التصوير وتعيين المنفذين</p>
+        </div>
+        <div class="mod" onclick="go('accounting')">
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <h3>المحاسبة والتوزيع</h3><p>نسب الأرباح: المصور 70%، وفاء 10%...</p>
+        </div>
+        <div class="mod locked">
+          <span class="m-soon">مرحلة 5</span>
+          <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13H15a1 1 0 0 1-1-1v-1.34a4.5 4.5 0 0 0 1.5-3.86A5 5 0 0 0 10.6 2.1 5 5 0 0 0 8.5 6.8a4.5 4.5 0 0 0 1.5 3.86V12a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 0-2.5 2.5V19h16v-3.5c0-.66-.26-1.3-.73-1.77z"/></svg></div>
+          <h3>الختم والتوثيق</h3><p>ختم رسمي وتوقيع للعقود والفواتير</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ EMPLOYEES ═══════ -->
+    <section class="page" id="page-employees">
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>فريق <em>مأوى</em></h1>
+          <p>الشركاء المصورون والإدارة — الأدوار وأرصدة الإجازات السنوية</p>
+        </div>
+        <button class="btn btn-primary" onclick="openEmpModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          إضافة عضو
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> أعضاء الفريق</h2>
+          <span class="chip chip-accent" id="empCount">0 عضو</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th>العضو</th><th>الدور</th><th>المسمى</th><th>الجوال</th><th>رصيد الإجازات</th><th>الحالة</th><th></th>
+            </tr></thead>
+            <tbody id="empTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ LEAVES ═══════ -->
+    <section class="page" id="page-leaves">
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>نظام <em>الإجازات</em></h1>
+          <p>الرصيد السنوي 90 يوماً لكل عضو — الطلبات تحتاج موافقة عضو آخر</p>
+        </div>
+        <button class="btn btn-primary" onclick="openLeaveModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          طلب إجازة
+        </button>
+      </div>
+
+      <div class="cards" id="leaveBalances"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> سجل الطلبات</h2>
+          <select class="btn btn-ghost btn-sm" id="leaveFilter" onchange="renderLeaves()" style="cursor:pointer">
+            <option value="all">كل الحالات</option>
+            <option value="pending">معلقة</option>
+            <option value="approved">مقبولة</option>
+            <option value="rejected">مرفوضة</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th>العضو</th><th>النوع</th><th>من</th><th>إلى</th><th>الأيام</th><th>الحالة</th><th></th>
+            </tr></thead>
+            <tbody id="leaveTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ ACCOUNTING ═══════ -->
+    <section class="page" id="page-accounting">
+      <div class="page-head">
+        <h1>المحاسبة <em>وتوزيع الأرباح</em></h1>
+        <p>نسب توزيع كل عقد — المصور المنفذ 70% ووفاء 10% ثابتة، والباقي مرن</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> نسب التوزيع الافتراضية</h2>
+          <button class="btn btn-primary btn-sm" onclick="saveProfit()">حفظ النسب</button>
+        </div>
+        <div class="panel-body">
+          <div class="field-row">
+            <div class="field">
+              <label>المصور المنفذ للعمل</label>
+              <input type="number" id="pctPhotographer" min="0" max="100" step="0.5" dir="ltr">
+              <div class="hint">النسبة الأكبر — تُحدد لكل عقد حسب المنفذ</div>
+            </div>
+            <div class="field">
+              <label>وفاء (ثابتة)</label>
+              <input type="number" id="pctWafaa" min="0" max="100" step="0.5" dir="ltr" disabled style="opacity:.75">
+              <div class="hint">إدارة، برمجة، وتسويق — نسبة ثابتة 10%</div>
+            </div>
+            <div class="field">
+              <label>التسويق والتطوير</label>
+              <input type="number" id="pctMarketing" min="0" max="30" step="0.5" dir="ltr">
+              <div class="hint">مرن: 10% أو 20% حسب المشاركة</div>
+            </div>
+            <div class="field">
+              <label>المنتجون</label>
+              <input type="number" id="pctProducers" min="0" max="30" step="0.5" dir="ltr">
+              <div class="hint">مرن: 10% أو 20% عند إشراك منتج</div>
+            </div>
+          </div>
+          <div style="background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:.85rem;color:var(--text-mid)">
+            مجموع النسب الحالي: <b id="pctTotal" style="color:var(--accent)">100%</b> — يجب أن يساوي 100% للحفظ
+          </div>
+
+          <h3 style="font-size:.95rem;margin:26px 0 14px">مثال تطبيقي على عقد بقيمة 2,000 ر.س</h3>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>الجهة</th><th>النسبة</th><th>المبلغ</th></tr></thead>
+              <tbody id="profitExample"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ LEDGER: دفتر الحسابات القديم ═══════ -->
+    <section class="page" id="page-ledger">
+      <div class="page-head">
+        <h1>دفتر <em>الحسابات</em></h1>
+        <p>منقول بالكامل من الدفتر القديم — كل حركة بتفاصيلها كما هي</p>
+      </div>
+
+      <div class="cards">
+        <div class="card accent">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="c-num">15,263</div>
+          <div class="c-label">إجمالي المصروفات (ر.س)</div>
+        </div>
+        <div class="card warnc">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="c-num">575</div>
+          <div class="c-label">مستحقات مالك المتبقية (ر.س)</div>
+        </div>
+        <div class="card okc">
+          <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="c-num">0</div>
+          <div class="c-label">مستحقات محمد وأسامة</div>
+        </div>
+        <div class="card">
+          <div class="c-icon" style="background:rgba(122,170,212,.14);color:#588EB8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <div class="c-num">38</div>
+          <div class="c-label">حركة مسجلة</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> أرصدة الشركاء</h2>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>الشريك</th><th>دائن (ما صرفه من جيبه)</th><th>مدفوع له (ما استلمه)</th><th>المبلغ المستحق</th></tr></thead>
+            <tbody id="ledgerBalances"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg> كل الحركات</h2>
+          <select class="btn btn-ghost btn-sm" id="ledgerFilter" onchange="ledgerShowAll=false;renderLedger()" style="cursor:pointer">
+            <option value="all">كل الحركات</option>
+            <option value="مصروف">مصروفات (دفعها الشركاء)</option>
+            <option value="سداد">سداد مستحقات</option>
+            <option value="مالك">مالك</option>
+            <option value="محمد">محمد</option>
+            <option value="أسامة">أسامة</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>التاريخ</th><th>المبلغ</th><th>المدفوع له</th><th>الدافع</th><th>البيان</th><th>النوع</th></tr></thead>
+            <tbody id="ledgerTbody"></tbody>
+          </table>
+        </div>
+        <div style="padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:.9rem">
+          <b>إجمالي المصروفات (ما دفعه الشركاء لمأوى):</b>
+          <b style="color:var(--accent)">15,263.00 ر.س</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ EXPENSES (placeholder → مرحلة 4) ═══════ -->
+    <section class="page" id="page-expenses">
+      <div class="page-head">
+        <h1>المصاريف</h1>
+        <p>تُبنى بالكامل في المرحلة 4 مع التقارير المالية والضريبة</p>
+      </div>
+      <div class="panel"><div class="panel-body">
+        <div class="empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <h3>وحدة المصاريف قادمة</h3>
+          <p>تصنيفات، إيصالات، وتقرير مصاريف شهري — المرحلة 4</p>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- placeholder صفحات المراحل القادمة -->
+    <!-- ═══════ CALENDAR ═══════ -->
+    <section class="page" id="page-calendar">
+      <div class="page-head-row">
+        <div class="page-head">
+          <h1>التقويم <em>والجدولة</em></h1>
+          <p>مواعيد التصوير — اسحب الحدث ليوم جديد، والتعارضات تظهر تلقائياً</p>
+        </div>
+        <button class="btn btn-primary" onclick="openJobModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          موعد جديد
+        </button>
+      </div>
+
+      <div class="cal-toolbar">
+        <div class="cal-nav">
+          <button onclick="calNav(-1)" aria-label="السابق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m9 18 6-6-6-6"/></svg></button>
+          <div class="cal-title" id="calTitle"></div>
+          <button onclick="calNav(1)" aria-label="التالي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button onclick="calToday()" style="width:auto;padding:0 14px;font-size:.8rem;font-weight:700">اليوم</button>
+        </div>
+        <div class="cal-view-btns">
+          <button class="cal-vbtn active" id="vbtn-month" onclick="calView('month')">شهري</button>
+          <button class="cal-vbtn" id="vbtn-week" onclick="calView('week')">أسبوعي</button>
+        </div>
+        <div class="cal-legend">
+          <span><i style="background:var(--accent)"></i> جلسة تصوير</span>
+          <span><i style="background:var(--ok)"></i> منجز</span>
+          <span><i style="background:var(--warn)"></i> إجازة</span>
+          <span><i style="background:var(--danger)"></i> ملغي</span>
+        </div>
+      </div>
+
+      <div class="panel" style="padding:18px">
+        <div id="calMonth" class="cal-grid"></div>
+        <div id="calWeek" class="cal-week" style="display:none"></div>
+      </div>
+    </section>
+
+    <!-- ═══ MODAL: موعد تصوير ═══════ -->
+    <div class="modal-ov" id="jobModal">
+      <div class="modal">
+        <div class="modal-head">
+          <h3 id="jobModalTitle">موعد تصوير جديد</h3>
+          <button class="modal-x" onclick="closeModal('jobModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="jobId">
+          <div class="field">
+            <label>عنوان الجلسة *</label>
+            <input type="text" id="jobTitle" placeholder="مثال: تصوير فيلا — حي الملقا">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>التاريخ *</label>
+              <input type="date" id="jobDate" required>
+            </div>
+            <div class="field">
+              <label>المنفذ</label>
+              <select id="jobEmp"></select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>من الساعة</label>
+              <input type="time" id="jobFrom" value="09:00">
+            </div>
+            <div class="field">
+              <label>إلى الساعة</label>
+              <input type="time" id="jobTo" value="13:00">
+            </div>
+          </div>
+          <div class="field">
+            <label>الموقع</label>
+            <input type="text" id="jobLoc" placeholder="الحي / العنوان">
+          </div>
+          <div class="field">
+            <label>ملاحظات</label>
+            <textarea id="jobNotes" rows="2"></textarea>
+          </div>
+          <div id="jobConflict" style="display:none;background:var(--danger-soft);color:var(--danger);border-radius:10px;padding:11px 14px;font-size:.82rem;font-weight:600;margin-bottom:8px"></div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-primary" onclick="saveJob()">حفظ</button>
+          <button class="btn btn-ghost" onclick="closeModal('jobModal')">إلغاء</button>
+          <span style="flex:1"></span>
+          <button class="btn btn-danger-soft" id="jobDelBtn" style="display:none" onclick="delJob()">حذف</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="page" id="page-stamp">
+      <div class="page-head"><h1>الختم والتوثيق</h1><p>سيُبنى في المرحلة 5 — ختم رسمي وتوقيع على العقود والفواتير</p></div>
+      <div class="panel"><div class="panel-body"><div class="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13H15a1 1 0 0 1-1-1v-1.34a4.5 4.5 0 0 0 1.5-3.86A5 5 0 0 0 10.6 2.1 5 5 0 0 0 8.5 6.8a4.5 4.5 0 0 0 1.5 3.86V12a1 1 0 0 1-1 1H6.5a2.5 2.5 0 0 0-2.5 2.5V19h16v-3.5c0-.66-.26-1.3-.73-1.77z"/></svg>
+        <h3>قريباً — المرحلة 5</h3><p>ختم رقمي وتوقيع إلكتروني معتمد</p>
+      </div></div></div>
+    </section>
+
+  </div>
+</main>
+</div>
+
+<!-- ═══════ MODAL: موظف ═══════ -->
+<div class="modal-ov" id="empModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="empModalTitle">إضافة عضو</h3>
+      <button class="modal-x" onclick="closeModal('empModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="empId">
+      <div class="field">
+        <label>الاسم *</label>
+        <input type="text" id="empName" placeholder="مثال: محمد" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>الدور *</label>
+          <select id="empRole">
+            <option value="photographer">مصور (شريك منفذ)</option>
+            <option value="admin">إدارة وتقنية</option>
+            <option value="producer">منتج</option>
+            <option value="marketer">تسويق</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>المسمى الوظيفي</label>
+          <input type="text" id="empTitle" placeholder="شريك مصور">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>الجوال</label>
+          <input type="tel" id="empPhone" dir="ltr" placeholder="05xxxxxxxx">
+        </div>
+        <div class="field">
+          <label>رصيد الإجازات السنوي</label>
+          <input type="number" id="empLeave" min="0" max="365" value="90" dir="ltr">
+        </div>
+      </div>
+      <div class="field">
+        <label class="chk-label" style="display:flex;align-items:center;gap:9px;cursor:pointer">
+          <input type="checkbox" id="empActive" checked style="width:17px;height:17px;accent-color:var(--accent)">
+          على رأس العمل (نشط)
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" onclick="saveEmp()">حفظ</button>
+      <button class="btn btn-ghost" onclick="closeModal('empModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: طلب إجازة ═══════ -->
+<div class="modal-ov" id="leaveModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>طلب إجازة</h3>
+      <button class="modal-x" onclick="closeModal('leaveModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>العضو *</label>
+        <select id="lvEmp"></select>
+      </div>
+      <div class="field">
+        <label>نوع الإجازة *</label>
+        <select id="lvType">
+          <option value="annual">سنوية</option>
+          <option value="sick">مرضية</option>
+          <option value="emergency">اضطرارية</option>
+          <option value="unpaid">بدون راتب</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>من تاريخ *</label>
+          <input type="date" id="lvFrom" required>
+        </div>
+        <div class="field">
+          <label>إلى تاريخ *</label>
+          <input type="date" id="lvTo" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>ملاحظة</label>
+        <textarea id="lvNote" rows="2" placeholder="اختياري..."></textarea>
+      </div>
+      <div id="lvBalanceHint" style="background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:11px 14px;font-size:.82rem;font-weight:600"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" onclick="saveLeave()">إرسال الطلب</button>
+      <button class="btn btn-ghost" onclick="closeModal('leaveModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+'use strict';
+
+/* ═════════ state ═════════ */
+let EMPLOYEES = [];
+let LEAVES = [];
+let ME = null;
+
+const ROLE_AR = { photographer:'مصور', admin:'إدارة وتقنية', producer:'منتج', marketer:'تسويق' };
+const ROLE_COLOR = { photographer:'accent', admin:'ok', producer:'warn', marketer:'dim' };
+const LEAVE_AR = { annual:'سنوية', sick:'مرضية', emergency:'اضطرارية', unpaid:'بدون راتب' };
+const STATUS_AR = { pending:['معلقة','warn'], approved:['مقبولة','ok'], rejected:['مرفوضة','danger'] };
+
+/* ═════════ helpers ═════════ */
+const $ = id => document.getElementById(id);
+const fmtD = d => new Date(d).toLocaleDateString('ar-SA-u-nu-latn', { day:'numeric', month:'short', year:'numeric' });
+const today = () => new Date().toISOString().slice(0,10);
+const days = (a,b) => Math.round((new Date(b) - new Date(a)) / 864e5) + 1;
+
+function toast(msg, ok = true) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (ok ? '' : ' err');
+  t.innerHTML = (ok
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="#1F8A4C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>') + msg;
+  $('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 3400);
+}
+
+function go(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  $('page-' + page).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  const titles = {
+    dashboard:['الرئيسية','نظرة عامة على الفريق والعمليات'],
+    employees:['الموظفون','الملفات، الأدوار، وأرصدة الإجازات'],
+    leaves:['الإجازات','الطلبات، الموافقات، والأرصدة'],
+    accounting:['المحاسبة والتوزيع','نسب الأرباح والتقارير المالية'],
+    ledger:['دفتر الحسابات','السجل القديم — أرصدة وحركات الشركاء'],
+    expenses:['المصاريف','تصنيفات وتقارير المصاريف'],
+    calendar:['التقويم والجدولة','مواعيد التصوير والتعيينات'],
+    stamp:['الختم والتوثيق','الختم الرقمي والتوقيع']
+  };
+  if (titles[page]) $('pageTitle').innerHTML = titles[page][0] + '<small>' + titles[page][1] + '</small>';
+  closeSidebar();
+  if (page === 'dashboard') refreshDashboard();
+  if (page === 'employees') loadEmployees();
+  if (page === 'leaves') loadLeaves();
+  if (page === 'accounting') loadProfit();
+  if (page === 'ledger') renderLedger();
+  if (page === 'calendar') loadCalendar();
+  window.scrollTo({ top: 0 });
+}
+
+function openContracts() { location.href = 'admin.html'; }
+
+function closeModal(id) { $(id).classList.remove('on'); }
+document.querySelectorAll('.modal-ov').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('on'); }));
+
+function toggleSidebar() { $('sidebar').classList.toggle('open'); $('scrim').classList.toggle('on'); }
+function closeSidebar() { $('sidebar').classList.remove('open'); $('scrim').classList.remove('on'); }
+$('scrim').addEventListener('click', closeSidebar);
+
+/* ═════════ auth ═════════ */
+$('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('loginBtn');
+  btn.disabled = true; btn.textContent = 'جارٍ الدخول...';
+  $('loginErr').classList.remove('show');
+  try {
+    const sb = getSupabase();
+    const { error } = await sb.auth.signInWithPassword({
+      email: $('logEmail').value.trim(),
+      password: $('logPass').value
+    });
+    if (error) throw error;
+    boot();
+  } catch (err) {
+    $('loginErr').textContent = 'تعذر الدخول: ' + (err.message || 'تحقق من البيانات');
+    $('loginErr').classList.add('show');
+  } finally {
+    btn.disabled = false; btn.textContent = 'تسجيل الدخول';
+  }
+});
+
+async function handleLogout() {
+  await getSupabase().auth.signOut();
+  location.reload();
+}
+
+/* ═════════ boot ═════════ */
+async function boot() {
+  const sb = getSupabase();
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { $('loginOv').classList.remove('hidden'); return; }
+
+  ME = session.user;
+  $('loginOv').classList.add('hidden');
+  $('shell').classList.add('on');
+
+  const name = (ME.email || 'م').split('@')[0];
+  $('sbUserName').innerHTML = name + '<small>' + (ME.email || '') + '</small>';
+  $('sbAvatar').textContent = name.charAt(0);
+
+  $('tbDate').textContent = new Date().toLocaleDateString('ar-SA-u-nu-latn', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  refreshDashboard();
+}
+
+/* ═════════ dashboard ═════════ */
+async function refreshDashboard() {
+  try {
+    const sb = getSupabase();
+    const [empR, lvR] = await Promise.all([
+      sb.from('employees').select('*').order('sort_order'),
+      sb.from('leave_requests').select('*')
+    ]);
+    EMPLOYEES = empR.data || [];
+    LEAVES = lvR.data || [];
+
+    $('stEmployees').textContent = EMPLOYEES.length;
+    $('stActive').textContent = EMPLOYEES.filter(e => e.is_active).length;
+    $('stPendingLeaves').textContent = LEAVES.filter(l => l.status === 'pending').length;
+    $('stOnLeave').textContent = LEAVES.filter(l => l.status === 'approved' && l.start_date <= today() && l.end_date >= today()).length;
+  } catch (e) { console.error(e); }
+}
+
+/* ═════════ employees ═════════ */
+async function loadEmployees() {
+  try {
+    const { data, error } = await getSupabase().from('employees').select('*').order('sort_order');
+    if (error) throw error;
+    EMPLOYEES = data || [];
+    renderEmployees();
+  } catch (e) { toast('تعذر تحميل الموظفين: ' + e.message, false); }
+}
+
+function usedLeaveDays(empId) {
+  return LEAVES.filter(l => l.employee_id === empId && l.status === 'approved' && l.leave_type === 'annual')
+    .reduce((s, l) => s + l.days, 0);
+}
+
+function renderEmployees() {
+  $('empCount').textContent = EMPLOYEES.length + ' عضو';
+  const tb = $('empTbody');
+  if (!EMPLOYEES.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><h3>لا يوجد أعضاء</h3><p>أضف أول عضو للفريق</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = EMPLOYEES.map(e => {
+    const used = usedLeaveDays(e.id);
+    const left = Math.max(0, e.annual_leave_days - used);
+    const pct = Math.min(100, Math.round(left / e.annual_leave_days * 100));
+    const color = e.role === 'admin' ? 'background:linear-gradient(135deg,#7AAAD4,#588EB8);color:#fff'
+                : e.role === 'producer' ? 'background:var(--warn-soft);color:var(--warn)'
+                : 'background:var(--accent-soft);color:var(--accent)';
+    return '<tr>' +
+      '<td><div class="t-name"><div class="t-avatar" style="' + color + '">' + e.name.charAt(0) + '</div>' + e.name + '</div></td>' +
+      '<td><span class="chip chip-' + (ROLE_COLOR[e.role] || 'dim') + '">' + (ROLE_AR[e.role] || e.role) + '</span></td>' +
+      '<td style="color:var(--text-mid)">' + (e.title || '—') + '</td>' +
+      '<td dir="ltr" style="text-align:right;color:var(--text-mid)">' + (e.phone || '—') + '</td>' +
+      '<td><div class="prog-wrap"><div class="prog"><i class="' + (pct > 25 ? '' : '') + '" style="width:' + pct + '%"></i></div><small>' + left + ' / ' + e.annual_leave_days + ' يوم</small></div></td>' +
+      '<td>' + (e.is_active ? '<span class="chip chip-ok">نشط</span>' : '<span class="chip chip-dim">موقوف</span>') + '</td>' +
+      '<td><div style="display:flex;gap:6px">' +
+        '<button class="btn btn-ghost btn-sm" onclick="openEmpModal(' + e.id + ')">تعديل</button>' +
+        '<button class="btn btn-danger-soft btn-sm" onclick="delEmp(' + e.id + ',\'' + e.name + '\')">حذف</button>' +
+      '</div></td></tr>';
+  }).join('');
+}
+
+function openEmpModal(id) {
+  const e = id ? EMPLOYEES.find(x => x.id === id) : null;
+  $('empModalTitle').textContent = e ? 'تعديل: ' + e.name : 'إضافة عضو';
+  $('empId').value = e ? e.id : '';
+  $('empName').value = e ? e.name : '';
+  $('empRole').value = e ? e.role : 'photographer';
+  $('empTitle').value = e ? (e.title || '') : '';
+  $('empPhone').value = e ? (e.phone || '') : '';
+  $('empLeave').value = e ? e.annual_leave_days : 90;
+  $('empActive').checked = e ? e.is_active : true;
+  $('empModal').classList.add('on');
+}
+
+async function saveEmp() {
+  const name = $('empName').value.trim();
+  if (!name) { toast('أدخل الاسم', false); return; }
+  const payload = {
+    name,
+    role: $('empRole').value,
+    title: $('empTitle').value.trim(),
+    phone: $('empPhone').value.trim(),
+    annual_leave_days: +$('empLeave').value || 90,
+    is_active: $('empActive').checked
+  };
+  try {
+    const id = $('empId').value;
+    const sb = getSupabase();
+    if (id) await sb.from('employees').update(payload).eq('id', id);
+    else await sb.from('employees').insert({ ...payload, sort_order: EMPLOYEES.length + 1 });
+    closeModal('empModal');
+    toast(id ? 'تم تحديث العضو' : 'تمت إضافة العضو');
+    loadEmployees();
+  } catch (e) { toast('تعذر الحفظ: ' + e.message, false); }
+}
+
+async function delEmp(id, name) {
+  if (!confirm('حذف "' + name + '" نهائياً؟ ستُحذف إجازاته وتعييناته أيضاً.')) return;
+  try {
+    await getSupabase().from('employees').delete().eq('id', id);
+    toast('تم الحذف');
+    loadEmployees();
+  } catch (e) { toast('تعذر الحذف: ' + e.message, false); }
+}
+
+/* ═════════ leaves ═════════ */
+async function loadLeaves() {
+  try {
+    const sb = getSupabase();
+    const [empR, lvR] = await Promise.all([
+      sb.from('employees').select('*').order('sort_order'),
+      sb.from('leave_requests').select('*').order('created_at', { ascending: false })
+    ]);
+    EMPLOYEES = empR.data || [];
+    LEAVES = lvR.data || [];
+    renderLeaveBalances();
+    renderLeaves();
+  } catch (e) { toast('تعذر تحميل الإجازات: ' + e.message, false); }
+}
+
+function renderLeaveBalances() {
+  const wrap = $('leaveBalances');
+  wrap.innerHTML = EMPLOYEES.filter(e => e.is_active).map(e => {
+    const used = usedLeaveDays(e.id);
+    const left = Math.max(0, e.annual_leave_days - used);
+    const pct = Math.min(100, Math.round(left / e.annual_leave_days * 100));
+    return '<div class="card">' +
+      '<div class="t-name" style="margin-bottom:12px"><div class="t-avatar" style="background:var(--accent-soft);color:var(--accent)">' + e.name.charAt(0) + '</div><div>' + e.name + '<small style="display:block;font-weight:400;color:var(--text-dim);font-size:.72rem">' + (ROLE_AR[e.role] || '') + '</small></div></div>' +
+      '<div class="c-num" style="color:var(--accent)">' + left + ' يوم</div>' +
+      '<div class="c-label">متبقي من ' + e.annual_leave_days + ' (استُخدم ' + used + ')</div>' +
+      '<div class="prog" style="margin-top:12px"><i style="width:' + pct + '%"></i></div>' +
+    '</div>';
+  }).join('') || '<div class="card"><div class="empty"><p>أضف موظفين أولاً</p></div></div>';
+}
+
+function renderLeaves() {
+  const f = $('leaveFilter').value;
+  const list = LEAVES.filter(l => f === 'all' || l.status === f);
+  const tb = $('leaveTbody');
+  if (!list.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><h3>لا توجد طلبات</h3><p>طلبات الإجازة ستظهر هنا</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = list.map(l => {
+    const emp = EMPLOYEES.find(e => e.id === l.employee_id);
+    const st = STATUS_AR[l.status] || [l.status, 'dim'];
+    const onNow = l.status === 'approved' && l.start_date <= today() && l.end_date >= today();
+    return '<tr>' +
+      '<td><div class="t-name"><div class="t-avatar" style="background:var(--accent-soft);color:var(--accent);width:32px;height:32px;font-size:.85rem">' + (emp ? emp.name.charAt(0) : '؟') + '</div>' + (emp ? emp.name : 'محذوف') + (onNow ? ' <span class="chip chip-accent" style="font-size:.65rem">الآن</span>' : '') + '</div></td>' +
+      '<td><span class="chip chip-dim">' + (LEAVE_AR[l.leave_type] || l.leave_type) + '</span></td>' +
+      '<td style="color:var(--text-mid)">' + fmtD(l.start_date) + '</td>' +
+      '<td style="color:var(--text-mid)">' + fmtD(l.end_date) + '</td>' +
+      '<td><b>' + l.days + '</b> يوم</td>' +
+      '<td><span class="chip chip-' + st[1] + '">' + st[0] + '</span></td>' +
+      '<td>' + (l.status === 'pending'
+        ? '<div style="display:flex;gap:6px">' +
+            '<button class="btn btn-soft btn-sm" onclick="decideLeave(' + l.id + ',\'approved\')">موافقة</button>' +
+            '<button class="btn btn-danger-soft btn-sm" onclick="decideLeave(' + l.id + ',\'rejected\')">رفض</button>' +
+          '</div>'
+        : '<span style="font-size:.76rem;color:var(--text-dim)">' + (l.approved_by ? 'قرار: ' + (EMPLOYEES.find(e => e.id === l.approved_by) || {}).name : '') + '</span>') +
+      '</td></tr>';
+  }).join('');
+}
+
+function openLeaveModal() {
+  if (!EMPLOYEES.length) { toast('أضف موظفين أولاً', false); return; }
+  $('lvEmp').innerHTML = EMPLOYEES.filter(e => e.is_active).map(e =>
+    '<option value="' + e.id + '">' + e.name + ' — متبقي ' + Math.max(0, e.annual_leave_days - usedLeaveDays(e.id)) + ' يوم</option>'
+  ).join('');
+  $('lvFrom').value = today();
+  $('lvTo').value = today();
+  $('lvNote').value = '';
+  $('lvType').value = 'annual';
+  updateLeaveHint();
+  $('leaveModal').classList.add('on');
+}
+
+function updateLeaveHint() {
+  const emp = EMPLOYEES.find(e => e.id == $('lvEmp').value);
+  if (!emp) return;
+  const left = Math.max(0, emp.annual_leave_days - usedLeaveDays(emp.id));
+  const d = ($('lvFrom').value && $('lvTo').value && $('lvTo').value >= $('lvFrom').value)
+    ? days($('lvFrom').value, $('lvTo').value) : 0;
+  $('lvBalanceHint').textContent = 'الرصيد المتبقي: ' + left + ' يوم — مدة الطلب: ' + d + ' يوم' +
+    (d > left ? ' ⚠ يتجاوز الرصيد' : '');
+}
+$('lvFrom').addEventListener('change', updateLeaveHint);
+$('lvTo').addEventListener('change', updateLeaveHint);
+$('lvEmp').addEventListener('change', updateLeaveHint);
+$('lvType').addEventListener('change', () => {
+  // الإجازة المرضية والاضطرارية لا تخصم من الرصيد السنوي
+  const t = $('lvType').value;
+  $('lvBalanceHint').style.opacity = (t === 'annual' || t === 'unpaid') ? 1 : .55;
+});
+
+async function saveLeave() {
+  const from = $('lvFrom').value, to = $('lvTo').value;
+  if (!from || !to || to < from) { toast('تحقق من التواريخ', false); return; }
+  const emp = EMPLOYEES.find(e => e.id == $('lvEmp').value);
+  const d = days(from, to);
+  if ($('lvType').value === 'annual' && d > Math.max(0, emp.annual_leave_days - usedLeaveDays(emp.id))) {
+    if (!confirm('المدة (' + d + ' يوم) تتجاوز الرصيد المتبقي. إرسال الطلب على أي حال؟')) return;
+  }
+  try {
+    await getSupabase().from('leave_requests').insert({
+      employee_id: emp.id,
+      leave_type: $('lvType').value,
+      start_date: from,
+      end_date: to,
+      days: d,
+      note: $('lvNote').value.trim(),
+      status: 'pending'
+    });
+    closeModal('leaveModal');
+    toast('أُرسل الطلب للموافقة');
+    loadLeaves();
+  } catch (e) { toast('تعذر الإرسال: ' + e.message, false); }
+}
+
+async function decideLeave(id, status) {
+  const lv = LEAVES.find(l => l.id === id);
+  if (lv && lv.status !== 'pending') return;
+  const wafaa = EMPLOYEES.find(e => e.role === 'admin');
+  try {
+    await getSupabase().from('leave_requests').update({
+      status,
+      approved_by: wafaa ? wafaa.id : null,
+      decided_at: new Date().toISOString()
+    }).eq('id', id);
+    toast(status === 'approved' ? 'تمت الموافقة على الإجازة' : 'تم رفض الطلب');
+    loadLeaves();
+    refreshDashboard();
+  } catch (e) { toast('تعذر تنفيذ القرار: ' + e.message, false); }
+}
+
+/* ═════════ profit ═════════ */
+const EXAMPLE = 2000;
+
+async function loadProfit() {
+  try {
+    const { data } = await getSupabase().from('profit_settings').select('*').eq('id', 1).maybeSingle();
+    const p = data || { photographer_pct: 70, wafaa_pct: 10, marketing_pct: 10, producers_pct: 10 };
+    $('pctPhotographer').value = p.photographer_pct;
+    $('pctWafaa').value = p.wafaa_pct;
+    $('pctMarketing').value = p.marketing_pct;
+    $('pctProducers').value = p.producers_pct;
+    renderProfitExample();
+  } catch (e) { renderProfitExample(); }
+}
+
+function pctVals() {
+  return {
+    ph: +$('pctPhotographer').value || 0,
+    wf: +$('pctWafaa').value || 0,
+    mk: +$('pctMarketing').value || 0,
+    pr: +$('pctProducers').value || 0
+  };
+}
+
+function renderProfitExample() {
+  const v = pctVals();
+  const total = v.ph + v.wf + v.mk + v.pr;
+  $('pctTotal').textContent = total + '%';
+  $('pctTotal').style.color = total === 100 ? 'var(--ok)' : 'var(--danger)';
+  const rows = [
+    ['المصور المنفذ', v.ph],
+    ['وفاء (إدارة وتقنية)', v.wf],
+    ['التسويق والتطوير', v.mk],
+    ['المنتجون', v.pr]
+  ];
+  $('profitExample').innerHTML = rows.map(([n, p]) =>
+    '<tr><td>' + n + '</td><td><span class="chip chip-accent">' + p + '%</span></td>' +
+    '<td><b>' + (EXAMPLE * p / 100).toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' ر.س</b></td></tr>'
+  ).join('') + '<tr style="background:var(--surface-2)"><td><b>الإجمالي</b></td><td><b>' + total + '%</b></td><td><b>' + EXAMPLE.toLocaleString() + ' ر.س</b></td></tr>';
+}
+
+['pctPhotographer', 'pctMarketing', 'pctProducers'].forEach(id =>
+  $(id).addEventListener('input', renderProfitExample)
+);
+
+async function saveProfit() {
+  const v = pctVals();
+  const total = v.ph + v.wf + v.mk + v.pr;
+  if (total !== 100) { toast('المجموع ' + total + '% — يجب أن يساوي 100%', false); return; }
+  try {
+    await getSupabase().from('profit_settings').upsert({
+      id: 1,
+      photographer_pct: v.ph,
+      wafaa_pct: v.wf,
+      marketing_pct: v.mk,
+      producers_pct: v.pr,
+      updated_at: new Date().toISOString()
+    });
+    toast('حُفظت نسب التوزيع');
+  } catch (e) { toast('تعذر الحفظ: ' + e.message, false); }
+}
+
+/* ═════════ calendar ═════════ */
+let CAL = { view:'month', y:new Date().getFullYear(), m:new Date().getMonth(), jobs:[], wkOff:0 };
+const MONTHS_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const DOW_AR = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+
+async function loadCalendar() {
+  try {
+    const [jR, eR] = await Promise.all([
+      getSupabase().from('schedule').select('*').order('job_date'),
+      getSupabase().from('leave_requests').select('*, employees(name)').eq('status','approved')
+    ]);
+    CAL.jobs = jR.data || [];
+    CAL.leaves = (eR.data || []).map(l => ({...l, start:l.start_date, end:l.end_date, title:'إجازة ' + (l.employees?.name || ''), type:'leave'}));
+    if (EMPLOYEES.length === 0) {
+      const { data } = await getSupabase().from('employees').select('*').order('sort_order');
+      EMPLOYEES = data || [];
+    }
+    renderCalendar();
+  } catch (e) { toast('تعذر تحميل التقويم: ' + e.message, false); }
+}
+
+function renderCalendar() {
+  $('calTitle').textContent = CAL.view === 'month'
+    ? MONTHS_AR[CAL.m] + ' ' + CAL.y
+    : 'أسبوع ' + getWeekLabel();
+  if (CAL.view === 'month') renderMonth(); else renderWeek();
+}
+
+function getWeekLabel() {
+  const d = weekStart();
+  return d.getDate() + ' ' + MONTHS_AR[d.getMonth()];
+}
+
+function weekStart() {
+  const d = new Date(CAL.y, CAL.m, 1);
+  d.setDate(d.getDate() + CAL.wkOff * 7);
+  while (d.getDay() !== 0) d.setDate(d.getDate() - 1);
+  return d;
+}
+
+/* events for a date */
+function eventsOn(dateStr) {
+  const jobs = CAL.jobs.filter(j => j.job_date === dateStr).map(j => ({
+    id:j.id, title:(j.employees_id && empName(j.employee_id) ? empName(j.employee_id) + ': ' : '') + (j.title || 'جلسة'),
+    time:(j.start_time || '').slice(0,5), status:j.status || 'scheduled', type:'job', raw:j
+  }));
+  const leaves = CAL.leaves.filter(l => l.start <= dateStr && l.end >= dateStr)
+    .map(l => ({ id:l.id, title:l.title, type:'leave', status:'leave', leave_type:l.leave_type, raw:l }));
+  return jobs.concat(leaves);
+}
+
+function empName(id) {
+  const e = EMPLOYEES.find(x => x.id === id);
+  return e ? e.name.split(' ')[0] : '';
+}
+
+function renderMonth() {
+  $('calMonth').style.display = 'grid';
+  $('calWeek').style.display = 'none';
+  $('vbtn-month').classList.add('active');
+  $('vbtn-week').classList.remove('active');
+
+  const first = new Date(CAL.y, CAL.m, 1);
+  const start = new Date(first);
+  while (start.getDay() !== 0) start.setDate(start.getDate() - 1);
+  const days = 42;
+  let html = DOW_AR.map(d => '<div class="cal-dow">' + d.slice(0, 3) + '</div>').join('');
+  for (let i = 0; i < days; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    const ds = iso(d);
+    const other = d.getMonth() !== CAL.m;
+    const todayCls = ds === iso(new Date()) ? ' today' : '';
+    const evs = eventsOn(ds);
+    html += '<div class="cal-cell' + (other ? ' other' : '') + todayCls + '" data-date="' + ds + '">' +
+      '<div class="cal-dnum"><span>' + d.getDate() + '</span>' +
+      (evs.length > 3 ? '<span style="font-size:.62rem;color:var(--text-dim)">+' + (evs.length - 3) + '</span>' : '') + '</div>' +
+      evs.slice(0, 3).map(ev =>
+        '<div class="cal-ev ' + ev.status + '" draggable="' + (ev.type === 'job') + '" data-id="' + ev.id + '" data-type="' + ev.type + '" onclick="' + (ev.type === 'job' ? 'openJobModal(\'' + ev.id + '\')' : 'go(\'leaves\')') + '">' +
+        (ev.time ? '<span class="ev-time">' + ev.time + '</span>' : '') + ev.title + '</div>'
+      ).join('') +
+      (!other ? '<button class="cal-add" onclick="openJobModal(null,\'' + ds + '\')" aria-label="إضافة">+</button>' : '') +
+      '</div>';
+  }
+  const grid = $('calMonth');
+  grid.innerHTML = html;
+  wireDnD(grid);
+}
+
+function renderWeek() {
+  $('calMonth').style.display = 'none';
+  $('calWeek').style.display = 'grid';
+  $('vbtn-week').classList.add('active');
+  $('vbtn-month').classList.remove('active');
+  const ws = weekStart();
+  const hours = [7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+  let html = '<div></div>' + Array.from({length:7}, (_,i) => {
+    const d = new Date(ws); d.setDate(ws.getDate() + i);
+    return '<div class="cal-whead">' + DOW_AR[i].slice(0,3) + ' ' + d.getDate() + (iso(d) === iso(new Date()) ? ' •' : '') + '</div>';
+  }).join('');
+  hours.forEach(h => {
+    html += '<div class="cal-whour">' + String(h).padStart(2,'0') + ':00</div>';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(ws); d.setDate(ws.getDate() + i);
+      const ds = iso(d);
+      const cellJobs = eventsOn(ds).filter(e => e.type === 'job' && e.time && +e.time.split(':')[0] === h);
+      html += '<div class="cal-wcell" data-date="' + ds + '" data-h="' + h + '">' +
+        cellJobs.map(ev => '<div class="cal-ev ' + ev.status + '" draggable="true" data-id="' + ev.id + '" data-type="job" onclick="openJobModal(\'' + ev.id + '\')" style="white-space:normal">' + ev.title + '</div>').join('') +
+        '</div>';
+    }
+  });
+  const grid = $('calWeek');
+  grid.innerHTML = html;
+  wireDnD(grid);
+}
+
+/* drag & drop */
+function wireDnD(grid) {
+  grid.querySelectorAll('.cal-ev[draggable="true"]').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', el.dataset.id);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+  });
+  grid.querySelectorAll('.cal-cell, .cal-wcell').forEach(cell => {
+    cell.addEventListener('dragover', e => { e.preventDefault(); cell.classList.add('drop-target'); });
+    cell.addEventListener('dragleave', () => cell.classList.remove('drop-target'));
+    cell.addEventListener('drop', async e => {
+      e.preventDefault();
+      cell.classList.remove('drop-target');
+      const id = e.dataTransfer.getData('text/plain');
+      const newDate = cell.dataset.date;
+      if (!id || !newDate) return;
+      const job = CAL.jobs.find(j => j.id === id);
+      if (!job || job.job_date === newDate) return;
+      /* conflict check: same employee, same date */
+      const conflict = CAL.jobs.find(j => j.job_date === newDate && j.employee_id === job.employee_id && j.id !== job.id && j.status === 'scheduled');
+      if (conflict && !confirm('تعارض: ' + empName(job.employee_id) + ' عنده جلسة بنفس اليوم (' + (conflict.title || 'جلسة') + '). نقل رغم ذلك؟')) return;
+      try {
+        await getSupabase().from('schedule').update({ job_date: newDate }).eq('id', id);
+        job.job_date = newDate;
+        renderCalendar();
+        toast('نُقل الموعد إلى ' + newDate);
+      } catch (err) { toast('تعذر النقل: ' + err.message, false); }
+    });
+  });
+}
+
+function calNav(dir) {
+  if (CAL.view === 'month') {
+    CAL.m += dir;
+    if (CAL.m > 11) { CAL.m = 0; CAL.y++; }
+    if (CAL.m < 0) { CAL.m = 11; CAL.y--; }
+  } else { CAL.wkOff += dir; }
+  renderCalendar();
+}
+function calToday() {
+  CAL.y = new Date().getFullYear(); CAL.m = new Date().getMonth(); CAL.wkOff = 0;
+  renderCalendar();
+}
+function calView(v) { CAL.view = v; renderCalendar(); }
+
+function openJobModal(id, presetDate) {
+  const job = id ? CAL.jobs.find(j => j.id === id) : null;
+  $('jobModalTitle').textContent = job ? 'تعديل الموعد' : 'موعد تصوير جديد';
+  $('jobId').value = job ? job.id : '';
+  $('jobTitle').value = job ? (job.title || '') : '';
+  $('jobDate').value = job ? job.job_date : (presetDate || iso(new Date()));
+  $('jobFrom').value = job && job.start_time ? job.start_time.slice(0,5) : '09:00';
+  $('jobTo').value = job && job.end_time ? job.end_time.slice(0,5) : '13:00';
+  $('jobLoc').value = job ? (job.location || '') : '';
+  $('jobNotes').value = job ? (job.notes || '') : '';
+  $('jobEmp').innerHTML = '<option value="">— بدون تعيين —</option>' +
+    EMPLOYEES.filter(e => e.is_active).map(e => '<option value="' + e.id + '"' + (job && job.employee_id === e.id ? ' selected' : '') + '>' + e.name + '</option>').join('');
+  $('jobDelBtn').style.display = job ? '' : 'none';
+  checkConflict();
+  $('jobModal').classList.add('on');
+}
+
+function checkConflict() {
+  const date = $('jobDate').value, emp = $('jobEmp').value, id = $('jobId').value;
+  const box = $('jobConflict');
+  if (!date || !emp) { box.style.display = 'none'; return; }
+  const conflict = CAL.jobs.find(j => j.job_date === date && j.employee_id === emp && j.id !== id && j.status === 'scheduled');
+  /* leave conflict */
+  const onLeave = CAL.leaves.find(l => l.employee_id === emp && l.start <= date && l.end >= date);
+  if (conflict || onLeave) {
+    box.style.display = 'block';
+    box.textContent = onLeave
+      ? '⚠ ' + empName(emp) + ' في إجازة بهذا التاريخ'
+      : '⚠ ' + empName(emp) + ' عنده جلسة أخرى بنفس اليوم';
+  } else box.style.display = 'none';
+}
+$('jobDate').addEventListener('change', checkConflict);
+$('jobEmp').addEventListener('change', checkConflict);
+
+async function saveJob() {
+  const title = $('jobTitle').value.trim();
+  const date = $('jobDate').value;
+  if (!title) { toast('أدخل عنوان الجلسة', false); return; }
+  if (!date) { toast('حدد التاريخ', false); return; }
+  const payload = {
+    title,
+    job_date: date,
+    start_time: $('jobFrom').value || null,
+    end_time: $('jobTo').value || null,
+    location: $('jobLoc').value.trim() || null,
+    notes: $('jobNotes').value.trim() || null,
+    employee_id: $('jobEmp').value || null
+  };
+  try {
+    const id = $('jobId').value;
+    if (id) await getSupabase().from('schedule').update(payload).eq('id', id);
+    else await getSupabase().from('schedule').insert(payload);
+    closeModal('jobModal');
+    toast(id ? 'حُدّث الموعد' : 'أُضيف الموعد');
+    loadCalendar();
+  } catch (e) { toast('تعذر الحفظ: ' + e.message, false); }
+}
+
+async function delJob() {
+  const id = $('jobId').value;
+  if (!id || !confirm('حذف هذا الموعد نهائياً؟')) return;
+  try {
+    await getSupabase().from('schedule').delete().eq('id', id);
+    closeModal('jobModal');
+    toast('حُذف الموعد');
+    loadCalendar();
+  } catch (e) { toast('تعذر الحذف: ' + e.message, false); }
+}
+
+/* ═════════ دفتر الحسابات (منقول من Google Sheets) ═════════ */
+/* ═════════ دفتر الحسابات (منقول من Google Sheets) ═════════ */
+const LEDGER_ROWS = [
+  ['16/1/2025',  4369, 'مأوى',   'مالك',  'رونين'],
+  ['16/1/2026',   684, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['23/2/2025',   820, 'مأوى',   'مالك',  'ذاكرة'],
+  ['23/2/2025',    20, 'مأوى',   'مالك',  'رسوم حراج'],
+  ['1/3/2025',    600, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['1/4/2025',    100, 'مأوى',   'محمد',  'كروت'],
+  ['1/5/2025',    100, 'محمد',   'مأوى',  'سداد مستحقات'],
+  ['27/2/2025',    20, 'مأوى',   'محمد',  'رسوم حراج'],
+  ['27/2/2025',    20, 'محمد',   'مأوى',  'سداد مستحقات'],
+  ['27/2/2025',   620, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['14/3/2025',   970, 'مأوى',   'مالك',  'فلتر'],
+  ['13/3/2025',    19, 'مأوى',   'مالك',  'رسوم حراج'],
+  ['28/3/2025',    16, 'مأوى',   'مالك',  'رسوم حراج'],
+  ['28/3/2025',  1080, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['30/4/2025',    30, 'مأوى',   'مالك',  'رسوم حراج'],
+  ['30/4/2025',   777, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['05/03/2025', 1095, 'مأوى',   'مالك',  'تجديد سجل تجاري'],
+  ['05/03/2025',  180, 'مأوى',   'مالك',  'سترات ودعاسات'],
+  ['05/11/2025',  920, 'مأوى',   'مالك',  'اشتراك جولات افتراضية'],
+  ['—',            650, 'مأوى',   'مالك',  'فلتر'],
+  ['30/5/2025',  2197, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['07/01/2025',  500, 'مأوى',   'مالك',  'زكاة'],
+  ['—',            20, 'مأوى',   'مالك',  'حراج'],
+  ['—',          1564, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['08/08/2025',   50, 'مأوى',   'مالك',  'حراج'],
+  ['8/8/2025',    889, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['20/8/2025',   314, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['24/8/2025',   240, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['—',           694, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['10/10/2025',   61, 'أسامة',  'مأوى',  'سداد مستحقات'],
+  ['—',            61, 'مأوى',   'أسامة', 'حراج'],
+  ['—',           165, 'مأوى',   'مأوى',  'مشتريات'],
+  ['24/5/2026',   900, 'مأوى',   'مأوى',  'رسوم اشتراك الجولة الافتراضية'],
+  ['—',          2900, 'مأوى',   'مالك',  'كاميرا ٣٦٠'],
+  ['—',          2900, 'مالك',   'مأوى',  'سداد مستحقات'],
+  ['—',          1383, 'مأوى',   'مالك',  'رسوم تجديد سجل وضريبة'],
+  ['—',            75, 'مأوى',   'مالك',  'دومين'],
+  ['—',           883, 'مالك',   'مأوى',  '']
+];
+const LEDGER_BALANCES = [
+  { name:'أسامة', credit:61,    paid:61,    due:0 },
+  { name:'مالك',  credit:14017, paid:13442, due:575 },
+  { name:'محمد',  credit:120,   paid:120,   due:0 }
+];
+const fmtSAR = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+function ledgerType(row) {
+  const [, , to, payer, note] = row;
+  if (payer === 'مأوى' && to === 'مأوى') return 'مصروف';
+  if (payer === 'مأوى') return 'سداد';      // مأوى تسدد للشريك
+  return 'مصروف';                            // الشريك دفع لمأوى (مصروف على المؤسسة)
+}
+
+let ledgerShowAll = false;
+function renderLedger() {
+  // الأرصدة
+  $('ledgerBalances').innerHTML = LEDGER_BALANCES.map(b =>
+    '<tr>' +
+    '<td><div class="t-name"><div class="t-avatar" style="background:var(--accent-soft);color:var(--accent)">' + b.name.charAt(0) + '</div>' + b.name + '</div></td>' +
+    '<td>' + fmtSAR(b.credit) + '</td>' +
+    '<td>' + fmtSAR(b.paid) + '</td>' +
+    '<td><span class="chip ' + (b.due > 0 ? 'chip-warn' : 'chip-ok') + '">' + fmtSAR(b.due) + '</span></td>' +
+    '</tr>'
+  ).join('');
+
+  // الحركات
+  const f = $('ledgerFilter').value;
+  const rows = LEDGER_ROWS.filter(r => {
+    if (f === 'all') return true;
+    if (f === 'مصروف' || f === 'سداد') return ledgerType(r) === f;
+    return r[2] === f || r[3] === f; // بالاسم
+  });
+  const tb = $('ledgerTbody');
+  if (!rows.length) { tb.innerHTML = '<tr><td colspan="6"><div class="empty"><p>لا توجد حركات مطابقة</p></div></td></tr>'; return; }
+  const shown = ledgerShowAll ? rows : rows.slice(-12);
+  const hidden = rows.length - shown.length;
+  tb.innerHTML = shown.map((r, i) => {
+    const type = ledgerType(r);
+    const isSettle = type === 'سداد';
+    return '<tr>' +
+      '<td style="color:var(--text-mid);white-space:nowrap">' + (r[0] || '—') + '</td>' +
+      '<td><b style="color:' + (isSettle ? 'var(--ok)' : 'var(--text)') + '">' + fmtSAR(r[1]) + '</b></td>' +
+      '<td>' + r[2] + '</td>' +
+      '<td>' + r[3] + '</td>' +
+      '<td style="color:var(--text-mid)">' + (r[4] || '—') + '</td>' +
+      '<td><span class="chip ' + (isSettle ? 'chip-ok' : 'chip-accent') + '">' + type + '</span></td>' +
+      '</tr>';
+  }).join('') + (hidden > 0
+    ? '<tr class="ledger-more-row"><td colspan="6"><button class="ledger-toggle" onclick="ledgerShowAll=true;renderLedger()">إظهار ' + hidden + ' حركة أقدم ▾</button></td></tr>'
+    : (ledgerShowAll && rows.length > 12
+        ? '<tr class="ledger-more-row"><td colspan="6"><button class="ledger-toggle" onclick="ledgerShowAll=false;renderLedger()">إظهار آخر 12 حركة فقط ▴</button></td></tr>'
+        : ''));
+}
+
+/* ═════════ init ═════════ */
+getSupabase().auth.onAuthStateChange((_e, session) => {
+  if (session && $('shell').classList.contains('on')) return;
+  if (session) boot(); else { $('shell').classList.remove('on'); $('loginOv').classList.remove('hidden'); }
+});
+boot();
+</script>
+
+</body>
+</html>

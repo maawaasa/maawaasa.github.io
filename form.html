@@ -690,43 +690,28 @@
                 const sb = getSupabase();
                 if (!sb) { alert('خطأ في الاتصال بقاعدة البيانات'); btn.textContent = 'إرسال الطلب'; btn.disabled = false; return; }
 
-                const { data: clientData, error: clientError } = await sb
-                    .from('clients')
-                    .insert([{ full_name: name, phone_number: phone, email: email || null, identity_number: idNum || null }])
-                    .select()
-                    .single();
-
-                if (clientError) throw clientError;
-
                 const svcList = Object.entries(selectedServices).map(([k, pkg]) => (serviceLabels[k] || k) + ' (باقة ' + (pkgLabels[pkg] || pkg) + ')').join('، ');
+                const servicesJson = Object.entries(selectedServices).map(([k, pkg]) => ({
+                    name: serviceLabels[k] || k,
+                    pkg: pkg
+                }));
 
-                const { data: contractData, error: contractError } = await sb
-                    .from('contracts')
-                    .insert([{
-                        client_id: clientData.id,
-                        service_type: svcList,
-                        total_amount: 0,
-                        contract_date: new Date().toISOString().split('T')[0],
-                        status: 'new',
-                        property_type: pType,
-                        property_location: pLoc,
-                        rooms_count: pArea || null,
-                        shoot_date: sDate || null,
-                        notes: notes || null
-                    }])
-                    .select()
-                    .single();
+                const { error: leadError } = await sb.rpc('submit_lead', {
+                    p_full_name: name,
+                    p_phone: phone,
+                    p_email: email || null,
+                    p_identity: idNum || null,
+                    p_service_type: svcList || '—',
+                    p_total: 0,
+                    p_property_type: pType,
+                    p_property_location: pLoc || null,
+                    p_rooms: pArea || null,
+                    p_shoot_date: sDate || null,
+                    p_notes: notes || null,
+                    p_services: servicesJson.length ? servicesJson : null
+                });
 
-                if (contractError) throw contractError;
-
-                if (Object.keys(selectedServices).length > 0) {
-                    const services = Object.entries(selectedServices).map(([k, pkg]) => ({
-                        contract_id: contractData.id,
-                        service_name: serviceLabels[k] || k,
-                        package_type: pkg
-                    }));
-                    await sb.from('contract_services').insert(services);
-                }
+                if (leadError) throw leadError;
 
                 document.getElementById('successOverlay').classList.add('show');
                 document.getElementById('clientForm').reset();
