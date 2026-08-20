@@ -61,7 +61,7 @@
   --maxw:1240px;
   --font-display:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif;
   --font-body:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif;
-  --font-latin:'Cormorant Garamond','IBM Plex Sans',serif;
+  --font-latin:'Cormorant Garamond','IBM Plex Sans Arabic','IBM Plex Sans',serif;
 }
 
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:92px}
@@ -77,7 +77,7 @@ img{max-width:100%;display:block}
 section{position:relative;z-index:1}
 
 /* ---------- eyebrow / headings ---------- */
-.eyebrow{font-family:var(--font-display);font-weight:500;font-size:.72rem;letter-spacing:2.6px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:18px}
+.eyebrow{font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:0;color:var(--muted);display:block;margin-bottom:18px}
 .sec-title{font-family:var(--font-display);font-weight:900;font-size:clamp(1.9rem,4.5vw,3.4rem);line-height:1.1;letter-spacing:-.5px}
 .sec-title em{font-style:normal;color:var(--accent)}
 .sec-lead{color:var(--text-mid);font-size:1.05rem;max-width:640px;margin-top:16px}
@@ -235,7 +235,7 @@ section{position:relative;z-index:1}
   radial-gradient(ellipse at 50% 40%,rgba(201,168,106,.12),transparent 60%),linear-gradient(135deg,#1f1a14,#15110e);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .vid-thumb::after{content:'▶';position:absolute;color:var(--accent);font-size:1.4rem;width:54px;height:54px;border-radius:50%;background:rgba(18,17,16,.7);display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-line);transition:all .3s}
 .vid-card:hover .vid-thumb::after{background:var(--accent);color:#121110}
-.vid-cat{font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.vid-cat{font-size:.72rem;color:var(--muted);letter-spacing:0;font-weight:600}
 .vid-body{padding:18px}
 .vid-body h4{font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-top:6px}
 
@@ -381,7 +381,7 @@ footer{border-top:1px solid var(--line);padding:64px 0 32px;background:var(--sur
 @keyframes platFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .lux-card:hover .lux-visual svg{transform:scale(1.07);filter:drop-shadow(0 0 34px rgba(238,241,244,.55))}
 .lux-body{padding:34px 32px 36px}
-.lux-card .lux-tag{font-size:.7rem;letter-spacing:3.6px;color:var(--plat);text-transform:uppercase;font-weight:600;display:block;margin-bottom:18px}
+.lux-card .lux-tag{font-size:.7rem;letter-spacing:0;color:var(--plat);font-weight:600;display:block;margin-bottom:18px}
 .lux-card .lux-tag::after{content:'';display:block;width:42px;height:1.5px;margin-top:9px;background:linear-gradient(90deg,var(--plat-bright),transparent);opacity:.8}
 .lux-card h3{font-family:var(--font-display);font-weight:700;font-size:1.8rem;margin-bottom:12px}
 .lux-card h3 em{font-style:normal}
@@ -398,10 +398,10 @@ footer{border-top:1px solid var(--line);padding:64px 0 32px;background:var(--sur
 
 
 /* ---------- Latin accent font ---------- */
-.eyebrow,.svc-meta,.work-cat,.vid-cat,.lux-tag,.cred bdi,.testi-stars{font-family:var(--font-latin);font-feature-settings:'lnum' 1,'tnum' 1}
+.svc-meta,.work-cat,.cred bdi,.testi-stars{font-family:var(--font-latin);font-feature-settings:'lnum' 1,'tnum' 1}
 .eyebrow{letter-spacing:3.2px;font-size:.82rem}
 .svc-meta{letter-spacing:1.8px}
-.work-cat,.vid-cat,.lux-tag{letter-spacing:2.2px}
+.work-cat{letter-spacing:2.2px}
 .hero-stat .num,.about-stat .v,.p-num,.vid-count,.lux-stat b,.ps-num{font-family:var(--font-latin);font-feature-settings:'lnum' 1,'tnum' 1;font-weight:600}
 
 /* ===== UX UPGRADES ===== */
@@ -681,9 +681,9 @@ a:focus-visible,button:focus-visible,.faq-q:focus-visible,.work-item:focus-visib
       </div>
     </div>
     <div class="about-stats reveal">
-      <div class="about-stat"><div class="v">32%</div><div class="t">بيع أسرع للعقار</div></div>
       <div class="about-stat"><div class="v">1200%</div><div class="t">مشاركة أوسع للفيديو</div></div>
       <div class="about-stat"><div class="v">300%</div><div class="t">زيارات أكثر جدية</div></div>
+      <div class="about-stat"><div class="v">32%</div><div class="t">بيع أسرع للعقار</div></div>
     </div>
     <p class="stats-source reveal">* هذه النسب تقديرية استنتاجية قدّمها الذكاء الاصطناعي كتأثير تقريبي للتصوير الاحترافي على العقارات، وليست إحصاءً رسمياً.</p>
   </div>
