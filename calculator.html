@@ -151,6 +151,14 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .pt-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);overflow:auto;padding:28px 14px}
 .pt-overlay.open{display:flex;align-items:flex-start;justify-content:center}
 .pt-card{background:#FBFAF6;color:#181412;border-radius:16px;max-width:760px;width:100%;padding:26px 24px;font-family:var(--f);box-shadow:0 40px 110px rgba(0,0,0,.5)}
+.pt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;border-radius:8px}
+.pt-scroll table{min-width:640px}
+.pt-hint{display:none;font-size:.7rem;color:#8a857f;margin:-8px 0 12px}
+@media(max-width:640px){
+  .pt-overlay{padding:14px 8px}
+  .pt-card{padding:18px 14px;border-radius:14px}
+  .pt-hint{display:block}
+}
 .pt-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #A4243B;padding-bottom:14px;margin-bottom:6px}
 .pt-head h3{font-size:1.15rem;font-weight:800;color:#A4243B;margin:0}
 .pt-x{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#6b6661;padding:4px 10px;border-radius:8px}
@@ -365,10 +373,10 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 .lc-btn:hover{color:var(--text)}
 .lc-btn.on{background:linear-gradient(135deg,#A4243B,#C44A60);color:#fff;box-shadow:0 4px 16px rgba(164,36,59,.32)}
 .lc-btn .riyal{font-size:1rem;margin-left:1px;transform:translateY(1px)}
-@media(max-width:640px){.lang-cur-bar{padding:0 14px 10px;gap:8px}.lc-btn{padding:7px 14px;font-size:.74rem}}
+@media(max-width:640px){.lang-cur-bar{padding:0 14px 10px;gap:6px}.lc-btn{padding:10px 13px;font-size:.74rem;min-height:42px}}
 
 /* نجمة الفاخرة */
-.type-btn .lux-star{font-style:normal;font-size:.62rem;color:#C9CED4;margin-right:2px;vertical-align:2px}
+.type-btn .lux-star{font-style:normal;font-size:.72rem;color:#C9CED4;margin-right:2px;vertical-align:2px}
 
 </style>
 </head>
@@ -1726,7 +1734,7 @@ function buildPriceTable(){
   const types=['studio','apartment','villa','office','land','project'];
   const cols=types.map(k=>({k, n:ar?TYPES[k].label:TYPES[k].en}));
   const svcs=['photo','video','vr360'];
-  let h='<table><thead><tr><th>'+t.ptSvc+'</th>'+cols.map(c=>'<th>'+c.n+'</th>').join('')+'</tr></thead><tbody>';
+  let h='<div class="pt-hint">⇠ '+(ar?'اسحب الجدول جانبياً لعرض كل الأعمدة':'Swipe the table sideways to see all columns')+' ⇢</div><div class="pt-scroll"><table><thead><tr><th>'+t.ptSvc+'</th>'+cols.map(c=>'<th>'+c.n+'</th>').join('')+'</tr></thead><tbody>';
   svcs.forEach(sk=>{
     const p=PRICING[sk];
     h+='<tr><td>'+(ar?SERVICES[sk].label:SERVICES[sk].en)+'</td>';
@@ -1738,7 +1746,7 @@ function buildPriceTable(){
     });
     h+='</tr>';
   });
-  h+='</tbody></table>';
+  h+='</tbody></table></div>';
   h+='<div class="pt-sec">'+t.ptFlat+'</div>';
   h+='<div class="pt-row"><span>'+t.ptDrone+'</span><span>'+fmtT(PRICING.drone.flat)+' ر.س</span></div>';
   h+='<div class="pt-row"><span>'+t.ptAd+'</span><span>'+fmtT(PRICING.ad.flat)+' ر.س</span></div>';
