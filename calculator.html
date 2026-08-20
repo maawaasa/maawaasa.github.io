@@ -147,6 +147,27 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .fields input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(164,36,59,.1)}
 .fields input::placeholder{color:var(--gray)}
 .note-mini{font-size:.73rem;color:var(--gray);margin-bottom:12px}
+/* ===== نافذة جدول الأسعار ===== */
+.pt-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);overflow:auto;padding:28px 14px}
+.pt-overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.pt-card{background:#FBFAF6;color:#181412;border-radius:16px;max-width:760px;width:100%;padding:26px 24px;font-family:var(--f);box-shadow:0 40px 110px rgba(0,0,0,.5)}
+.pt-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #A4243B;padding-bottom:14px;margin-bottom:6px}
+.pt-head h3{font-size:1.15rem;font-weight:800;color:#A4243B;margin:0}
+.pt-x{background:none;border:none;font-size:1.3rem;cursor:pointer;color:#6b6661;padding:4px 10px;border-radius:8px}
+.pt-x:hover{background:#F0EAE0}
+.pt-sub{font-size:.78rem;color:#8a857f;margin-bottom:16px}
+.pt-card table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:14px}
+.pt-card th{background:#A4243B;color:#FBFAF6;padding:9px 8px;font-weight:600;white-space:nowrap}
+.pt-card th:first-child{border-radius:8px 0 0 0}
+.pt-card th:last-child{border-radius:0 8px 0 0}
+.pt-card td{padding:9px 8px;border-bottom:1px solid #ece8e0;text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pt-card td:first-child{text-align:right;font-weight:700;color:#181412}
+.pt-card tbody tr:nth-child(even){background:#faf7f1}
+.pt-card td small{display:block;font-weight:500;color:#8a857f;font-size:.68rem;margin-top:2px;white-space:normal}
+.pt-sec{font-size:.86rem;font-weight:800;color:#A4243B;margin:16px 0 8px}
+.pt-row{display:flex;justify-content:space-between;padding:8px 4px;border-bottom:1px dashed #ece8e0;font-size:.84rem}
+.pt-row span:last-child{font-weight:700}
+.pt-note{margin-top:14px;font-size:.72rem;color:#8a857f;background:#fff;border:1px dashed #ece8e0;border-radius:10px;padding:10px 14px;line-height:1.8}
 /* ===== الوضع الفاخر: طلب مخصّص ===== */
 .lux-banner{display:none;margin:14px 0 4px;background:linear-gradient(135deg,#1C1620,#26141A);border:1px solid #4A3240;border-radius:16px;padding:22px 22px 18px;text-align:center}
 .lux-banner.on{display:block;animation:discPop .5s cubic-bezier(.2,1.5,.4,1)}
@@ -558,10 +579,17 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       <a class="call-fab" id="callFab" href="tel:+966531646152" aria-label="اتصال مباشر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
       <div class="btn-row" style="margin-top:9px">
         <button class="btn btn-out btn-slim" id="quoteBtn" data-t="pdf">إصدار عرض سعر رسمي PDF</button>
+        <button class="btn btn-out btn-slim" id="ptBtn" data-t="ptBtn">📋 جدول الأسعار الكامل</button>
       </div>
-      <div style="text-align:center;margin-top:10px">
-        <a href="index.html#pricing" style="font-size:.78rem;color:var(--gray)"><span data-t="priceTable">عرض جدول الأسعار الكامل ←</span></a>
-      </div>
+
+<!-- نافذة جدول الأسعار -->
+<div class="pt-overlay" id="ptOverlay">
+  <div class="pt-card">
+    <div class="pt-head"><h3 data-t="ptTitle">قائمة الأسعار الموحّدة 2026</h3><button class="pt-x" id="ptClose" aria-label="إغلاق">✕</button></div>
+    <div class="pt-sub" data-t="ptSub">الأسعار بالريال السعودي · الباقة الأساسية · التصوير داخل الرياض</div>
+    <div id="ptBody"></div>
+  </div>
+</div>
 
   <p class="disclaimer">© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.</p>
 </div>
@@ -964,6 +992,12 @@ const T = {
     eyebrow:'حاسبة أسعار فورية', heroSub:'اختر نوع العقار وعدد الغرف والخدمات، واحصل على عرض سعر فوري مع تفاصيل المُخرجات.',
     bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%', dateHint:'متاح يومياً عدا الجمعة', timeHint:'الفترات المتاحة: 4:00 صباحاً — 12:00 منتصف الليل',
     quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً', priceTable:'عرض جدول الأسعار الكامل ←', locAll:'كل الوحدات في نفس الموقع (خصم أعلى)',
+    ptBtn:'📋 جدول الأسعار الكامل', ptTitle:'قائمة الأسعار الموحّدة 2026', ptSub:'الأسعار بالريال السعودي · الباقة الأساسية · التصوير داخل الرياض',
+    ptSvc:'الخدمة', ptFrom:'من', ptPerRoom:'+ للغرفة الإضافية', ptFlat:'خدمات بثابت',
+    ptDrone:'تصوير درون 4K (شامل التصاريح)', ptAd:'فيديو إعلاني تسويقي',
+    ptExtras:'الإضافات والتصميم', ptNight:'تصوير ليلي / Blue-hour', ptSocial:'نسخ لمواقع التواصل', ptRush:'تسليم عاجل', ptRushV:'+25%',
+    ptLogo:'تصميم شعار عقاري', ptSign:'تصميم لوحة خارجية', ptBrochure:'بروشور PDF', ptBrochureV:'100 ر.س / صفحة',
+    ptNote:'هذه أسعار الباقة الأساسية — الباقة الاحترافية للتصوير والفيديو +45% (تجهيز كامل للمنصات + مخرجات إضافية). السعر النهائي يُحدَّد بدقة من الحاسبة أعلاه حسب عدد الغرف والخدمات — والخصومات تُطبَّق تلقائياً (وحدات متعددة حتى 20% · 3 خدمات تصوير 10%).',
     luxTitle:'هذا المشروع يستحق تسعيراً مخصّصاً',
     luxSub:'المشاريع الفاخرة تختلف تفاصيلها من موقع لآخر — أرسل طلبك وسيتواصل معك فريقنا لمناقشة التفاصيل، ثم نصلك عرض سعر رسمي مخصّص خلال 24 ساعة.',
     luxReqT:'✦ تفاصيل سريعة تساعدنا لخدمتك أفضل',
@@ -1044,6 +1078,12 @@ const T = {
     heroSub:'Pick your property type, rooms and services — and get an instant price quote with output details.',
     bookNowSub:'Pick date & time now + 25% deposit', dateHint:'Available daily except Friday', timeHint:'Available slots: 4:00 AM — 12:00 Midnight',
     quoteOnlySub:'We will contact you to schedule later', priceTable:'View full price list ←', locAll:'All units at the same location (higher discount)',
+    ptBtn:'📋 Full Price Table', ptTitle:'Unified Price List 2026', ptSub:'Prices in SAR · Basic package · Riyadh coverage',
+    ptSvc:'Service', ptFrom:'from', ptPerRoom:'+ per extra room', ptFlat:'Fixed-rate services',
+    ptDrone:'4K Drone (permits included)', ptAd:'Marketing promo video',
+    ptExtras:'Add-ons & Design', ptNight:'Night / Blue-hour shoot', ptSocial:'Social media versions', ptRush:'Rush delivery', ptRushV:'+25%',
+    ptLogo:'Real estate logo design', ptSign:'Outdoor signage design', ptBrochure:'PDF brochure', ptBrochureV:'100 SAR / page',
+    ptNote:'These are Basic package prices — the Professional package for photo & video is +45% (full platform-ready delivery + extra outputs). The exact final price is calculated by the calculator above based on rooms & services — discounts apply automatically (multi-unit up to 20% · 3+ photo services 10%).',
     luxTitle:'This project deserves a custom quote',
     luxSub:'Luxury projects vary by location and scope — send your request, our team will contact you to discuss details, then deliver a tailored official quote within 24 hours.',
     luxReqT:'✦ A few quick details to serve you better',
@@ -1679,6 +1719,41 @@ $('waBtn').onclick = async function(){
     toast('✓ تم إرسال طلبك');
   }
 };
+
+/* ===== نافذة جدول الأسعار (مبنية من PRICING — توحيد تلقائي) ===== */
+function buildPriceTable(){
+  const t=T[UI.lang], ar=UI.lang==='ar';
+  const types=['studio','apartment','villa','office','land','project'];
+  const cols=types.map(k=>({k, n:ar?TYPES[k].label:TYPES[k].en}));
+  const svcs=['photo','video','vr360'];
+  let h='<table><thead><tr><th>'+t.ptSvc+'</th>'+cols.map(c=>'<th>'+c.n+'</th>').join('')+'</tr></thead><tbody>';
+  svcs.forEach(sk=>{
+    const p=PRICING[sk];
+    h+='<tr><td>'+(ar?SERVICES[sk].label:SERVICES[sk].en)+'</td>';
+    cols.forEach(c=>{
+      const cell=p[c.k];
+      if(!cell||cell.b===0){ h+='<td>—</td>'; return; }
+      const rTxt=cell.r.toLocaleString('en-US')+(ar?' ر.س':'');
+      h+='<td>'+t.ptFrom+' '+fmtT(cell.b)+(cell.r?('<small>+'+rTxt+' '+t.ptPerRoom+'</small>'):'')+'</td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  h+='<div class="pt-sec">'+t.ptFlat+'</div>';
+  h+='<div class="pt-row"><span>'+t.ptDrone+'</span><span>'+fmtT(PRICING.drone.flat)+' ر.س</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptAd+'</span><span>'+fmtT(PRICING.ad.flat)+' ر.س</span></div>';
+  h+='<div class="pt-sec">'+t.ptExtras+'</div>';
+  h+='<div class="pt-row"><span>'+t.ptLogo+'</span><span>1,200 ر.س</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptSign+'</span><span>700 ر.س</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptBrochure+'</span><span>'+t.ptBrochureV+'</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptSocial+'</span><span>+300 ر.س</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptRush+'</span><span>'+t.ptRushV+'</span></div>';
+  h+='<div class="pt-note">'+t.ptNote+'</div>';
+  $('ptBody').innerHTML=h;
+}
+$('ptBtn').onclick=()=>{ buildPriceTable(); $('ptOverlay').classList.add('open'); document.body.style.overflow='hidden'; };
+$('ptClose').onclick=()=>{ $('ptOverlay').classList.remove('open'); document.body.style.overflow=''; };
+$('ptOverlay').addEventListener('click',e=>{ if(e.target.id==='ptOverlay'){ $('ptClose').onclick(); } });
 
 setupDateInput(); fillTimes('');
   if (typeof UI!=='undefined' && UI.lang==='en'){ const dpv=$('d-pages-v'); if(dpv) dpv.textContent='0'; }
