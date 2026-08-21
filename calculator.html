@@ -76,7 +76,7 @@ a{color:inherit;text-decoration:none}
 html[lang="en"] .type-btn.lux::before{content:'LUXURY'}
 .type-btn.lux.active{border-color:#C9CED4;background:linear-gradient(155deg,rgba(201,206,212,.18),rgba(20,22,26,.55));box-shadow:0 0 0 1px rgba(201,206,212,.35),0 8px 22px rgba(201,206,212,.14)}
 .type-btn.lux.active .em{color:#EEF1F4}
-.type-btn.lux.active .lux-star{color:#EEF1F4}
+.type-btn.lux.active .lux-ic{color:#EEF1F4}
 .rooms-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .rooms-val{font-weight:700;font-size:1.5rem;color:var(--red)}
 .rooms-val small{color:var(--gray);font-size:.78rem;font-weight:400;margin-right:6px}
@@ -376,7 +376,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 @media(max-width:640px){.lang-cur-bar{padding:0 14px 10px;gap:6px}.lc-btn{padding:10px 13px;font-size:.74rem;min-height:42px}}
 
 /* نجمة الفاخرة */
-.type-btn .lux-star{font-style:normal;font-size:.72rem;color:#C9CED4;margin-right:2px;vertical-align:2px}
+.lux-ic{width:.62em;height:.62em;color:#C9CED4;margin-right:3px;display:inline-flex;vertical-align:baseline}
 
 </style>
 </head>
@@ -499,7 +499,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
           <div class="bo-s" data-t="quoteOnlySub">نتواصل معك لتحديد الموعد لاحقاً</div>
         </div>
         <div class="book-opt" id="optBook" onclick="setBookMode('book')">
-          <div class="bo-t" data-t="bookNow">حجز موعد مؤكد ✦</div>
+          <div class="bo-t" data-t="bookNow">حجز موعد مؤكد</div>
           <div class="bo-s" data-t="bookNowSub">اختر التاريخ والوقت الآن + عربون 25%</div>
         </div>
       </div>
@@ -525,14 +525,14 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <div class="gs-body">
           <label class="gs-label"><span data-t="facadeLabel">اتجاه واجهة العقار — للتصوير الخارجي</span></label>
           <div class="facade-chips" id="facadeChips">
-            <button type="button" class="fchip" data-f="N"><span class="fico">⛅</span><span data-t="facN">شمالية</span></button>
-            <button type="button" class="fchip" data-f="NE"><span class="fico">🌤️</span><span data-t="facNE">شمالية شرقية</span></button>
-            <button type="button" class="fchip" data-f="E"><span class="fico">🌅</span><span data-t="facE">شرقية</span></button>
-            <button type="button" class="fchip" data-f="SE"><span class="fico">🌞</span><span data-t="facSE">جنوبية شرقية</span></button>
-            <button type="button" class="fchip" data-f="S"><span class="fico">☀️</span><span data-t="facS">جنوبية</span></button>
-            <button type="button" class="fchip" data-f="SW"><span class="fico">🌆</span><span data-t="facSW">جنوبية غربية</span></button>
-            <button type="button" class="fchip" data-f="W"><span class="fico">🌇</span><span data-t="facW">غربية</span></button>
-            <button type="button" class="fchip" data-f="NW"><span class="fico">🌁</span><span data-t="facNW">شمالية غربية</span></button>
+            <button type="button" class="fchip" data-f="N"><span class="fico" data-svg="facN"></span><span data-t="facN">شمالية</span></button>
+            <button type="button" class="fchip" data-f="NE"><span class="fico" data-svg="facNE"></span><span data-t="facNE">شمالية شرقية</span></button>
+            <button type="button" class="fchip" data-f="E"><span class="fico" data-svg="facE"></span><span data-t="facE">شرقية</span></button>
+            <button type="button" class="fchip" data-f="SE"><span class="fico" data-svg="facSE"></span><span data-t="facSE">جنوبية شرقية</span></button>
+            <button type="button" class="fchip" data-f="S"><span class="fico" data-svg="facS"></span><span data-t="facS">جنوبية</span></button>
+            <button type="button" class="fchip" data-f="SW"><span class="fico" data-svg="facSW"></span><span data-t="facSW">جنوبية غربية</span></button>
+            <button type="button" class="fchip" data-f="W"><span class="fico" data-svg="facW"></span><span data-t="facW">غربية</span></button>
+            <button type="button" class="fchip" data-f="NW"><span class="fico" data-svg="facNW"></span><span data-t="facNW">شمالية غربية</span></button>
           </div>
           <div class="gs-hint"><span data-t="facadeHint">نقترح عليك أفضل وقت للتصوير الخارجي حسب واجهة عقارك ومسار الشمس في الرياض — مجرد اقتراح، وقد تحجب المباني المجاورة أو المعيقات الضوء</span></div>
           <div class="sun-advice" id="sunAdvice"></div>
@@ -549,12 +549,12 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <div class="bb-row" onclick="copyBankVal(this,'acct')" title="اضغط لنسخ رقم الحساب">
           <span class="bb-label" data-t="acctNum">رقم الحساب</span>
           <span class="bb-val" dir="ltr">6126-08016-0946</span>
-          <span class="bb-copy">⧉ <span data-t="copyW">نسخ</span></span>
+          <span class="bb-copy"><span data-svg="copy"></span><span data-t="copyW">نسخ</span></span>
         </div>
         <div class="bb-row" onclick="copyBankVal(this,'iban')" title="اضغط لنسخ رقم الآيبان">
           <span class="bb-label" data-t="ibanNum">الآيبان</span>
           <span class="bb-val" dir="ltr">SA48 8000 0612 6080 1609 4625</span>
-          <span class="bb-copy">⧉ <span data-t="copyW">نسخ</span></span>
+          <span class="bb-copy"><span data-svg="copy"></span><span data-t="copyW">نسخ</span></span>
         </div>
       </div>
     
@@ -570,12 +570,12 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       </div>
 
       <div class="lux-banner" id="luxBanner">
-        <div class="lb-ico">✦</div>
+        <div class="lb-ico" id="lbIco"></div>
         <div class="lb-t" data-t="luxTitle">هذا المشروع يستحق تسعيراً مخصّصاً</div>
         <div class="lb-s" data-t="luxSub">المشاريع الفاخرة تختلف تفاصيلها من موقع لآخر — أرسل طلبك وسيتواصل معك فريقنا لمناقشة التفاصيل، ثم نصلك عرض سعر رسمي مخصّص خلال 24 ساعة.</div>
       </div>
       <div class="lux-req" id="luxReq">
-        <div class="lr-t" data-t="luxReqT">✦ تفاصيل سريعة تساعدنا لخدمتك أفضل</div>
+        <div class="lr-t" data-t="luxReqT">تفاصيل سريعة تساعدنا لخدمتك أفضل</div>
         <textarea id="luxDetails" data-t-ph="luxPh" placeholder="مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع..."></textarea>
         <div class="lr-row">
           <input type="text" id="luxCity" data-t-ph="luxCity" placeholder="الموقع (الحي / المدينة)">
@@ -587,7 +587,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       <a class="call-fab" id="callFab" href="tel:+966531646152" aria-label="اتصال مباشر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
       <div class="btn-row" style="margin-top:9px">
         <button class="btn btn-out btn-slim" id="quoteBtn" data-t="pdf">إصدار عرض سعر رسمي PDF</button>
-        <button class="btn btn-out btn-slim" id="ptBtn" data-t="ptBtn">📋 جدول الأسعار الكامل</button>
+        <button class="btn btn-out btn-slim" id="ptBtn" data-t="ptBtn"><span data-svg="clip"></span> جدول الأسعار الكامل</button>
       </div>
 
 <!-- نافذة جدول الأسعار -->
@@ -609,9 +609,9 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
   <div class="qbar">
     <span>عرض سعر رسمي — مأوى للتصوير العقاري</span>
     <div class="acts">
-      <button class="primary" id="pdfBtn">⬇ تحميل PDF</button>
-      <button id="printBtn">🖨 طباعة</button>
-      <button id="closeQuote">✕ إغلاق</button>
+      <button class="primary" id="pdfBtn"><span data-svg="dl"></span> تحميل PDF</button>
+      <button id="printBtn"><span data-svg="print"></span> طباعة</button>
+      <button id="closeQuote"><span data-svg="x"></span> إغلاق</button>
     </div>
   </div>
   <div class="qdoc" id="quoteDoc">
@@ -743,6 +743,30 @@ const ICONS={
   link:`<svg viewBox="0 0 24 24" width="16" height="16" ${S}><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>`,
 };
 
+/* ===== أيقونات SVG بدل الإيموجي ===== */
+/* ===== أيقونات SVG بدل الإيموجي ===== */
+const SVGI = {
+  lux: `<svg viewBox="0 0 24 24" fill="currentColor" class="lux-ic" aria-hidden="true"><path d="M12 1.8 14.47 8.6 21.7 9 16.1 13.5 18 20.6 12 16.6 6 20.6 7.9 13.5 2.3 9 9.53 8.6z"/></svg>`,
+  luxBig: `<svg viewBox="0 0 24 24" fill="currentColor" style="width:26px;height:26px;color:#E8C88F" aria-hidden="true"><path d="M12 1.8 14.47 8.6 21.7 9 16.1 13.5 18 20.6 12 16.6 6 20.6 7.9 13.5 2.3 9 9.53 8.6z"/></svg>`,
+  cal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:.9em;height:.9em;vertical-align:-.08em;margin-right:4px" aria-hidden="true"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 9.5h18"/></svg>`,
+  sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="width:.95em;height:.95em;vertical-align:-.1em" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>`,
+  warn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:.95em;height:.95em;vertical-align:-.1em" aria-hidden="true"><path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>`,
+  gift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:.95em;height:.95em;vertical-align:-.12em" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M12 8a3 3 0 1 0-3-3c0 1.7 1.3 3 3 3zM12 8a3 3 0 1 1 3-3c0 1.7-1.3 3-3 3z"/></svg>`,
+  clip: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:.95em;height:.95em;vertical-align:-.12em" aria-hidden="true"><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M16 4.5h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>`,
+  dl: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:-2px" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`,
+  print: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:-2px" aria-hidden="true"><path d="M6 9V3.5A1.5 1.5 0 0 1 7.5 2h9A1.5 1.5 0 0 1 18 3.5V9M6 18H4.5A1.5 1.5 0 0 1 3 16.5v-6A1.5 1.5 0 0 1 4.5 9h15a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5H18M6 14.5h12v7H6z"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:14px;height:14px;vertical-align:-2px" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>`,
+  copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
+  facN: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>`,
+  facNE: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M17 7h-6M17 7v6"/></svg>`,
+  facE: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/><path d="M12 4v16" opacity=".4"/><path d="M4.5 9.5c2-1.6 4.6-2.5 7.5-2.5s5.5.9 7.5 2.5"/></svg>`,
+  facSE: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 17h-6M17 17v-6"/></svg>`,
+  facS: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>`,
+  facSW: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M7 17h6M7 17v-6"/></svg>`,
+  facW: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/><path d="M12 4v16" opacity=".4"/><path d="M4.5 14.5c2 1.6 4.6 2.5 7.5 2.5s5.5-.9 7.5-2.5"/></svg>`,
+  facNW: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17 7 7M7 7h6M7 7v6"/></svg>`
+};
+
 /* ===== الحالة ===== */
 const state={ type:'apartment', rooms:2, units:1, sameLoc:true, sel:new Set(['photo']), pkg:'basic', night:false, social:false, rush:false, logo:false, sign:false, pages:0, name:'', phone:'', email:'', attn:'', qnote:'', isCustom:false };
 const $=id=>document.getElementById(id);
@@ -754,8 +778,9 @@ const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('room
 /* ===== رسم ===== */
 function renderTypes(){
   typesEl.innerHTML=Object.entries(TYPES).map(([k,t])=>
-    `<button class="type-btn ${k===state.type?'active':''} ${t.luxury?'lux':''}" data-k="${k}"><span class="em">${ICONS.type[k]||''}</span>${(typeof UI!=='undefined'&&UI.lang==='en'&&t.en)?t.en:t.label}${t.luxury?' <i class="lux-star">✦</i>':''}</button>`).join('');
+    `<button class="type-btn ${k===state.type?'active':''} ${t.luxury?'lux':''}" data-k="${k}"><span class="em">${ICONS.type[k]||''}</span>${(typeof UI!=='undefined'&&UI.lang==='en'&&t.en)?t.en:t.label}${t.luxury?' '+SVGI.lux:''}</button>`).join('');
   typesEl.querySelectorAll('.type-btn').forEach(b=>b.onclick=()=>{state.type=b.dataset.k; onTypeChange(); recalc(); syncUrl();});
+  typesEl.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.dataset.svg; if(SVGI[k]) el.innerHTML=SVGI[k]; });
 }
 function renderServices(){
   const dis=DISABLED[state.type]||[];
@@ -935,7 +960,7 @@ function recalc(){
   const db=$('discBadge'); const saved=bundleDiscount+multiDiscount;
   if(saved>0 && !state.isCustom){
     db.style.display='flex';
-    db.innerHTML=`<span class="ds-ic">🎉</span><span class="ds-amt">وفّرت ${fmt(saved)}</span><span class="ds-msg">${multiDiscount>0?'خصم الوحدات مفعّل!':'خصم الباقة مفعّل!'}</span>`;
+    db.innerHTML=`<span class="ds-ic" data-svg="gift"></span><span class="ds-amt">وفّرت ${fmt(saved)}</span><span class="ds-msg">${multiDiscount>0?'خصم الوحدات مفعّل!':'خصم الباقة مفعّل!'}</span>`;
     db.style.animation='none'; void db.offsetWidth; db.style.animation='';
   }else{ db.style.display='none'; }
   animateTotal(total);
@@ -1000,7 +1025,7 @@ const T = {
     eyebrow:'حاسبة أسعار فورية', heroSub:'اختر نوع العقار وعدد الغرف والخدمات، واحصل على عرض سعر فوري مع تفاصيل المُخرجات.',
     bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%', dateHint:'متاح يومياً عدا الجمعة', timeHint:'الفترات المتاحة: 4:00 صباحاً — 12:00 منتصف الليل',
     quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً', priceTable:'عرض جدول الأسعار الكامل ←', locAll:'كل الوحدات في نفس الموقع (خصم أعلى)',
-    ptBtn:'📋 جدول الأسعار الكامل', ptTitle:'قائمة الأسعار الموحّدة 2026', ptSub:'الأسعار بالريال السعودي · الباقة الأساسية · التصوير داخل الرياض',
+    ptBtn:'جدول الأسعار الكامل', ptTitle:'قائمة الأسعار الموحّدة 2026', ptSub:'الأسعار بالريال السعودي · الباقة الأساسية · التصوير داخل الرياض',
     ptSvc:'الخدمة', ptFrom:'من', ptPerRoom:'+ للغرفة الإضافية', ptFlat:'خدمات بثابت',
     ptDrone:'تصوير درون 4K (شامل التصاريح)', ptAd:'فيديو إعلاني تسويقي',
     ptExtras:'الإضافات والتصميم', ptNight:'تصوير ليلي / Blue-hour', ptSocial:'نسخ لمواقع التواصل', ptRush:'تسليم عاجل', ptRushV:'+25%',
@@ -1008,7 +1033,7 @@ const T = {
     ptNote:'هذه أسعار الباقة الأساسية — الباقة الاحترافية للتصوير والفيديو +45% (تجهيز كامل للمنصات + مخرجات إضافية). السعر النهائي يُحدَّد بدقة من الحاسبة أعلاه حسب عدد الغرف والخدمات — والخصومات تُطبَّق تلقائياً (وحدات متعددة حتى 20% · 3 خدمات تصوير 10%).',
     luxTitle:'هذا المشروع يستحق تسعيراً مخصّصاً',
     luxSub:'المشاريع الفاخرة تختلف تفاصيلها من موقع لآخر — أرسل طلبك وسيتواصل معك فريقنا لمناقشة التفاصيل، ثم نصلك عرض سعر رسمي مخصّص خلال 24 ساعة.',
-    luxReqT:'✦ تفاصيل سريعة تساعدنا لخدمتك أفضل',
+    luxReqT:'تفاصيل سريعة تساعدنا لخدمتك أفضل',
     luxPh:'مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع...',
     luxCity:'الموقع (الحي / المدينة)',
     send:'اطلب هذا العرض عبر واتساب', sendLux:'أرسل طلبك المخصّص — واتساب',
@@ -1022,7 +1047,7 @@ const T = {
     total:'الإجمالي التقديري',
     depositBanner:'تأكيد الحجز يتطلب <b>عربون 25%</b> — بقيمة <b id="depositVal">0</b> — يُحوَّل على حساب المؤسسة ويُرسل الإيصال عبر واتساب لتثبيت الموعد.',
     quoteOnly:'طلب عرض سعر فقط', quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً',
-    bookNow:'حجز موعد مؤكد ✦', bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%',
+    bookNow:'حجز موعد مؤكد', bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%',
     dateLabel:'تاريخ جلسة التصوير', dateHint:'متاح يومياً عدا الجمعة',
      timeLabel:'وقت بداية الجلسة', timeHint:'الفترات المتاحة: 4:00 صباحاً — 12:00 منتصف الليل',
      facadeLabel:'اتجاه واجهة العقار — للتصوير الخارجي', facE:'شرقية', facS:'جنوبية', facW:'غربية', facN:'شمالية',
@@ -1031,7 +1056,7 @@ const T = {
      sunBest:'أفضل وقت لتصوير', sunOn:'في الرياض يوم',
      facET:'الواجهة الشرقية', facST:'الواجهة الجنوبية', facWT:'الواجهة الغربية', facNT:'الواجهة الشمالية',
      facNET:'الواجهة الشمالية الشرقية', facSET:'الواجهة الجنوبية الشرقية', facSWT:'الواجهة الجنوبية الغربية', facNWT:'الواجهة الشمالية الغربية',
-     sunNote:'⚠️ هذا اقتراح إرشادي فقط — المباني المجاورة أو الأشجار أو أي معيقات قد تحجب الضوء عن الواجهة في الوقت المقترح',
+     sunNote:'هذا اقتراح إرشادي فقط — المباني المجاورة أو الأشجار أو أي معيقات قد تحجب الضوء عن الواجهة في الوقت المقترح',
      sunWhyE:'الشمس تشرق من الشرق — واجهتك تستقبل ضوءاً ذهبياً مباشراً في الساعات الأولى بعد الشروق',
      sunWhyS:'الشمس في جنوب السماء معظم النهار — واجهتك مضاءة بإضاءة متوازنة حول الظهيرة',
      sunWhyW:'الشمس تتحول للغرب بعد الظهيرة — واجهتك تستقبل ضوءاً دافئاً غنياً قبل الغروب',
@@ -1077,7 +1102,7 @@ const T = {
     pkgPro:'احترافية (+45%)', brochurePages:'صفحة',
     approx:'≈', photosWord:'صورة HDR', bundleDisc:'خصم الباقة المجمّعة (3 خدمات ‑10٪)',
     footer:'© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.',
-    quoteBar:'عرض سعر رسمي — مأوى للتصوير العقاري', dlPdf:'⬇ تحميل PDF', printBtn:'🖨 طباعة', closeQuote:'✕ إغلاق',
+    quoteBar:'عرض سعر رسمي — مأوى للتصوير العقاري', dlPdf:'تحميل PDF', printBtn:'طباعة', closeQuote:'إغلاق',
     customMsg:'هذا النوع يُسعَّر بعد المعاينة', perReq:'حسب الطلب',
     sar:'ر.س', usd:'دولار'
   },
@@ -1086,7 +1111,7 @@ const T = {
     heroSub:'Pick your property type, rooms and services — and get an instant price quote with output details.',
     bookNowSub:'Pick date & time now + 25% deposit', dateHint:'Available daily except Friday', timeHint:'Available slots: 4:00 AM — 12:00 Midnight',
     quoteOnlySub:'We will contact you to schedule later', priceTable:'View full price list ←', locAll:'All units at the same location (higher discount)',
-    ptBtn:'📋 Full Price Table', ptTitle:'Unified Price List 2026', ptSub:'Prices in SAR · Basic package · Riyadh coverage',
+    ptBtn:'Full Price Table', ptTitle:'Unified Price List 2026', ptSub:'Prices in SAR · Basic package · Riyadh coverage',
     ptSvc:'Service', ptFrom:'from', ptPerRoom:'+ per extra room', ptFlat:'Fixed-rate services',
     ptDrone:'4K Drone (permits included)', ptAd:'Marketing promo video',
     ptExtras:'Add-ons & Design', ptNight:'Night / Blue-hour shoot', ptSocial:'Social media versions', ptRush:'Rush delivery', ptRushV:'+25%',
@@ -1094,7 +1119,7 @@ const T = {
     ptNote:'These are Basic package prices — the Professional package for photo & video is +45% (full platform-ready delivery + extra outputs). The exact final price is calculated by the calculator above based on rooms & services — discounts apply automatically (multi-unit up to 20% · 3+ photo services 10%).',
     luxTitle:'This project deserves a custom quote',
     luxSub:'Luxury projects vary by location and scope — send your request, our team will contact you to discuss details, then deliver a tailored official quote within 24 hours.',
-    luxReqT:'✦ A few quick details to serve you better',
+    luxReqT:'A few quick details to serve you better',
     luxPh:'Property size, location, required services, expected delivery date...',
     luxCity:'Location (district / city)',
     send:'Request This Quote via WhatsApp', sendLux:'Send Your Custom Request — WhatsApp',
@@ -1108,7 +1133,7 @@ const T = {
     total:'Estimated Total',
     depositBanner:'Booking confirmation requires a <b>25% deposit</b> — of <b id="depositVal">0</b> — transferred to the company account; send the receipt via WhatsApp to confirm your booking.',
     quoteOnly:'Quote Request Only', quoteOnlySub:'We will contact you to schedule later',
-    bookNow:'Confirmed Booking ✦', bookNowSub:'Pick date & time now + 25% deposit',
+    bookNow:'Confirmed Booking', bookNowSub:'Pick date & time now + 25% deposit',
     dateLabel:'Session Date', dateHint:'Available daily except Friday',
     timeLabel:'Session Start Time', timeHint:'Available slots: 4:00 AM — 12:00 Midnight',
     facadeLabel:'Property Facade Direction — for exterior shots', facE:'East', facS:'South', facW:'West', facN:'North',
@@ -1117,7 +1142,7 @@ const T = {
     sunBest:'Best time to shoot', sunOn:'in Riyadh on',
     facET:'your East facade', facST:'your South facade', facWT:'your West facade', facNT:'your North facade',
     facNET:'your Northeast facade', facSET:'your Southeast facade', facSWT:'your Southwest facade', facNWT:'your Northwest facade',
-    sunNote:'⚠️ This is a guiding suggestion only — nearby buildings, trees or obstacles may block light from your facade at the suggested time',
+    sunNote:'This is a guiding suggestion only — nearby buildings, trees or obstacles may block light from your facade at the suggested time',
     sunWhyE:'The sun rises in the east — your facade gets direct golden light in the first hours after sunrise',
     sunWhyS:'The sun sits in the southern sky most of the day — your facade is evenly lit around midday',
     sunWhyW:'The sun swings west in the afternoon — your facade gets rich warm light before sunset',
@@ -1163,7 +1188,7 @@ const T = {
     pkgPro:'Professional (+45%)', brochurePages:'pages',
     approx:'≈', photosWord:'HDR photos', bundleDisc:'Bundle discount (3 services ‑10%)',
     footer:'© 2026 MAWA Real Estate Photography — Prices in Saudi Riyal. Riyadh only.',
-    quoteBar:'Official Quote — MAWA Real Estate Photography', dlPdf:'⬇ Download PDF', printBtn:'🖨 Print', closeQuote:'✕ Close',
+    quoteBar:'Official Quote — MAWA Real Estate Photography', dlPdf:'Download PDF', printBtn:'Print', closeQuote:'Close',
     customMsg:'This type is priced after a site visit', perReq:'On request',
     sar:'SAR', usd:'USD'
   }
@@ -1187,6 +1212,7 @@ function setLang(l){
   applyLang();
   fillTimes(BOOK.date || '');
   updateSunAdvice();
+  injectIcons();
   recalc();
 }
 
@@ -1557,10 +1583,10 @@ function updateSunAdvice(){
   const from = fmtTime(pad2(w.a)+':00'), to = fmtTime(pad2(w.b+1)+':00');
   const d = new Date(BOOK.date+'T00:00:00');
   const dtxt = UI.lang==='en' ? d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : d.getDate()+' '+MC_MONTHS[d.getMonth()];
-  box.innerHTML = '<div class="sa-t">☀️ '+t.sunBest+' '+names[BOOK.facade]+' '+t.sunOn+' '+dtxt+'</div>'+
+  box.innerHTML = '<div class="sa-t">'+SVGI.sun+' '+t.sunBest+' '+names[BOOK.facade]+' '+t.sunOn+' '+dtxt+'</div>'+
     '<div class="sa-w">'+from+' — '+to+'</div>'+
     '<div class="sa-x">'+t['sunWhy'+BOOK.facade]+'</div>'+
-    '<div class="sa-n">'+t.sunNote+'</div>';
+    '<div class="sa-n">'+SVGI.warn+' '+t.sunNote+'</div>';
   box.style.display='block';
   fillTimes(BOOK.date);
 }
@@ -1763,6 +1789,14 @@ $('ptBtn').onclick=()=>{ buildPriceTable(); $('ptOverlay').classList.add('open')
 $('ptClose').onclick=()=>{ $('ptOverlay').classList.remove('open'); document.body.style.overflow=''; };
 $('ptOverlay').addEventListener('click',e=>{ if(e.target.id==='ptOverlay'){ $('ptClose').onclick(); } });
 
+
+/* حاقن أيقونات SVG */
+function injectIcons(){
+  document.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.dataset.svg; if(SVGI[k]) el.innerHTML=SVGI[k]; });
+  const li=$('lbIco'); if(li) li.innerHTML=SVGI.luxBig;
+}
+
+injectIcons();
 setupDateInput(); fillTimes('');
   if (typeof UI!=='undefined' && UI.lang==='en'){ const dpv=$('d-pages-v'); if(dpv) dpv.textContent='0'; }
 updateDeposit();
