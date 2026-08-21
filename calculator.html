@@ -1681,7 +1681,10 @@ async function saveLead(total){
         p_notes: notes,
         p_services: svcRows.length?svcRows:null
       });
-      if (!error) return true;
+      if (!error){
+        notifyOwner('📥 طلب جديد من الحاسبة\nالاسم: '+(state.name||'—')+'\nالجوال: '+(state.phone||'—')+'\nالعقار: '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\nالإجمالي: '+fmtT(total)+' ر.س'+(shootDate?('\nموعد التصوير: '+shootDate):''));
+        return true;
+      }
     }catch(_){}
 
     // 2) مسار مباشر: عميل موجود ⇒ يعدّل لا يكرر
@@ -1709,6 +1712,7 @@ async function saveLead(total){
       const cs = await sb.from('contract_services').insert(svcRows.map(s=>({ contract_id: contract.data.id, service_name: s.name, package_type: s.pkg })));
       if (cs.error) console.warn('خدمات العقد فشلت:', cs.error);
     }
+    notifyOwner('📥 طلب جديد من الحاسبة\nالاسم: '+(state.name||'—')+'\nالجوال: '+(state.phone||'—')+'\nالعقار: '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\nالإجمالي: '+fmtT(total)+' ر.س'+(shootDate?('\nموعد التصوير: '+shootDate):''));
     return true;
   }catch(e){ console.warn('حفظ الحاسبة فشل:', e); return false; }
 }

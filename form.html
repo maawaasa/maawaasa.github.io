@@ -714,6 +714,10 @@
 
                 if (leadError) throw leadError;
 
+                if (typeof notifyOwner === 'function'){
+                    notifyOwner('📥 طلب جديد من نموذج الموقع\nالاسم: '+name+'\nالجوال: '+phone+(email?('\nالبريد: '+email):'')+'\nالخدمات: '+(svcList||'—')+(pLoc?('\nالموقع: '+pLoc):'')+(sDate?('\nموعد مفضل: '+sDate):''));
+                }
+
                 document.getElementById('successOverlay').classList.add('show');
                 document.getElementById('clientForm').reset();
                 Object.keys(selectedServices).forEach(k => delete selectedServices[k]);
