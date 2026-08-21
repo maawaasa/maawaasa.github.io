@@ -98,7 +98,7 @@ footer a:hover{color:var(--white)}
     <div class="body">
       <div class="meta">
         <span class="badge">دليل عملي</span>
-        <span class="dot"></span><span class="m">أغسطس 2026</span>
+        <span class="dot"></span><span class="m" data-dyn="best-time-to-shoot-property-facade.html"></span>
         <span class="dot"></span><span class="m">7 دقائق</span>
       </div>
       <h2>أفضل وقت لتصوير <em>واجهة عقارك</em> حسب اتجاهها</h2>
@@ -114,7 +114,7 @@ footer a:hover{color:var(--white)}
     <div class="body">
       <div class="meta">
         <span class="badge">أسعار 2026</span>
-        <span class="dot"></span><span class="m">أغسطس 2026</span>
+        <span class="dot"></span><span class="m" data-dyn="best-time-to-shoot-property-facade.html"></span>
         <span class="dot"></span><span class="m">6 دقائق</span>
       </div>
       <h2>كم سعر تصوير <em>شقتك في الرياض</em>؟ الجدول الكامل</h2>
@@ -146,5 +146,20 @@ footer a:hover{color:var(--white)}
 }
 </script>
 
+
+<script>
+/* تاريخ آخر تحديث ديناميكي لكل مقال — من آخر تعديل فعلي */
+(function(){
+  const AR=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  document.querySelectorAll('[data-dyn]').forEach(el=>{
+    fetch(el.dataset.dyn,{method:'HEAD'}).then(r=>{
+      const lm=r.headers.get('last-modified');
+      if(!lm){el.textContent='';return;}
+      const d=new Date(lm);
+      el.textContent=AR[d.getMonth()]+' '+d.getFullYear();
+    }).catch(()=>el.textContent='');
+  });
+})();
+</script>
 </body>
 </html>

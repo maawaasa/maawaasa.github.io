@@ -101,7 +101,7 @@ footer a:hover{color:var(--white)}
 <h1>أفضل وقت لتصوير واجهة العقار حسب اتجاهها — الدليل الكامل لرياض 2026</h1>
 <div class="meta">
   <span class="tag">دليل عملي</span>
-  <span>تحديث: أغسطس 2026</span>
+  <span>آخر تحديث: <span data-lm></span></span>
   <span>وقت القراءة: 7 دقائق</span>
   <span>بقلم: فريق مأوى للتصوير العقاري</span>
 </div>
@@ -250,5 +250,9 @@ footer a:hover{color:var(--white)}
 }
 </script>
 
+
+<script>
+(function(){const AR=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];fetch(location.pathname,{method:'HEAD'}).then(r=>{const lm=r.headers.get('last-modified');if(lm){const d=new Date(lm);document.querySelectorAll('[data-lm]').forEach(e=>e.textContent=AR[d.getMonth()]+' '+d.getFullYear());}}).catch(()=>{});})();
+</script>
 </body>
 </html>
