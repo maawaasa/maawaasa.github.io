@@ -703,10 +703,10 @@ const TYPES = {
 /* تسعيرة مضبوطة على ورقة مأوى (b=أساسي، r=زيادة لكل غرفة). النقاط المرجعية:
    شقة تصوير: غرفة1=850، غرفة3=1100 | فيلا تصوير: 6غرف=2000 | جولة فيلا=1600 | درون=1200 | 360 شقة1=1300/3=1600 | 360 فيلا6=2500 | 360 مشروع=3200 | فيديو إعلاني=2000 */
 const PRICING = {
-  photo:{ studio:{b:700,r:0}, apartment:{b:725,r:125}, villa:{b:1370,r:105}, office:{b:680,r:110}, land:{b:900,r:0}, project:{b:2500,r:0} },
-  video:{ studio:{b:900,r:0}, apartment:{b:1020,r:80}, villa:{b:1090,r:85}, office:{b:950,r:80}, land:{b:0,r:0}, project:{b:2000,r:0} },
+  photo:{ studio:{b:850,r:0}, apartment:{b:725,r:125}, villa:{b:1370,r:105}, office:{b:680,r:110}, land:{b:900,r:0}, project:{b:2500,r:0} },
+  video:{ studio:{b:1100,r:0}, apartment:{b:1020,r:80}, villa:{b:1090,r:85}, office:{b:950,r:80}, land:{b:0,r:0}, project:{b:2000,r:0} },
   drone:{ flat:1200 },
-  vr360:{ studio:{b:950,r:0}, apartment:{b:1150,r:150}, villa:{b:1720,r:130}, office:{b:1250,r:100}, land:{b:0,r:0}, project:{b:3200,r:0} },
+  vr360:{ studio:{b:1300,r:0}, apartment:{b:1150,r:150}, villa:{b:1720,r:130}, office:{b:1250,r:100}, land:{b:0,r:0}, project:{b:3200,r:0} },
   ad:{ flat:2000 },
 };
 const SERVICES = {
@@ -840,7 +840,7 @@ function priceOf(svc){
 /* مُخرجات تقريبية لكل خدمة */
 function deliverableOf(svc){
   const r=state.rooms;
-  if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?8:10+r; return `≈ ${n} صورة HDR`; }
+  if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?10:10+r; return `≈ ${n} صورة HDR`; }
   if(svc==='video'){ const sec=45+r*12; return `≈ فيديو ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} دقيقة`; }
   if(svc==='drone') return `≈ 10–15 لقطة جوية`;
   if(svc==='vr360') return `≈ ${r+2} نقطة 360°`;
@@ -850,7 +850,7 @@ function deliverableOf(svc){
 const L = () => (typeof T !== 'undefined' && typeof UI !== 'undefined') ? T[UI.lang] : {days:['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'], months:['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'], midnight:'12:00 منتصف الليل', noon:'12:00 ظهراً', am:'صباحاً', pm:'مساءً', chooseTime:'— اختر الوقت —', passed:'(مضت)', friday:'الجمعة غير متاحة', yourAppt:'موعدك:', totalWord:'الإجمالي:', depNow:'العربون الآن:', remaining:'المتبقي بعد الجلسة:'};
 function deliverableOfEn(svc){
   const r=state.rooms;
-  if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?8:10+r; return `≈ ${n} HDR photos`; }
+  if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?10:10+r; return `≈ ${n} HDR photos`; }
   if(svc==='video'){ const sec=45+r*12; return `≈ ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} min video`; }
   if(svc==='drone') return `≈ 10–15 aerial shots`;
   if(svc==='vr360') return `≈ ${r+2} 360° points`;
