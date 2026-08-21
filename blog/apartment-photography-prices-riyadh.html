@@ -76,8 +76,23 @@ details .a{padding:0 20px 18px;color:rgba(244,240,235,.85);font-size:.93rem;line
 footer{border-top:1px solid var(--border);padding:26px 0;text-align:center;font-size:.8rem;color:var(--gray)}
 footer a{color:var(--gray);text-decoration:none}
 footer a:hover{color:var(--white)}
+
 @media(max-width:640px){
   body{font-size:.95rem}
+  .stats{grid-template-columns:1fr}
+  /* الجداول تصبح بطاقات قابلة للقراءة بلا سحب */
+  .tbl-scroll{overflow:visible;border-radius:0;margin:20px -22px 26px;padding:0 14px}
+  .tbl, .tbl tbody, .tbl tr, .tbl td{display:block;width:100%;min-width:0}
+  .tbl thead{display:none}
+  .tbl{border:none;background:transparent;overflow:hidden}
+  .tbl tr{background:var(--sec);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;padding:6px 0}
+  .tbl td{border-bottom:1px solid var(--line);padding:9px 16px;font-size:.9rem;text-align:right}
+  .tbl tr:nth-child(even) td{background:transparent}
+  .tbl td:last-child{border-bottom:none;text-align:left;font-weight:700;color:var(--red-soft);font-size:1rem}
+  .tbl td::before{content:attr(data-th);display:block;font-size:.68rem;font-weight:700;color:var(--gray);margin-bottom:3px}
+  .tbl-hint{display:block}
+}
+.tbl-hint{display:none;text-align:center;font-size:.7rem;color:var(--gray);margin:-16px 0 20px}
   .nav-cta{font-size:.75rem;padding:8px 14px}
   .logo{font-size:1rem;letter-spacing:2px}
   .tbl{font-size:.84rem;min-width:520px}
@@ -115,12 +130,12 @@ footer a:hover{color:var(--white)}
 <table class="tbl">
 <thead><tr><th>حجم الشقة</th><th>عدد الصور التقريبي</th><th>السعر (باقة أساس)</th></tr></thead>
 <tbody>
-<tr><td>استوديو / غرفة واحدة</td><td>10–12 صورة</td><td>850 ر.س</td></tr>
-<tr><td>غرفتين</td><td>12 صورة</td><td>975 ر.س</td></tr>
-<tr><td>3 غرف</td><td>14 صورة</td><td>1,100 ر.س</td></tr>
-<tr><td>4 غرف</td><td>16 صورة</td><td>1,225 ر.س</td></tr>
-<tr><td>5 غرف</td><td>18 صورة</td><td>1,350 ر.س</td></tr>
-<tr><td>6 غرف</td><td>20 صورة</td><td>1,475 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">استوديو / غرفة واحدة</td><td data-th="عدد الصور التقريبي">10–12 صورة</td><td data-th="السعر (باقة أساس)">850 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">غرفتين</td><td data-th="عدد الصور التقريبي">12 صورة</td><td data-th="السعر (باقة أساس)">975 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">3 غرف</td><td data-th="عدد الصور التقريبي">14 صورة</td><td data-th="السعر (باقة أساس)">1,100 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">4 غرف</td><td data-th="عدد الصور التقريبي">16 صورة</td><td data-th="السعر (باقة أساس)">1,225 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">5 غرف</td><td data-th="عدد الصور التقريبي">18 صورة</td><td data-th="السعر (باقة أساس)">1,350 ر.س</td></tr>
+<tr><td data-th="حجم الشقة">6 غرف</td><td data-th="عدد الصور التقريبي">20 صورة</td><td data-th="السعر (باقة أساس)">1,475 ر.س</td></tr>
 </tbody>
 </table>
 </div>
@@ -134,14 +149,14 @@ footer a:hover{color:var(--white)}
 <table class="tbl">
 <thead><tr><th>الخدمة</th><th>المخرجات</th><th>السعر</th></tr></thead>
 <tbody>
-<tr><td>فيديو جولة سينمائية — غرفتين</td><td>فيديو ~2:30 دقيقة بتصحيح ألوان</td><td>1,180 ر.س</td></tr>
-<tr><td>تصوير جوي بالدرون 4K</td><td>10–15 لقطة جوية + التصاريح</td><td>1,200 ر.س</td></tr>
-<tr><td>جولة افتراضية 360° — غرفة</td><td>3 نقاط تفاعلية</td><td>1,300 ر.س</td></tr>
-<tr><td>جولة افتراضية 360° — 3 غرف</td><td>5 نقاط تفاعلية</td><td>1,600 ر.س</td></tr>
-<tr><td>فيديو تسويقي إعلاني</td><td>برومو 30–60 ثانية للسوشيال</td><td>2,000 ر.س</td></tr>
-<tr><td>نسخ لمواقع التواصل</td><td>تقطيع عمودي/مربع</td><td>+300 ر.س</td></tr>
-<tr><td>تصوير ليلي Blue-hour</td><td>لقطات الواجهة والإطلالة</td><td>+450 ر.س</td></tr>
-<tr><td>تسليم عاجل</td><td>تسليم خلال 24 ساعة</td><td>+25%</td></tr>
+<tr><td data-th="الخدمة">فيديو جولة سينمائية — غرفتين</td><td data-th="المخرجات">فيديو ~2:30 دقيقة بتصحيح ألوان</td><td data-th="السعر">1,180 ر.س</td></tr>
+<tr><td data-th="الخدمة">تصوير جوي بالدرون 4K</td><td data-th="المخرجات">10–15 لقطة جوية + التصاريح</td><td data-th="السعر">1,200 ر.س</td></tr>
+<tr><td data-th="الخدمة">جولة افتراضية 360° — غرفة</td><td data-th="المخرجات">3 نقاط تفاعلية</td><td data-th="السعر">1,300 ر.س</td></tr>
+<tr><td data-th="الخدمة">جولة افتراضية 360° — 3 غرف</td><td data-th="المخرجات">5 نقاط تفاعلية</td><td data-th="السعر">1,600 ر.س</td></tr>
+<tr><td data-th="الخدمة">فيديو تسويقي إعلاني</td><td data-th="المخرجات">برومو 30–60 ثانية للسوشيال</td><td data-th="السعر">2,000 ر.س</td></tr>
+<tr><td data-th="الخدمة">نسخ لمواقع التواصل</td><td data-th="المخرجات">تقطيع عمودي/مربع</td><td data-th="السعر">+300 ر.س</td></tr>
+<tr><td data-th="الخدمة">تصوير ليلي Blue-hour</td><td data-th="المخرجات">لقطات الواجهة والإطلالة</td><td data-th="السعر">+450 ر.س</td></tr>
+<tr><td data-th="الخدمة">تسليم عاجل</td><td data-th="المخرجات">تسليم خلال 24 ساعة</td><td data-th="السعر">+25%</td></tr>
 </tbody>
 </table>
 </div>

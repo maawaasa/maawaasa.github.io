@@ -76,8 +76,23 @@ details .a{padding:0 20px 18px;color:rgba(244,240,235,.85);font-size:.93rem;line
 footer{border-top:1px solid var(--border);padding:26px 0;text-align:center;font-size:.8rem;color:var(--gray)}
 footer a{color:var(--gray);text-decoration:none}
 footer a:hover{color:var(--white)}
+
 @media(max-width:640px){
   body{font-size:.95rem}
+  .stats{grid-template-columns:1fr}
+  /* الجداول تصبح بطاقات قابلة للقراءة بلا سحب */
+  .tbl-scroll{overflow:visible;border-radius:0;margin:20px -22px 26px;padding:0 14px}
+  .tbl, .tbl tbody, .tbl tr, .tbl td{display:block;width:100%;min-width:0}
+  .tbl thead{display:none}
+  .tbl{border:none;background:transparent;overflow:hidden}
+  .tbl tr{background:var(--sec);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;padding:6px 0}
+  .tbl td{border-bottom:1px solid var(--line);padding:9px 16px;font-size:.9rem;text-align:right}
+  .tbl tr:nth-child(even) td{background:transparent}
+  .tbl td:last-child{border-bottom:none;text-align:left;font-weight:700;color:var(--red-soft);font-size:1rem}
+  .tbl td::before{content:attr(data-th);display:block;font-size:.68rem;font-weight:700;color:var(--gray);margin-bottom:3px}
+  .tbl-hint{display:block}
+}
+.tbl-hint{display:none;text-align:center;font-size:.7rem;color:var(--gray);margin:-16px 0 20px}
   .vs{grid-template-columns:1fr}
   .tbl{font-size:.84rem;min-width:520px}
 }
@@ -161,10 +176,10 @@ footer a:hover{color:var(--white)}
 <table class="tbl">
 <thead><tr><th>الحالة</th><th>الخيار الأنسب</th></tr></thead>
 <tbody>
-<tr><td>إعلان بيع أو إيجار على المنصات</td><td>HDR إلزامي — هو واجهة تسويقك</td></tr>
-<tr><td>موقع أو مشروع يحتاج صوراً فاخرة</td><td>HDR + باقة احترافية بمخرجات إضافية</td></tr>
-<tr><td>توثيق حالة العقار قبل تسليمه للمستأجر</td><td>التصوير العادي كافٍ</td></tr>
-<tr><td>أرشفة داخلية سريعة للاستعمال الشخصي</td><td>التصوير العادي كافٍ</td></tr>
+<tr><td data-th="الحالة">إعلان بيع أو إيجار على المنصات</td><td data-th="الخيار الأنسب">HDR إلزامي — هو واجهة تسويقك</td></tr>
+<tr><td data-th="الحالة">موقع أو مشروع يحتاج صوراً فاخرة</td><td data-th="الخيار الأنسب">HDR + باقة احترافية بمخرجات إضافية</td></tr>
+<tr><td data-th="الحالة">توثيق حالة العقار قبل تسليمه للمستأجر</td><td data-th="الخيار الأنسب">التصوير العادي كافٍ</td></tr>
+<tr><td data-th="الحالة">أرشفة داخلية سريعة للاستعمال الشخصي</td><td data-th="الخيار الأنسب">التصوير العادي كافٍ</td></tr>
 </tbody>
 </table>
 </div>
