@@ -40,7 +40,12 @@ h1{font-size:clamp(1.7rem,5vw,2.5rem);font-weight:700;line-height:1.4;margin-bot
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:10px 0 70px}
 .card{background:var(--sec);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:.3s}
 .card:hover{border-color:var(--red);transform:translateY(-4px)}
-.card .thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1C1620,#26141A);border-bottom:1px solid var(--border);position:relative}
+.card .thumb{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 90% at 20% 0%,rgba(164,36,59,.16),transparent 55%),linear-gradient(135deg,#151015,#221318);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.card .thumb::before{content:'';position:absolute;inset:14px;border:1px solid rgba(244,240,235,.07);border-radius:10px;pointer-events:none}
+.card .thumb svg{width:64px;height:64px;color:var(--red-soft);opacity:.95;filter:drop-shadow(0 6px 18px rgba(164,36,59,.35));transition:.35s}
+.card:hover .thumb svg{transform:scale(1.12) rotate(-4deg)}
+.card .thumb .kicker{position:absolute;bottom:14px;right:16px;font-size:.66rem;font-weight:700;color:var(--gray);letter-spacing:.5px}
+.card .thumb .badge{position:absolute;top:12px;right:12px;background:rgba(164,36,59,.92);color:#fff;font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px;z-index:2}
 .card .thumb svg{width:52px;height:52px;color:var(--red-soft);opacity:.9}
 .card .thumb .badge{position:absolute;top:12px;right:12px;background:rgba(164,36,59,.9);color:#fff;font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px}
 .card .body{padding:20px 18px;flex:1;display:flex;flex-direction:column}
@@ -79,7 +84,8 @@ footer a:hover{color:var(--white)}
   <a class="card" href="best-time-to-shoot-property-facade.html">
     <div class="thumb">
       <span class="badge">دليل عملي</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+      <span class="kicker">8 اتجاهات · توقيت الرياض</span>
     </div>
     <div class="body">
       <div class="meta"><span>أغسطس 2026</span><span>7 دقائق قراءة</span></div>
@@ -92,7 +98,8 @@ footer a:hover{color:var(--white)}
   <a class="card" href="apartment-photography-prices-riyadh.html">
     <div class="thumb">
       <span class="badge">أسعار 2026</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4M9 9h2"/></svg>
+      <span class="kicker">جدول محدّث · حسب الغرف</span>
     </div>
     <div class="body">
       <div class="meta"><span>أغسطس 2026</span><span>6 دقائق قراءة</span></div>
