@@ -1503,6 +1503,7 @@ function openQuote(){
   const valid=new Date(now.getTime()+30*864e5);
   $('qValid').textContent=valid.toLocaleDateString('en-GB');
   $('qRows').innerHTML=d.rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.label}</td><td class="det">${r.det||'—'}</td><td class="amt">${r.amt<0?'حسب المشروع':fmt(r.amt)}</td></tr>`).join('');
+  const _m=LIST_MULT[state.type]||LIST_MULT._flat;
   const ob=$('qOffers');
   let qOffers=[...d.offers];
   if(CAMPAIGN.active && d.gross>0){
