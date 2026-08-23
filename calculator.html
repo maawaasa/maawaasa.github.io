@@ -712,29 +712,42 @@ const PRICING = {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   نظام الحملات الترويجية — التحكم الكامل من هنا فقط
+   نظام الحملات الترويجية v2 — التحكم الكامل من هنا فقط
    ─────────────────────────────────────────────────────────────
-   البنية: قيم PRICING أعلاه = أسعار اليوم الفعلية.
-   سعر القائمة المعروض (المشطوب) = اليوم × LIST_MULT.
-   الخصم الحالي 20% يعيد العميل لسعر اليوم تماماً.
+   البنية: PRICING أعلاه = أسعار اليوم الفعلية (المدفوع حالياً).
+   سعر القائمة (المشطوب) = اليوم × معامل الفئة LIST_MULT.
+   كل فئة لها معامل — الفلل والمشاريع أعلى (فجوة أكبر).
 
-   رافعة الرفع المستقبلي (بدون إعلان أي زيادة):
-     pct 20 → 15   →  رفع فعلي ~6%
-     pct 15 → 10   →  رفع فعلي ~6% إضافية
-     pct 10 → 0    →  الأسعار الكاملة (رفع إجمالي 25%)
-   مثال شقة الغرفتين: 975 → 1,036 → 1,097 → 1,219
+   رافعة الرفع المستقبلي — أنقص DISCOUNT_STEP تدريجياً:
+     كل خطوة 5% ترفع المدفوع ~7-9% حسب الفئة
+     مثال فيلا 6غ (اليوم 2,000):
+       step 100 → 2,000  (اليوم)
+       step 70  → 2,245  (+12%)
+       step 50  → 2,405  (+20%)
+       step 0   → 2,730  (منتصف الطريق للقائمة 3,500)
    • تغيير اسم الحملة كل فترة: name/nameEn فقط
-   • إيقاف النظام كلياً: active:false (أسعار اليوم مباشرة)
+   • إيقاف النظام: active:false (يعرض اليوم مباشرة بلا مشطوب)
    ═══════════════════════════════════════════════════════════════ */
 const CAMPAIGN = {
   active: true,
   name: 'عرض التأسيس',
   nameEn: 'Founding Offer',
-  pct: 20
+  step: 100
 };
-const LIST_MULT = 1.25;
-const anchorOf = p => Math.round(p * LIST_MULT);
-const campNet = p => CAMPAIGN.active ? Math.round(anchorOf(p) * (1 - CAMPAIGN.pct / 100)) : Math.round(p);
+const LIST_MULT = { studio:1.40, apartment:1.45, villa:1.75, office:1.45, land:1.60, project:1.70, _flat:1.60 };
+const multOf = (svc, forcedType) => {
+  if (forcedType && LIST_MULT[forcedType]) return LIST_MULT[forcedType];
+  const p = PRICING[svc];
+  if (p && 'flat' in p) return LIST_MULT._flat;
+  return LIST_MULT[state.type] || LIST_MULT._flat;
+};
+/* نسبة الخصم المعروضة لكل خدمة: كاملة اليوم (تعيد لسعر اليوم) × step */
+const anchorOf = (p, svc, ft) => Math.round(p * multOf(svc, ft));
+const fullDisc = (svc, ft) => 1 - 1 / multOf(svc, ft);
+const campDisc = (svc, ft) => (1 - 1 / multOf(svc, ft)) * (CAMPAIGN.step / 100);
+const campNet = (p, svc, ft) => CAMPAIGN.active
+  ? Math.round(p * multOf(svc, ft) * (1 - campDisc(svc, ft)))
+  : Math.round(p);
 const SERVICES = {
   photo:{ label:'تصوير فوتوغرافي HDR', en:'HDR Photography',      sub:'صور داخلية وخارجية معالجة', subEn:'Processed interior & exterior photos' },
   video:{ label:'فيديو سينمائي', en:'Cinematic Video',        sub:'جولة سينمائية + تصحيح ألوان', subEn:'Cinematic tour + color grading' },
@@ -856,21 +869,21 @@ function applyLuxury(){
 /* ===== حساب سعر خدمة ===== */
 function priceOf(svc){
   const p=PRICING[svc];
-  if('flat' in p) return campNet(p.flat);
+  if('flat' in p) return campNet(p.flat, null, '_flat');
   const t=p[state.type]; if(!t) return 0;
   const r=TYPES[state.type].rooms[1]===0?0:state.rooms;
   const base=t.b+t.r*r;
   const mult=(svc==='photo'||svc==='video')?(state.pkg==='pro'?1.45:1):1;
-  return campNet(base*mult);
+  return campNet(base*mult, svc);
 }
 const listPriceOf = svc => {
   const p=PRICING[svc];
-  if('flat' in p) return CAMPAIGN.active ? anchorOf(p.flat) : p.flat;
+  if('flat' in p) return CAMPAIGN.active ? anchorOf(p.flat, null, '_flat') : p.flat;
   const t=p[state.type]; if(!t) return 0;
   const r=TYPES[state.type].rooms[1]===0?0:state.rooms;
   const base=t.b+t.r*r;
   const mult=(svc==='photo'||svc==='video')?(state.pkg==='pro'?1.45:1):1;
-  return CAMPAIGN.active ? anchorOf(base*mult) : Math.round(base*mult);
+  return CAMPAIGN.active ? anchorOf(base*mult, svc) : Math.round(base*mult);
 };
 /* مُخرجات تقريبية لكل خدمة */
 function deliverableOf(svc){
@@ -995,13 +1008,15 @@ function recalc(){
   else un.textContent='';
   // علامة الخصم المُفعّل (مشجّعة)
   /* خصم الحملة — عرض فقط؛ الإجمالي محسوب بالصافي أصلاً */
-  let campAmt=0;
+  let campAmt=0, campPct=0;
   if(CAMPAIGN.active && !state.isCustom){
-    const grossList=items.reduce((s2,[,v])=>s2+v,0)+totalDisc;
-    const anchor=anchorOf(grossList);
-    campAmt=Math.max(0,anchor-grossList);
+    const gross=items.reduce((s2,[,v])=>s2+v,0)+totalDisc;
+    const mult=LIST_MULT[state.type]||LIST_MULT._flat;
+    const anchor=Math.round(gross*mult);
+    campAmt=Math.max(0,anchor-gross);
+    campPct=Math.round(fullDisc(state.type)*CAMPAIGN.step);
     if(campAmt>0) linesEl.insertAdjacentHTML('beforeend',
-      `<div class="line disc"><span class="l">${EN()?CAMPAIGN.nameEn+' ('+CAMPAIGN.pct+'% off)':CAMPAIGN.name+' ('+CAMPAIGN.pct+'٪ خصم)'}</span><span class="v">−${fmt(campAmt)}</span></div>`);
+      `<div class="line disc"><span class="l">${EN()?CAMPAIGN.nameEn+' ('+campPct+'% off)':CAMPAIGN.name+' ('+campPct+'٪ خصم)'}</span><span class="v">−${fmt(campAmt)}</span></div>`);
   }
   const db=$('discBadge'); const saved=bundleDiscount+multiDiscount+campAmt;
   if(saved>0 && !state.isCustom){
@@ -1491,8 +1506,9 @@ function openQuote(){
   const ob=$('qOffers');
   let qOffers=[...d.offers];
   if(CAMPAIGN.active && d.gross>0){
-    const cA=Math.max(0,anchorOf(d.gross)-d.gross);
-    if(cA>0) qOffers.unshift(`خصم ${CAMPAIGN.name} (${CAMPAIGN.pct}٪): −${fmtT(cA)} ر.س`);
+    const cA=Math.max(0,Math.round(d.gross*_m)-d.gross);
+    const cP=Math.round(fullDisc(state.type)*CAMPAIGN.step);
+    if(cA>0) qOffers.unshift(`خصم ${CAMPAIGN.name} (${cP}٪): −${fmtT(cA)} ر.س`);
     d.totalDisc+=cA;
   }
   if(qOffers.length){ ob.style.display='block'; ob.innerHTML='<div class="oh">العروض المطبَّقة</div>'+qOffers.map(o=>`<div>${o}</div>`).join(''); } else ob.style.display='none';
@@ -1500,7 +1516,8 @@ function openQuote(){
     $('qGross').innerHTML='حسب المشروع'; $('qNet').innerHTML='حسب المشروع';
     $('qDiscRow').style.display='none'; $('qSaveRow').style.display='none'; $('qRushRow').style.display='none';
   } else {
-    const gA=CAMPAIGN.active?anchorOf(d.gross):d.gross;
+    const _m=LIST_MULT[state.type]||LIST_MULT._flat;
+    const gA=CAMPAIGN.active?Math.round(d.gross*_m):d.gross;
     $('qGross').innerHTML=(gA>d.gross?fmtT(gA)+' ← ':'')+fmt(d.gross);
     const dr=$('qDiscRow'), sr=$('qSaveRow');
     if(d.totalDisc>0){dr.style.display='flex'; $('qDisc').innerHTML='−'+fmt(d.totalDisc); sr.style.display='block'; $('qSave').innerHTML=fmt(d.totalDisc);}
@@ -1715,7 +1732,7 @@ async function saveLead(total){
     const svcRows=[...state.sel].filter(k=>!dis.includes(k)).map(k=>({name:SERVICES[k].label, pkg: state.pkg==='pro'?'pro':'basic'}));
     const breakdown=[...linesEl.querySelectorAll('.line:not(.empty)')].map(l=>l.querySelector('.l').childNodes[0].textContent.trim()+': '+l.querySelector('.v').innerHTML.replace(/<[^>]*>/g,'').trim()).join(' | ');
     const _luxDet=($('luxDetails').value||'').trim(), _luxCity=($('luxCity').value||'').trim(), _luxDate=($('luxDate').value||'').trim();
-    const notes='طلب من الحاسبة — '+breakdown+' | باقة '+state.pkg+(CAMPAIGN.active?` | حملة: ${CAMPAIGN.name} ${CAMPAIGN.pct}%`:``)+(state.attn?(' | موجه لـ: '+state.attn):'')+(BOOK.facade?(' | واجهة العقار: '+T.ar['fac'+BOOK.facade]+' — أفضل وقت خارجي '+bestWindowLabel()):'')+(state.isCustom?(' | ★ طلب فاخر ('+TYPES[state.type].label+')'+(_luxCity?(' | الموقع: '+_luxCity):'')+(_luxDate?(' | تاريخ مفضل: '+_luxDate):'')+(_luxDet?(' | تفاصيل: '+_luxDet):'')):'')+(BOOK.mode==='book'?' | حجز مؤكد: '+BOOK.date+' الساعة '+BOOK.time+' | عربون مستحق: '+Math.round(total*0.25):' | عرض سعر فقط');
+    const notes='طلب من الحاسبة — '+breakdown+' | باقة '+state.pkg+(CAMPAIGN.active?` | حملة: ${CAMPAIGN.name} step=${CAMPAIGN.step}%`:``)+(state.attn?(' | موجه لـ: '+state.attn):'')+(BOOK.facade?(' | واجهة العقار: '+T.ar['fac'+BOOK.facade]+' — أفضل وقت خارجي '+bestWindowLabel()):'')+(state.isCustom?(' | ★ طلب فاخر ('+TYPES[state.type].label+')'+(_luxCity?(' | الموقع: '+_luxCity):'')+(_luxDate?(' | تاريخ مفضل: '+_luxDate):'')+(_luxDet?(' | تفاصيل: '+_luxDet):'')):'')+(BOOK.mode==='book'?' | حجز مؤكد: '+BOOK.date+' الساعة '+BOOK.time+' | عربون مستحق: '+Math.round(total*0.25):' | عرض سعر فقط');
     const shootDate = (BOOK.mode==='book'&&BOOK.date)?BOOK.date:null;
 
     // 1) الدالة الآمنة submit_lead (إن وُجدت)
@@ -1804,7 +1821,7 @@ $('waBtn').onclick = async function(){
       const luxBlock=(det||city||ddate)?'\n\n✦ تفاصيل المشروع:'+(city?'\n• الموقع: '+city:'')+(ddate?'\n• التاريخ المفضل: '+dtxt:'')+(det?'\n• تفاصيل إضافية: '+det:''):'';
       msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر مخصّص من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات:\n• '+svcs+luxBlock+'\n\nهذا المشروع من الفئة الفاخرة ويحتاج معاينة وتسعيراً مخصّصاً من فريقكم. أرجو التواصل لاستكمال التفاصيل.';
     } else {
-      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+fmtT(lastTotal)+' ر.س'+(CAMPAIGN.active?` (بعد خصم ${CAMPAIGN.name} ${CAMPAIGN.pct}٪)`:``)+bookInfo;
+      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+fmtT(lastTotal)+' ر.س'+(CAMPAIGN.active?` (شامل خصم ${CAMPAIGN.name})`:``)+bookInfo;
     }
     window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');
     toast('✓ تم إرسال طلبك');
@@ -1825,7 +1842,7 @@ function buildPriceTable(){
       const cell=p[c.k];
       if(!cell||cell.b===0){ h+='<td>—</td>'; return; }
       const rTxt=cell.r.toLocaleString('en-US')+(ar?' ر.س':'');
-      h+='<td>'+t.ptFrom+' '+fmtT(campNet(cell.b))+(cell.r?('<small>+'+fmtT(campNet(cell.r))+' '+t.ptPerRoom+'</small>'):'')+'</td>';
+      h+='<td>'+t.ptFrom+' '+fmtT(campNet(cell.b, c.k))+(cell.r?('<small>+'+fmtT(campNet(cell.r, c.k))+' '+t.ptPerRoom+'</small>'):'')+'</td>';
     });
     h+='</tr>';
   });
@@ -1839,7 +1856,7 @@ function buildPriceTable(){
   h+='<div class="pt-row"><span>'+t.ptBrochure+'</span><span>'+t.ptBrochureV+'</span></div>';
   h+='<div class="pt-row"><span>'+t.ptSocial+'</span><span>+300 ر.س</span></div>';
   h+='<div class="pt-row"><span>'+t.ptRush+'</span><span>'+t.ptRushV+'</span></div>';
-  h+='<div class="pt-note">'+t.ptNote+(CAMPAIGN.active?`<br>جميع الأسعار شاملة <b>${CAMPAIGN.name}</b> بخصم ${CAMPAIGN.pct}٪.`:'')+'</div>';
+  h+='<div class="pt-note">'+t.ptNote+(CAMPAIGN.active?`<br>جميع الأسعار شاملة <b>${CAMPAIGN.name}</b>.`:'')+'</div>';
   $('ptBody').innerHTML=h;
 }
 $('ptBtn').onclick=()=>{ buildPriceTable(); $('ptOverlay').classList.add('open'); document.body.style.overflow='hidden'; };
