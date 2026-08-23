@@ -1752,7 +1752,7 @@ async function saveLead(total){
         p_services: svcRows.length?svcRows:null
       });
       if (!error){
-        notifyOwner('📥 طلب جديد من الحاسبة\nالاسم: '+(state.name||'—')+'\nالجوال: '+(state.phone||'—')+'\nالعقار: '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\nالإجمالي: '+fmtT(total)+' ر.س'+(shootDate?('\nموعد التصوير: '+shootDate):''));
+        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'');
         return true;
       }
     }catch(_){}
@@ -1782,7 +1782,7 @@ async function saveLead(total){
       const cs = await sb.from('contract_services').insert(svcRows.map(s=>({ contract_id: contract.data.id, service_name: s.name, package_type: s.pkg })));
       if (cs.error) console.warn('خدمات العقد فشلت:', cs.error);
     }
-    notifyOwner('📥 طلب جديد من الحاسبة\nالاسم: '+(state.name||'—')+'\nالجوال: '+(state.phone||'—')+'\nالعقار: '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\nالإجمالي: '+fmtT(total)+' ر.س'+(shootDate?('\nموعد التصوير: '+shootDate):''));
+    notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'');
     return true;
   }catch(e){ console.warn('حفظ الحاسبة فشل:', e); return false; }
 }
