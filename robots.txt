@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # As a condition of accessing this website, you agree to abide by the following
 # content signals:
 
@@ -59,6 +60,8 @@ Disallow: /
 
 # END Cloudflare Managed Content
 
+=======
+>>>>>>> 2b66e2b08eec15d35028236dbe196a55dfdae63b
 User-agent: *
 Allow: /
 Disallow: /admin.html
