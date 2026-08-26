@@ -925,11 +925,9 @@ a:focus-visible,button:focus-visible,.faq-q:focus-visible,.work-item:focus-visib
       <h2 class="sec-title">مشاريعنا <em>بالتفصيل.</em></h2>
       <p class="sec-lead">كل مشروع بخمس لقطات مختارة — تصفّحها بالتكبير، مصنّفة حسب نوع العقار.</p>
     </div>
-    <div class="cat-tabs reveal">
-      <button type="button" class="cat-tab on">فلل</button>
-      <button type="button" class="cat-tab">شقق</button>
-    </div>
-        <article class="pg-card reveal" data-group="villas" style="margin-bottom:34px">
+
+        <div class="reveal" style="font-size:.78rem;font-weight:700;letter-spacing:2px;color:var(--gray);margin:6px 0 14px;text-transform:uppercase">فلل</div>
+    <article class="pg-card reveal" data-group="villas" style="margin-bottom:34px">
       <div class="pg-main lb-item" data-lbgroup="villas" data-img="assets/gallery/villas/1.jpg" data-title="فيلا فاخرة — الرياض" data-sub="تصوير داخلي HDR · أعمال مأوى" tabindex="0" role="button" aria-label="تكبير صورة الفيلا">
         <img src="assets/gallery/villas/1.jpg" alt="فيلا فاخرة — الرياض — الصورة الرئيسية" id="villaMainImg" loading="lazy">
         <div class="pg-zoom">⌕ تكبير الصورة</div>
@@ -954,7 +952,8 @@ a:focus-visible,button:focus-visible,.faq-q:focus-visible,.work-item:focus-visib
         <button type="button" class="pg-thumb lb-item" data-lbgroup="villas" data-img="assets/gallery/villas/15.jpg" data-title="فيلا فاخرة — الرياض" data-sub="صورة 15 من 15 — تصوير HDR"></button>
       </div>
     </article>
-<article class="pg-card reveal" data-group="qurtubah">
+<div class="reveal" style="font-size:.78rem;font-weight:700;letter-spacing:2px;color:var(--gray);margin:38px 0 14px;text-transform:uppercase">شقق</div>
+    <article class="pg-card reveal" data-group="qurtubah">
       <div class="pg-main lb-item" data-lbgroup="qurtubah" data-img="assets/gallery/qurtubah/1.jpg" data-title="شقة قرطبة — الرياض" data-sub="تصوير داخلي HDR · باقة احترافية" tabindex="0" role="button" aria-label="تكبير صورة شقة قرطبة">
         <img src="assets/gallery/qurtubah/1.jpg" alt="شقة قرطبة — الرياض — الصورة الرئيسية" id="pgMainImg" loading="lazy">
         <div class="pg-zoom">⌕ تكبير الصورة</div>
@@ -1505,34 +1504,26 @@ const countObs = new IntersectionObserver((entries) => {
 const aboutStatsEl = document.querySelector('.about-stats');
 if (aboutStatsEl) countObs.observe(aboutStatsEl);
 
-/* ---------- projects gallery: tabs + main + thumbs ---------- */
+/* ---------- projects gallery: كل قسم مستقل — مصغراته تتحكم بصورته فقط ---------- */
 (function(){
-  /* تبويبات الفلل/الشقق */
-  const tabs=document.querySelectorAll('.cat-tab');
-  const cards=document.querySelectorAll('.pg-card');
-  if(tabs.length>1 && cards.length>1){
-    cards.forEach((c,i)=>c.style.display=(i===0?'':'none'));
-    tabs.forEach((t2,ti)=>t2.addEventListener('click',()=>{
-      tabs.forEach(x=>x.classList.remove('on'));
-      t2.classList.add('on');
-      cards.forEach((c,i)=>c.style.display=(i===ti?'':'none'));
-    }));
-  }
-  const main = document.querySelector('.pg-main');
-  if(!main) return;
-  const mainImg = document.getElementById('pgMainImg');
-  const mainDefault = { img: main.dataset.img, sub: main.dataset.sub };
-  const thumbs = Array.from(document.querySelectorAll('.pg-thumb'));
-  let selected = null;
-  thumbs.forEach(t => {
-    t.addEventListener('click', () => {
-      selected = t;
-      mainImg.src = t.dataset.img;
-      main.dataset.sub = t.dataset.sub;
-      thumbs.forEach(x => x.classList.toggle('on', x === t));
+  document.querySelectorAll('.pg-card').forEach(card=>{
+    const main = card.querySelector('.pg-main');
+    if(!main) return;
+    const mainImg = main.querySelector('img');
+    if(!mainImg) return;
+    const defaultSrc = mainImg.getAttribute('src');
+    const thumbs = Array.from(card.querySelectorAll('.pg-thumb:has(img)'));
+    let selected = null;
+    thumbs.forEach(t => {
+      t.addEventListener('click', () => {
+        selected = t;
+        mainImg.src = t.dataset.img;
+        main.dataset.sub = t.dataset.sub;
+        thumbs.forEach(x => x.classList.toggle('on', x === t));
+      });
+      t.addEventListener('mouseenter', () => { mainImg.src = t.dataset.img; });
+      t.addEventListener('mouseleave', () => { mainImg.src = selected ? selected.dataset.img : defaultSrc; });
     });
-    t.addEventListener('mouseenter', () => { mainImg.src = t.dataset.img; });
-    t.addEventListener('mouseleave', () => { mainImg.src = selected ? selected.dataset.img : mainDefault.img; });
   });
 })();
 
