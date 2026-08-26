@@ -1505,8 +1505,19 @@ const countObs = new IntersectionObserver((entries) => {
 const aboutStatsEl = document.querySelector('.about-stats');
 if (aboutStatsEl) countObs.observe(aboutStatsEl);
 
-/* ---------- projects gallery: main + thumbs ---------- */
+/* ---------- projects gallery: tabs + main + thumbs ---------- */
 (function(){
+  /* تبويبات الفلل/الشقق */
+  const tabs=document.querySelectorAll('.cat-tab');
+  const cards=document.querySelectorAll('.pg-card');
+  if(tabs.length>1 && cards.length>1){
+    cards.forEach((c,i)=>c.style.display=(i===0?'':'none'));
+    tabs.forEach((t2,ti)=>t2.addEventListener('click',()=>{
+      tabs.forEach(x=>x.classList.remove('on'));
+      t2.classList.add('on');
+      cards.forEach((c,i)=>c.style.display=(i===ti?'':'none'));
+    }));
+  }
   const main = document.querySelector('.pg-main');
   if(!main) return;
   const mainImg = document.getElementById('pgMainImg');
