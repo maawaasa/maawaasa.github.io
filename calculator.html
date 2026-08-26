@@ -336,6 +336,16 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 input.gov-input::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.6}
 select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:38px;cursor:pointer}
 .gs-hint{font-size:.74rem;color:#9A9AA5;margin-top:7px}
+/* خطوة الموقع والبعد */
+.loc-btn{display:flex;align-items:center;gap:10px;width:100%;background:#FBFAF6;border:1.5px solid #D9D9E0;border-radius:11px;padding:12px 14px;font-family:inherit;font-size:.9rem;font-weight:700;color:#1a1a1e;cursor:pointer;transition:.2s}
+.loc-btn:hover{border-color:#B9B9C4}
+.loc-btn svg{width:17px;height:17px;color:var(--red);flex-shrink:0}
+.loc-result{display:none;margin-top:10px;background:#FDFCF9;border:1.5px dashed #C9B97F;border-radius:11px;padding:11px 14px;font-size:.8rem;line-height:1.8}
+.loc-result.on{display:block}
+.loc-result .lr-km{font-weight:800;color:#1F2A3D}
+.loc-result .lr-fee{font-weight:800;color:var(--red)}
+.loc-addr{width:100%;margin-top:8px;background:#fff;border:1.5px solid #D9D9E0;border-radius:11px;padding:10px 13px;font-family:inherit;font-size:.85rem;outline:none}
+.loc-addr:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(164,36,59,.1)}
 .facade-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(102px,1fr));gap:8px}
 .fchip{min-width:0;padding:11px 6px;border:1.5px solid #D9D9E0;border-radius:11px;background:#fff;font-family:inherit;font-size:.8rem;font-weight:700;color:#3A3A44;cursor:pointer;transition:all .18s;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;text-align:center;line-height:1.3}
 .fchip span:last-child{min-width:0;white-space:normal;word-break:keep-all}
@@ -538,7 +548,20 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
           <div class="sun-advice" id="sunAdvice"></div>
         </div>
       </div>
-      <div class="book-summary" id="bookSummary"></div>
+            <div class="gov-step">
+        <div class="gs-num">4</div>
+        <div class="gs-body">
+          <label class="gs-label">موقع العقار — لتحديد رسوم التنقل</label>
+          <button type="button" class="loc-btn" id="locBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            حدّد موقعي تلقائياً
+          </button>
+          <input type="text" class="loc-addr" id="locAddr" placeholder="أو اكتب اسم الحي (مثال: حي القويز)">
+          <div class="loc-result" id="locResult"></div>
+          <div class="gs-hint">الأسعار تشمل تنقلاً حتى 25 كم من مقرنا — ما بعدها يُحسب برسم بسيط</div>
+        </div>
+      </div>
+<div class="book-summary" id="bookSummary"></div>
       <div class="gov-deposit">
         <div class="gd-title" data-t="depositTitle">عربون تأكيد الحجز (25%)</div>
         <div class="gd-amount" id="govDepositAmt">0 ر.س</div>
@@ -1047,6 +1070,12 @@ function recalc(){
     db.innerHTML=`<span class="ds-ic" data-svg="gift"></span><span class="ds-amt">وفّرت ${fmt(saved)}</span><span class="ds-msg">${CAMPAIGN.active&&campAmt>0?CAMPAIGN.name+' مفعّل!':(multiDiscount>0?'خصم الوحدات مفعّل!':'خصم الباقة مفعّل!')}</span>`;
     db.style.animation='none'; void db.offsetWidth; db.style.animation='';
   }else{ db.style.display='none'; }
+  /* رسم التنقل البعيد */
+  if(state_loc.fee>0 && !state.isCustom){
+    items.push(['رسم تنقل بعيد ('+state_loc.km+' كم — '+state_loc.label+')', state_loc.fee, '']);
+    total+=state_loc.fee;
+    linesEl.insertAdjacentHTML('beforeend','<div class="line"><span class="l">رسم تنقل بعيد — '+state_loc.label+'</span><span class="v">'+fmt(state_loc.fee)+'</span></div>');
+  }
   animateTotal(total);
   lastTotal=total;
 }
@@ -1895,6 +1924,54 @@ function injectIcons(){
 }
 
 injectIcons();
+
+/* ═══ محرك الموقع والبعد — الأساس RUQB2510 ═══ */
+const HQ={lat:24.7136,lon:46.6753,label:'مقر مأوى'};
+const DIST={free:25, step:10, fee:100, max:600}; // 25 كم مجاناً · كل 10 كم بعدها +100 حتى 600
+const DISTRICTS={ // أحياء مرجعية تقريبية (لات/لون)
+ 'النرجس':[24.8421,46.6458],'الملقا':[24.7895,46.5985],'الياسمين':[24.8311,46.6367],'حطين':[24.8123,46.6005],'الرحمانية':[24.8245,46.6262],
+ 'العليا':[24.6941,46.6854],'الملز':[24.6722,46.7351],'النصيم':[24.7118,46.7907],'الروضة':[24.7405,46.7997],'الشفا':[24.5675,46.7113],
+ 'العزيزية':[24.5761,46.6803],'الدرعية':[24.7365,46.5751],'القويز':[24.9148,46.6162],'العارض':[24.9559,46.6538],'الخير':[24.9122,46.7025],
+ 'طويق':[24.9406,46.5856],'سدراء':[24.8743,46.6484],'نمار':[24.5736,46.6297],'المصانع':[24.6167,46.7489],'الصناعية القديمة':[24.6296,46.7236],
+ 'الخرج':[24.1500,47.3167],'الحائر':[24.4167,46.7333],'جلاجل':[25.6789,45.4289],'المجمعة':[25.9000,45.4500],'ثادق':[25.2833,45.8167],
+ 'حوطة بني تميم':[23.5167,46.8500],'المزاحمية':[24.4667,46.2667]
+};
+const kmOf=(a,b)=>{const R=6371,d=Math.PI/180,dLa=(b[0]-a[0])*d,dLo=(b[1]-a[1])*d;
+ const h=Math.sin(dLa/2)**2+Math.cos(a[0]*d)*Math.cos(b[0]*d)*Math.sin(dLo/2)**2;
+ return Math.round(R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h)));};
+const feeOf=km=>km<=DIST.free?0:Math.min(DIST.max,Math.ceil((km-DIST.free)/DIST.step)*DIST.fee);
+const state_loc={km:null,fee:0,label:''};
+function applyLoc(name,coords){
+  const km=kmOf([HQ.lat,HQ.lon],coords), fee=feeOf(km);
+  state_loc.km=km; state_loc.fee=fee; state_loc.label=name;
+  const box=$('locResult');
+  box.classList.add('on');
+  box.innerHTML= fee===0
+    ? '<b>'+name+'</b> — تبعد <span class="lr-km">'+km+' كم</span> عن '+HQ.label+'<br>التنقل <b>مشمول مجاناً</b> ✓'
+    : '<b>'+name+'</b> — تبعد <span class="lr-km">'+km+' كم</span> عن '+HQ.label+'<br>رسم تنقل بعيد: <span class="lr-fee">+'+fee+' ر.س</span> (كل '+DIST.step+' كم بعد '+DIST.free+' كم)';
+  recalc();
+}
+$('locBtn').onclick=()=>{
+  if(!navigator.geolocation){toast('المتصفح لا يدعم تحديد الموقع');return;}
+  $('locBtn').disabled=true; $('locBtn').textContent='جارٍ تحديد موقعك…';
+  navigator.geolocation.getCurrentPosition(p=>{
+    $('locBtn').disabled=false;
+    $('locBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> حدّد موقعي تلقائياً';
+    applyLoc('موقعك الحالي',[p.coords.latitude,p.coords.longitude]);
+  },()=>{
+    $('locBtn').disabled=false;
+    $('locBtn').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.1-7-11a7 7 0 0 1 14 0c0 5.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> حدّد موقعي تلقائياً';
+    toast('تعذّر تحديد الموقع — اكتب اسم الحي');
+  },{timeout:8000});
+};
+$('locAddr').addEventListener('change',()=>{
+  const v=$('locAddr').value.trim();
+  if(!v)return;
+  const key=Object.keys(DISTRICTS).find(k=>k.includes(v)||v.includes(k));
+  if(key){applyLoc('حي '+key,DISTRICTS[key]);}
+  else{toast('حي غير معروف بعد — جرب اسماً من القائمة قريباً');}
+});
+
 setupDateInput(); fillTimes('');
   if (typeof UI!=='undefined' && UI.lang==='en'){ const dpv=$('d-pages-v'); if(dpv) dpv.textContent='0'; }
 updateDeposit();
