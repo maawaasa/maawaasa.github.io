@@ -1549,8 +1549,18 @@ const countObs = new IntersectionObserver((entries) => {
 const aboutStatsEl = document.querySelector('.about-stats');
 if (aboutStatsEl) countObs.observe(aboutStatsEl);
 
-/* ---------- projects gallery: main + thumbs ---------- */
+/* ---------- projects gallery: main + thumbs + tabs ---------- */
 (function(){
+  /* التبويبات: فلل / شقق */
+  const tabs=document.querySelectorAll('.cat-tab');
+  if(tabs.length>1){
+    tabs.forEach(t=>t.addEventListener('click',()=>{
+      tabs.forEach(x=>x.classList.remove('on'));
+      t.classList.add('on');
+      const idx=[...tabs].indexOf(t);
+      document.querySelectorAll('.pg-card').forEach((c,i)=>c.style.display=(i===idx?'':'none'));
+    }));
+  }
   const main = document.querySelector('.pg-main');
   if(!main) return;
   const mainImg = document.getElementById('pgMainImg');
