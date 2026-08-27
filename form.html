@@ -531,6 +531,10 @@
                         <label>موعد التصوير المطلوب</label>
                         <input type="date" id="shootDate">
                     </div>
+                    <div class="form-group">
+                        <label>وقت بداية جلسة التصوير</label>
+                        <input type="time" id="shootTime" step="3600">
+                    </div>
                 </div>
             </div>
 
@@ -668,6 +672,7 @@
             const pLoc = document.getElementById('propertyLocation').value.trim();
             const pArea = document.getElementById('propertyArea').value.trim();
             const sDate = document.getElementById('shootDate').value;
+            const sTime = document.getElementById('shootTime').value;
             const notes = document.getElementById('clientNotes').value.trim();
 
             let hasError = false;
@@ -696,8 +701,10 @@
                     name: serviceLabels[k] || k,
                     pkg: pkg
                 }));
+                const bookingNote = sDate && sTime ? 'موعد التصوير: '+sDate+' الساعة '+sTime : '';
+                const savedNotes = [notes, bookingNote].filter(Boolean).join(' | ');
 
-                const { error: leadError } = await sb.rpc('submit_lead', {
+                const { data: contractId, error: leadError } = await sb.rpc('submit_lead', {
                     p_full_name: name,
                     p_phone: phone,
                     p_email: email || null,
@@ -708,14 +715,14 @@
                     p_property_location: pLoc || null,
                     p_rooms: pArea || null,
                     p_shoot_date: sDate || null,
-                    p_notes: notes || null,
+                    p_notes: savedNotes || null,
                     p_services: servicesJson.length ? servicesJson : null
                 });
 
                 if (leadError) throw leadError;
 
                 if (typeof notifyOwner === 'function'){
-                    notifyOwner('📥 طلب جديد من نموذج الموقع\nالاسم: '+name+'\nالجوال: '+phone+(email?('\nالبريد: '+email):'')+'\nالخدمات: '+(svcList||'—')+(pLoc?('\nالموقع: '+pLoc):'')+(sDate?('\nموعد مفضل: '+sDate):''));
+                    notifyOwner('📥 طلب جديد من نموذج الموقع\nالاسم: '+name+'\nالجوال: '+phone+(email?('\nالبريد: '+email):'')+'\nالخدمات: '+(svcList||'—')+(pLoc?('\nالموقع: '+pLoc):'')+(sDate?('\nموعد مفضل: '+sDate):'')+(sTime?(' الساعة '+sTime):''), contractId);
                 }
 
                 document.getElementById('successOverlay').classList.add('show');

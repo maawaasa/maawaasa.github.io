@@ -32,6 +32,7 @@ Three self-contained pages, each with its own inline `<style>` and `<script>`:
 - The anon key in `supabase-config.js` is a public client key (safe in frontend), not a secret — leave it in place.
 - Tables: `clients`, `contracts`, `contract_services` (services are inserted after a contract is created; editing a contract deletes then re-inserts its services).
 - `admin.html` also uses `html2pdf.js` (CDN) for PDF export of contracts.
+- Owner notifications (Telegram + email) go through the `notify-lead` Edge Function in `supabase/functions/notify-lead/` — secrets live in Supabase server-side only. `notifyOwner(text)` in `supabase-config.js` calls it. Never put Telegram tokens or Web3Forms keys in frontend files. See `supabase/DEPLOY.md`.
 
 ## Conventions
 

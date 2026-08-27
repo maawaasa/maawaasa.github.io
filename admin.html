@@ -2106,6 +2106,11 @@
         function getServiceLabel(k) { return serviceLabels[k] || k; }
         function getPkgLabel(p) { return pkgLabels[p] || p || '-'; }
         function getPaymentLabel(m) { return paymentLabels[m] || m; }
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>'"]/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            })[char]);
+        }
 
         async function updateStats() {
             try {
@@ -2149,10 +2154,10 @@
                 let tableHTML = '<table class="contracts-table"><thead><tr><th>رقم العقد</th><th>اسم العميل</th><th>الخدمة</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
 
                 filtered.forEach(c => {
-                    const svcNames = c.service_type || '-';
-                    const clientName = c.clients?.full_name || '-';
+                    const svcNames = escapeHTML(c.service_type || '-');
+                    const clientName = escapeHTML(c.clients?.full_name || '-');
                     const statusClass = c.status;
-                    tableHTML += '<tr><td><span class="contract-number">' + (c.contract_number || '-') + '</span></td><td>' + clientName + '</td><td>' + svcNames + '</td><td>' + (c.total_amount ? c.total_amount + ' ر.س' : '-') + '</td><td>' + (c.contract_date || '-') + '</td><td><span class="status-badge status-' + statusClass + '" onclick="toggleStatusDropdown(\'' + c.id + '\', event)"><span class="status-dot"></span>' + getStatusLabel(c.status) + '<div class="status-dropdown" id="sd_' + c.id + '"><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'draft\',event)"><span class="sd-dot draft"></span> مسودة</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'new\',event)"><span class="sd-dot new"></span> جديد</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'awaiting_payment\',event)"><span class="sd-dot awaiting_payment"></span> انتظار الدفع</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'deposit_paid\',event)"><span class="sd-dot deposit_paid"></span> مدفوع عربون</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'awaiting_signature\',event)"><span class="sd-dot awaiting_signature"></span> انتظار التوقيع</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'in_progress\',event)"><span class="sd-dot in_progress"></span> قيد التنفيذ</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'fully_paid\',event)"><span class="sd-dot fully_paid"></span> مدفوع كامل</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'completed\',event)"><span class="sd-dot completed"></span> مكتمل</div></div></span></td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button onclick="editContract(\'' + c.id + '\')" title="تعديل">&#9998;</button><button class="delete-btn" onclick="deleteContract(\'' + c.id + '\')" title="حذف">&#128465;</button></div></td></tr>';
+                    tableHTML += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + clientName + '</td><td>' + svcNames + '</td><td>' + escapeHTML(c.total_amount ? c.total_amount + ' ر.س' : '-') + '</td><td>' + escapeHTML(c.contract_date || '-') + '</td><td><span class="status-badge status-' + statusClass + '" onclick="toggleStatusDropdown(\'' + c.id + '\', event)"><span class="status-dot"></span>' + getStatusLabel(c.status) + '<div class="status-dropdown" id="sd_' + c.id + '"><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'draft\',event)"><span class="sd-dot draft"></span> مسودة</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'new\',event)"><span class="sd-dot new"></span> جديد</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'awaiting_payment\',event)"><span class="sd-dot awaiting_payment"></span> انتظار الدفع</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'deposit_paid\',event)"><span class="sd-dot deposit_paid"></span> مدفوع عربون</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'awaiting_signature\',event)"><span class="sd-dot awaiting_signature"></span> انتظار التوقيع</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'in_progress\',event)"><span class="sd-dot in_progress"></span> قيد التنفيذ</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'fully_paid\',event)"><span class="sd-dot fully_paid"></span> مدفوع كامل</div><div class="sd-option" onclick="changeStatus(\'' + c.id + '\',\'completed\',event)"><span class="sd-dot completed"></span> مكتمل</div></div></span></td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button onclick="editContract(\'' + c.id + '\')" title="تعديل">&#9998;</button><button class="delete-btn" onclick="deleteContract(\'' + c.id + '\')" title="حذف">&#128465;</button></div></td></tr>';
                 });
 
                 const totalAmount = filtered.reduce((sum, c) => sum + (parseFloat(c.total_amount) || 0), 0);
@@ -2186,8 +2191,8 @@
 
                 requests.forEach(c => {
                     const client = c.clients || {};
-                    const services = (c.contract_services || []).map(s => s.service_name).join('، ') || c.service_type || '-';
-                    html += '<tr><td><span class="contract-number">' + (c.contract_number || '-') + '</span></td><td>' + (client.full_name || '-') + '</td><td dir="ltr">' + (client.phone_number || '-') + '</td><td>' + (propertyLabels[c.property_type] || c.property_type || '-') + '</td><td>' + (c.property_location || '-') + '</td><td>' + services + '</td><td>' + (c.contract_date || '-') + '</td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button class="btn btn-gold btn-sm" onclick="editContract(\'' + c.id + '\')" title="تحويل لعقد" style="width:auto;padding:6px 14px;font-size:0.75rem;">تحويل لعقد</button></div></td></tr>';
+                    const services = (c.contract_services || []).map(s => escapeHTML(s.service_name)).join('، ') || escapeHTML(c.service_type || '-');
+                    html += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + escapeHTML(client.full_name || '-') + '</td><td dir="ltr">' + escapeHTML(client.phone_number || '-') + '</td><td>' + escapeHTML(propertyLabels[c.property_type] || c.property_type || '-') + '</td><td>' + escapeHTML(c.property_location || '-') + '</td><td>' + services + '</td><td>' + escapeHTML(c.contract_date || '-') + '</td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button class="btn btn-gold btn-sm" onclick="editContract(\'' + c.id + '\')" title="تحويل لعقد" style="width:auto;padding:6px 14px;font-size:0.75rem;">تحويل لعقد</button></div></td></tr>';
                 });
 
                 html += '</tbody></table>';
@@ -2500,7 +2505,7 @@
                     c.contract_services.forEach(s => {
                         const key = Object.keys(serviceLabels).find(k => serviceLabels[k] === s.service_name) || '';
                         const desc = svcDescriptions[key] ? svcDescriptions[key][s.package_type] || '' : '';
-                        svcBody += '<tr><td>' + idx + '</td><td>' + s.service_name + '</td><td>باقة ' + getPkgLabel(s.package_type) + '</td><td style="font-size:0.82rem;color:var(--text-mid);">' + desc + '</td></tr>';
+                        svcBody += '<tr><td>' + idx + '</td><td>' + escapeHTML(s.service_name) + '</td><td>باقة ' + escapeHTML(getPkgLabel(s.package_type)) + '</td><td style="font-size:0.82rem;color:var(--text-mid);">' + escapeHTML(desc) + '</td></tr>';
                         idx++;
                     });
                 }

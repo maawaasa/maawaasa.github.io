@@ -1790,7 +1790,7 @@ async function saveLead(total){
 
     // 1) الدالة الآمنة submit_lead (إن وُجدت)
     try{
-      const { error } = await sb.rpc('submit_lead', {
+      const { data: contractId, error } = await sb.rpc('submit_lead', {
         p_full_name: state.name||'عميل من الحاسبة',
         p_phone: state.phone||'',
         p_email: state.email||null,
@@ -1805,7 +1805,7 @@ async function saveLead(total){
         p_services: svcRows.length?svcRows:null
       });
       if (!error){
-        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'');
+        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'', contractId);
         return true;
       }
     }catch(_){}
@@ -1835,7 +1835,7 @@ async function saveLead(total){
       const cs = await sb.from('contract_services').insert(svcRows.map(s=>({ contract_id: contract.data.id, service_name: s.name, package_type: s.pkg })));
       if (cs.error) console.warn('خدمات العقد فشلت:', cs.error);
     }
-    notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'');
+    notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'', contract.data.id);
     return true;
   }catch(e){ console.warn('حفظ الحاسبة فشل:', e); return false; }
 }
