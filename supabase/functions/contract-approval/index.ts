@@ -177,7 +177,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#fbfaf7;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
     <tr><td style="height:5px;background:#a4243b;font-size:0;line-height:0;">&nbsp;</td></tr>
-    <tr><td align="center" style="padding:24px 32px;background:#090808;color:#fff;text-align:center;">
+    <tr><td align="center" bgcolor="#090808" style="padding:24px 32px;background-color:#090808!important;color:#fff;text-align:center;">
       <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
     <tr><td style="padding:34px 32px 10px;">
