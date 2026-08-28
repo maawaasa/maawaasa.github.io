@@ -201,11 +201,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
   const appointment = appointmentDate ? `
     <tr><td style="padding:22px 32px 0;">
       <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; موعد جلسة التصوير</div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#a4243b" style="background:#a4243b;background:linear-gradient(135deg,#b42c46 0%,#a4243b 52%,#7c1a2a 100%);background-color:#a4243b!important;border-radius:14px;">
         <tr>
-          <td align="right" style="padding:17px 20px;border-left:1px solid #e5e0da;text-align:right;"><div style="font-size:11px;color:#746d67;text-align:right;">التاريخ</div><div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:5px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:17px;font-weight:900;color:#211e1c;letter-spacing:.5px;text-align:right;">${escapeHtml(appointmentDate)}</div></td>
-          <td style="padding:17px 20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">وقت البداية</div><div style="margin-top:5px;font-size:16px;font-weight:900;color:#211e1c;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
-          <td style="padding:17px 20px;"><div style="font-size:11px;color:#746d67;">المصور المسؤول</div><div style="margin-top:5px;font-size:16px;font-weight:900;color:#211e1c;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
+          <td align="right" style="padding:19px 20px;border-left:1px solid #bb5570;text-align:right;"><div style="font-size:11px;color:#f4d7dd;font-weight:700;text-align:right;">التاريخ</div><div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:6px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:19px;font-weight:900;color:#ffffff;letter-spacing:.5px;text-align:right;">${escapeHtml(appointmentDate)}</div></td>
+          <td style="padding:19px 20px;border-left:1px solid #bb5570;"><div style="font-size:11px;color:#f4d7dd;font-weight:700;">وقت البداية</div><div style="margin-top:6px;font-size:17px;font-weight:900;color:#ffffff;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
+          <td style="padding:19px 20px;"><div style="font-size:11px;color:#f4d7dd;font-weight:700;">المصور المسؤول</div><div style="margin-top:6px;font-size:17px;font-weight:900;color:#ffffff;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
         </tr>
       </table>
     </td></tr>` : '';
@@ -226,15 +226,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#18794e;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
       <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
       <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;text-align:right;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
+      <div style="margin-top:12px;font-size:12.5px;color:#706963;">رقم العقد: <span dir="ltr" style="direction:ltr;unicode-bidi:isolate;font-family:Arial,sans-serif;font-weight:800;color:#a4243b;letter-spacing:.5px;">${number}</span></div>
     </td></tr>
-    <tr><td style="padding:16px 32px 0;">
+    ${appointment}
+    <tr><td style="padding:22px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
-        <tr><td style="padding:0;border-bottom:1px solid #ece8e3;">
-          <div bgcolor="#a4243b" style="background:#a4243b;background:linear-gradient(135deg,#b42c46 0%,#a4243b 52%,#7c1a2a 100%);background-color:#a4243b!important;border-radius:13px 13px 0 0;padding:18px 12px;text-align:center;">
-            <div style="font-size:11px;color:#f4d7dd;font-weight:700;letter-spacing:1.4px;">رقم العقد</div>
-            <div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:7px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:1.5px;line-height:1.2;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
-          </div>
-        </td></tr>
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
           ${infoRow('اسم العميل', client.full_name)}
@@ -245,7 +241,6 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
         </table></td></tr>
       </table>
     </td></tr>
-    ${appointment}
     <tr><td style="padding:26px 32px 0;">
       <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; الخدمات المعتمدة</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;">${serviceRows}</table>
