@@ -213,8 +213,8 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
   const optionalInfoRow = (label: string, value: unknown) => value ? infoRow(label, value) : '';
   const html = `<!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="only light"><meta name="supported-color-schemes" content="only light"><style>@media only screen and (max-width:520px){.appt-col{display:block!important;width:100%!important;border-left:0!important;padding:6px 10px!important}}</style></head>
-<body style="margin:0;padding:0;background:#f2f0ed;background-color:#f2f0ed!important;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;color-scheme:only light;supported-color-schemes:only light;">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="only light"><style>@media only screen and (max-width:520px){.appt-col{display:block!important;width:100%!important;border-left:0!important;padding:6px 10px!important}}</style></head>
+<body style="margin:0;padding:0;background:#f2f0ed;background-color:#f2f0ed!important;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">تم اعتماد عقد مأوى رقم ${number} وإرفاق نسختك الرسمية المختومة.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#fbfaf7" style="max-width:640px;background:#fbfaf7;background-color:#fbfaf7!important;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
