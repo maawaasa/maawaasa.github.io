@@ -411,9 +411,32 @@ async function fitServices(){
       if(note1)z.appendChild(note1);
       const ct=z.querySelector('table');if(ct)ct.className=t.className;
       contPage.hidden=false;
-      const contOver=()=>contPage.getBoundingClientRect().height>1126;
+      const contPages=[contPage];
       const csteps=[()=>ct.className='tbl-d2',()=>ct.className='tbl-d3',()=>contPage.classList.add('p1-compact'),()=>ct.className='tbl-d4'];
-      while(contOver()&&csteps.length){csteps.shift()()}
+      while(contPages.some(pg=>pg.getBoundingClientRect().height>1126)&&csteps.length){csteps.shift()()}
+      while(true){
+        const src=contPages.find(pg=>pg.getBoundingClientRect().height>1126);
+        if(!src)break;
+        const tbS=src.querySelector('tbody');
+        if(tbS.children.length<=1)break;
+        const clone=contPage.cloneNode(true);
+        const cb=clone.querySelector('tbody');cb.innerHTML='';cb.removeAttribute('id');
+        const zz=clone.querySelector('.z');
+        const rm=zz.querySelector('.totals');if(rm)rm.remove();
+        const rn=zz.querySelector('.note');if(rn)rn.remove();
+        clone.querySelector('h2').textContent='تكملة الخدمات';
+        const sp=clone.querySelector('.sec span');if(sp)sp.textContent='تابع للصفحات السابقة';
+        while(src.getBoundingClientRect().height>1126&&tbS.children.length>1){cb.appendChild(tbS.lastElementChild)}
+        if(!cb.children.length){clone.remove();break}
+        const tot=src.querySelector('.totals');
+        if(tot)zz.appendChild(tot);
+        const nt=src.querySelector('.note');
+        if(nt&&nt.textContent.includes('الصفحتين'))zz.appendChild(nt);
+        src.after(clone);
+        contPages.splice(contPages.indexOf(src)+1,0,clone);
+      }
+      let idx=0;
+      contPages.forEach(pg=>{[...pg.querySelector('tbody').children].forEach(r=>{r.firstElementChild.textContent=++idx})});
     }
     const visible=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);
     visible.forEach((p,i)=>{const g=p.querySelector('footer .pg');if(g)g.textContent='صفحة '+(i+1)+' من '+visible.length});
