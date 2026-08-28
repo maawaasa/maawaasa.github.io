@@ -281,9 +281,8 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
         <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">03</td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي استفسار أو تعديل، فريقنا جاهز لخدمتك عبر واتساب خلال ساعات العمل.</td></tr>
       </table>
       <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin-top:22px;"><tr><td align="center" bgcolor="#18794e" style="background:#18794e;background-color:#18794e!important;border-radius:999px;">
-        <a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 34px;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;border-radius:999px;letter-spacing:.2px;">الدعم عبر واتساب</a>
-      </td></tr>
-      <tr><td align="center" style="padding-top:8px;font-size:11.5px;color:#8a837d;"><span dir="ltr">+966 53 164 6152</span> &nbsp;·&nbsp; رد سريع خلال ساعات العمل</td></tr></table>
+        <a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 30px;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;border-radius:999px;letter-spacing:.2px;">الدعم عبر واتساب &nbsp;·&nbsp; <span dir="ltr" style="color:#ffffff;">+966 53 164 6152</span></a>
+      </td></tr></table>
     </td></tr>
     <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
       <strong style="color:#28231f;">مؤسسة مأوى المهارة التجارية</strong><br>
