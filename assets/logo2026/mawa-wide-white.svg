@@ -5,6 +5,9 @@
       .cls-1 {
         fill: #F4F0EB;
       }
+      path {
+        fill: #F4F0EB;
+      }
     </style>
   </defs>
   <g id="Layer_1-2" data-name="Layer 1">
