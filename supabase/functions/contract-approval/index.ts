@@ -230,9 +230,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </td></tr>
     <tr><td style="padding:16px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
-        <tr><td bgcolor="#a4243b" style="padding:20px 18px;background:#a4243b;background-color:#a4243b!important;text-align:center;">
-          <div style="font-size:11px;color:#f2d4da;font-weight:700;letter-spacing:1.2px;">رقم العقد</div>
-          <div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:7px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:1.5px;line-height:1.2;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
+        <tr><td style="padding:16px;border-bottom:1px solid #ece8e3;">
+          <div style="background:#a4243b;background:linear-gradient(135deg,#b42c46 0%,#a4243b 52%,#7c1a2a 100%);border:1px solid #c4637a;border-radius:14px;padding:15px 12px;text-align:center;">
+            <div style="font-size:11px;color:#f4d7dd;font-weight:700;letter-spacing:1.4px;">رقم العقد</div>
+            <div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:7px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:1.5px;line-height:1.2;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
+          </div>
         </td></tr>
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
