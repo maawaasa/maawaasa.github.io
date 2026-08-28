@@ -157,7 +157,9 @@ function shootDate(value: unknown): string {
   const d = new Date(String(value));
   if (Number.isNaN(d.getTime())) return '';
   try {
-    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Riyadh' }).format(d);
+    const p = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: 'Asia/Riyadh' }).formatToParts(d);
+    const g = (t: string) => p.find((x) => x.type === t)?.value || '';
+    return `${Number(g('day'))}.${Number(g('month'))}.${g('year')}`;
   } catch {
     return '';
   }
@@ -190,9 +192,8 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     : String(contract.service_type || 'خدمات تصوير عقاري').split(/[،,]/).map((item) => escapeHtml(item.trim())).filter(Boolean);
   const serviceRows = services.map((name: string, index: number) => `
     <tr>
-      <td style="padding:13px 16px;border-bottom:1px solid #ece8e3;color:#817a74;font-size:13px;width:34px;">${index + 1}</td>
-      <td style="padding:13px 0;border-bottom:1px solid #ece8e3;color:#201d1b;font-size:14px;font-weight:700;">${name}</td>
-      <td style="padding:13px 16px;border-bottom:1px solid #ece8e3;color:#817a74;font-size:12px;text-align:left;">مشمول بالعقد</td>
+      <td align="right" style="padding:12px 16px;border-bottom:1px solid #ece8e3;width:46px;"><span dir="ltr" style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;background:#f7eff0;color:#a4243b;border-radius:999px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;">${index + 1}</span></td>
+      <td style="padding:12px 16px 12px 0;border-bottom:1px solid #ece8e3;color:#201d1b;font-size:14px;font-weight:700;">${name}</td>
     </tr>`).join('');
   const appointmentDate = shootDate(contract.shoot_date);
   const appointmentTime = shootTime(details.schedule_time || contract.notes);
@@ -202,11 +203,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <tr><td style="padding:15px 20px 5px;">
         <div style="font-size:11px;font-weight:800;letter-spacing:.8px;color:#926b17;">موعد جلسة التصوير</div>
       </td></tr>
-      <tr><td style="padding:0 10px 13px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-          <td class="appt-col" width="40%" style="padding:7px 10px;border-left:1px solid #ead8ad;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">التاريخ</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;white-space:nowrap;">${escapeHtml(appointmentDate)}</div></td>
-          <td class="appt-col" width="25%" style="padding:7px 10px;border-left:1px solid #ead8ad;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">وقت البداية</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
-          <td class="appt-col" width="35%" style="padding:7px 10px;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">المصور المسؤول</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
+      <tr><td style="padding:1px 12px 15px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ead8ad;border-radius:10px;"><tr>
+          <td class="appt-col" width="30%" align="center" style="padding:10px 6px;border-left:1px solid #f0e4c8;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">التاريخ</div><div dir="ltr" style="direction:ltr;unicode-bidi:isolate;font-family:Arial,'Helvetica Neue',sans-serif;font-size:16px;font-weight:900;color:#2a251e;margin-top:4px;letter-spacing:.6px;">${escapeHtml(appointmentDate)}</div></td>
+          <td class="appt-col" width="26%" align="center" style="padding:10px 6px;border-left:1px solid #f0e4c8;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">وقت البداية</div><div style="font-size:14.5px;font-weight:800;color:#2a251e;margin-top:4px;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
+          <td class="appt-col" width="44%" align="center" style="padding:10px 6px;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">المصور المسؤول</div><div style="font-size:14.5px;font-weight:800;color:#2a251e;margin-top:4px;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
         </tr></table>
       </td></tr>
     </table>` : '';
@@ -230,8 +231,8 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </td></tr>
     <tr><td style="padding:16px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
-        <tr><td style="padding:16px;border-bottom:1px solid #ece8e3;">
-          <div style="background:#a4243b;background:linear-gradient(135deg,#b42c46 0%,#a4243b 52%,#7c1a2a 100%);border:1px solid #c4637a;border-radius:14px;padding:15px 12px;text-align:center;">
+        <tr><td style="padding:0;border-bottom:1px solid #ece8e3;">
+          <div bgcolor="#a4243b" style="background:#a4243b;background:linear-gradient(135deg,#b42c46 0%,#a4243b 52%,#7c1a2a 100%);background-color:#a4243b!important;border-radius:13px 13px 0 0;padding:18px 12px;text-align:center;">
             <div style="font-size:11px;color:#f4d7dd;font-weight:700;letter-spacing:1.4px;">رقم العقد</div>
             <div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:7px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:1.5px;line-height:1.2;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
           </div>
