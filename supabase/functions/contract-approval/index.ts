@@ -70,7 +70,7 @@ async function dataSource(): Promise<any> {
   return notion(`/data_sources/${encodeURIComponent(match.id)}`);
 }
 
-async function notionOrder(contractId: string): Promise<{ page: any; paid: number }> {
+async function notionOrder(contractId: string): Promise<{ page: any; paid: number; extras: Record<string, unknown> }> {
   const schema = await dataSource();
   const result = await notion(`/data_sources/${encodeURIComponent(schema.id)}/query`, {
     method: 'POST',
@@ -80,7 +80,30 @@ async function notionOrder(contractId: string): Promise<{ page: any; paid: numbe
   if (!page) throw new Error('notion_order_not_found');
   const paidProp = page.properties?.['إجمالي المدفوع من العميل'];
   const paid = Number(paidProp?.number ?? paidProp?.formula?.number ?? 0);
-  return { page, paid: Number.isFinite(paid) ? paid : 0 };
+  const num = (name: string) => {
+    const prop = page.properties?.[name];
+    const value = Number(prop?.number ?? prop?.formula?.number ?? NaN);
+    return Number.isFinite(value) ? value : 0;
+  };
+  const text = (name: string) => plainText(page.properties?.[name]?.rich_text || []).trim();
+  const date = (name: string) => page.properties?.[name]?.date?.start || null;
+  const extras = {
+    base_package: num('قيمة الباقة الأساسية'),
+    discount_amount: num('قيمة الخصم'),
+    discount_reason: text('سبب الخصم'),
+    shooting_date: date('موعد جلسة التصوير'),
+    order_number: text('رقم الطلب'),
+  };
+  return { page, paid: Number.isFinite(paid) ? paid : 0, extras };
+}
+
+async function verifySignatureFor(contractId: string, secret: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'],
+  );
+  return bytesToHex(new Uint8Array(await crypto.subtle.sign(
+    'HMAC', key, new TextEncoder().encode(`verify:${contractId}`),
+  ))).slice(0, 16);
 }
 
 async function loadContract(contractId: string): Promise<any> {
@@ -118,44 +141,6 @@ function deliverableEmail(value: unknown): boolean {
   const email = String(value || '').trim().toLowerCase();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
     !/\.(example|invalid|test)$/.test(email);
-}
-
-function escapeHtml(value: unknown): string {
-  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  })[char] || char);
-}
-
-function formatSar(value: number): string {
-  return `${new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(value)} ر.س`;
-}
-
-function propertyLabel(value: unknown): string {
-  const labels: Record<string, string> = {
-    villa: 'فيلا', apartment: 'شقة', office: 'مكتب', land: 'أرض',
-    commercial: 'عقار تجاري', compound: 'مجمع سكني', other: 'أخرى',
-  };
-  const key = String(value || '');
-  return labels[key] || key || 'غير محدد';
-}
-
-function shootTime(notes: unknown): string {
-  const match = String(notes || '').match(/الساعة\s+([01]?\d|2[0-3]):([0-5]\d)/);
-  if (!match) return '';
-  const hour = Number(match[1]);
-  const minute = match[2];
-  if (hour === 0) return `12:${minute} منتصف الليل`;
-  if (hour === 12) return `12:${minute} ظهرًا`;
-  return hour < 12 ? `${hour}:${minute} صباحًا` : `${hour - 12}:${minute} مساءً`;
-}
-
-function shootDate(value: unknown): string {
-  if (!value) return '';
-  const date = new Date(`${String(value)}T12:00:00+03:00`);
-  if (Number.isNaN(date.getTime())) return String(value);
-  return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Riyadh',
-  }).format(date);
 }
 
 function buildContractEmail(details: any, paid: number, required: number): { html: string; text: string } {
@@ -289,8 +274,6 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
   const upload = await fetch(storageUrl, { method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true' }, body: pdf });
   if (!upload.ok) throw new Error(`storage_${upload.status}`);
 
-  const resendKey = Deno.env.get('RESEND_API_KEY') || '';
-  const subject = `تم اعتماد عقدك | مأوى — ${details.contract.contract_number || ''}`;
   const emailContent = buildContractEmail(details, paid, required);
   const email = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
@@ -302,6 +285,8 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
       attachments: [{ filename: `عقد-مأوى-${safeNumber}.pdf`, content: pdfBase64(pdfData) }],
     }),
   });
+  const emailBody = await email.json().catch(() => ({}));
+
   const emailBody = await email.json().catch(() => ({}));
   if (!email.ok) throw new Error(`resend_${email.status}:${emailBody?.message || ''}`);
 
@@ -334,6 +319,30 @@ Deno.serve(async (req: Request) => {
     const contractId = String(body.contract_id || '');
     const expires = Number(body.expires || 0);
     const supplied = String(body.signature || '');
+
+    // مسار التحقق العام — يُستخدم من صفحة verify.html عبر رمز QR على العقد
+    if (body.action === 'verify') {
+      const secret = Deno.env.get('CONTRACT_APPROVAL_SECRET') || '';
+      if (!UUID.test(contractId) || !secret) return json({ error: 'invalid_request' }, 400);
+      const expectedVerify = await verifySignatureFor(contractId, secret);
+      if (!constantTimeEqual(supplied, expectedVerify)) return json({ valid: false });
+      let payload: Record<string, unknown> = { valid: true };
+      try {
+        const details = await loadContract(contractId);
+        const deliveries = await supabase(`/rest/v1/contract_deliveries?contract_id=eq.${contractId}&select=status,sent_at&limit=1`);
+        payload = {
+          valid: true,
+          contract_number: details.contract.contract_number || '',
+          client_name: details.client.full_name || '',
+          total_amount: Number(details.contract.total_amount || 0),
+          delivery_status: deliveries?.[0]?.status || 'pending',
+        };
+      } catch (error) {
+        console.error('verify lookup failed', error);
+      }
+      return json(payload);
+    }
+
     if (!UUID.test(contractId) || !Number.isInteger(expires) || expires < Math.floor(Date.now() / 1000)) return json({ error: 'invalid_or_expired_link' }, 401);
     const secret = Deno.env.get('CONTRACT_APPROVAL_SECRET') || '';
     const expected = await signatureFor(contractId, expires, secret);
@@ -342,10 +351,12 @@ Deno.serve(async (req: Request) => {
     const details = await loadContract(contractId);
     const order = await notionOrder(contractId);
     const required = Math.round(Number(details.contract.total_amount || 0) * 0.25 * 100) / 100;
-    if (body.action === 'preview') return json({ ok: true, ...details, payment: { paid: order.paid, required, sufficient: order.paid >= required } });
+    const verifySig = secret ? await verifySignatureFor(contractId, secret) : '';
+    const verifyUrl = verifySig ? `https://maawaa.sa/verify.html?c=${contractId}&s=${verifySig}` : '';
+    if (body.action === 'preview') return json({ ok: true, ...details, payment: { paid: order.paid, required, sufficient: order.paid >= required }, notion: order.extras, verify: { url: verifyUrl } });
     if (body.action === 'email_preview') {
       const email = buildContractEmail(details, order.paid, required);
-      return json({ ok: true, html: email.html });
+      return json({ ok: true, html: email.html, text: email.text });
     }
     if (body.action === 'send') return await sendContract(contractId, String(body.pdf_base64 || ''), details, order.page);
     return json({ error: 'invalid_action' }, 400);

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>التحقق من عقد مأوى</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="assets/js/supabase-config.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#A4243B;--ink:#1D1815;--mut:#6B6661;--line:#E8E3DA;--green:#16663a}
+body{font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;background:#EFEBE4;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#FBFAF6;border-radius:14px;box-shadow:0 10px 40px #00000018;max-width:420px;width:100%;padding:34px 30px;text-align:center}
+.logo{height:34px;width:auto;display:block;margin:0 auto 20px}
+.icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px}
+.ok{background:#E8F6EE;color:var(--green)}
+.bad{background:#FDEAEA;color:#8D2335}
+h1{font-size:1.25rem;margin-bottom:8px}
+p{font-size:.9rem;color:var(--mut);line-height:1.9}
+.row{display:flex;justify-content:space-between;font-size:.85rem;padding:10px 0;border-bottom:1px dashed var(--line);text-align:right}
+.row b{color:var(--ink)}
+.badge{display:inline-block;border-radius:20px;padding:3px 14px;font-size:.75rem;font-weight:700;margin-top:6px}
+.sent{background:#E8F6EE;color:var(--green)}
+.pending{background:#FFF4DC;color:#805300}
+.spin{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:r 1s linear infinite;margin:0 auto 14px}
+@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main class="card">
+  <img class="logo" src="assets/logo2026/mawa-wide.svg" alt="مأوى">
+  <div id="result"><div class="spin"></div><p>جاري التحقق من العقد…</p></div>
+</main>
+<script>
+const ENDPOINT='https://fivrwlowntwacfrsocge.supabase.co/functions/v1/contract-approval';
+const params=new URLSearchParams(location.search);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>new Intl.NumberFormat('en-US').format(Number(n||0))+' ر.س';
+const out=document.getElementById('result');
+(async()=>{
+  try{
+    const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON_KEY,'apikey':SUPABASE_ANON_KEY},body:JSON.stringify({action:'verify',contract_id:params.get('c')||'',signature:params.get('s')||''})});
+    const body=await res.json().catch(()=>({}));
+    if(!res.ok||body.valid===false){
+      out.innerHTML='<div class="icon bad">✕</div><h1>عقد غير موثّق</h1><p>هذا الرابط لا يطابق أي عقد معتمد لدى مؤسسة مأوى المهارة التجارية.<br>للتأكد تواصلوا معنا: info@maawaa.sa</p>';
+      return;
+    }
+    const status=body.delivery_status;
+    out.innerHTML='<div class="icon ok">✓</div><h1>عقد معتمد رسميًا</h1>'
+      +(body.contract_number?'<div class="row"><span>رقم العقد</span><b>'+esc(body.contract_number)+'</b></div>':'')
+      +(body.client_name?'<div class="row"><span>العميل</span><b>'+esc(body.client_name)+'</b></div>':'')
+      +(body.total_amount?'<div class="row"><span>قيمة العقد</span><b>'+money(body.total_amount)+'</b></div>':'')
+      +'<div class="row"><span>حالة الإرسال</span><span class="badge '+(status==='sent'?'sent':'pending')+'">'+(status==='sent'?'مرسل ومعتمد':'قيد الاعتماد')+'</span></div>'
+      +'<p style="margin-top:14px;font-size:.78rem">هذه الصفحة مصدر رسمي للتحقق من عقود مأوى للتصوير العقاري.</p>';
+  }catch(e){
+    out.innerHTML='<div class="icon bad">!</div><h1>تعذر التحقق</h1><p>تحققوا من اتصالكم بالإنترنت ثم أعادوا المحاولة.</p>';
+  }
+})();
+</script>
+</body>
+</html>
