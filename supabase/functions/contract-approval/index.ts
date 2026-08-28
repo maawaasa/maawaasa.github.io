@@ -223,10 +223,9 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
     <tr><td style="padding:34px 32px 10px;text-align:center;">
-      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#18794e;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
+      <span style="display:inline-block;padding:7px 14px;border-radius:999px;background:#e9f7ef;color:#18794e;font-size:12px;font-weight:800;">تم اعتماد العقد رقم <span dir="ltr" style="direction:ltr;unicode-bidi:isolate;font-family:Arial,sans-serif;font-weight:900;letter-spacing:.4px;">${number}</span> وتأكيد الحجز</span>
       <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
       <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;text-align:right;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
-      <div style="margin-top:12px;font-size:12.5px;color:#706963;">رقم العقد: <span dir="ltr" style="direction:ltr;unicode-bidi:isolate;font-family:Arial,sans-serif;font-weight:800;color:#a4243b;letter-spacing:.5px;">${number}</span></div>
     </td></tr>
     ${appointment}
     <tr><td style="padding:22px 32px 0;">
