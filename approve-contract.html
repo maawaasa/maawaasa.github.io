@@ -34,7 +34,7 @@ body{background:#EFEBE4;font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,san
 /* ===== الهيدر ===== */
 header{padding:0 0 6mm}
 header .hcard{position:relative;background:#fff;border:1px solid var(--line);border-top:0.5mm solid var(--red);border-radius:4.5mm;padding:5.5mm 7mm;display:flex;flex-direction:column;align-items:center;gap:3.5mm;text-align:center;box-shadow:0 5px 18px #00000014}
-header .logo img{height:12.5mm;width:auto;display:block;margin:0 auto}
+header .logo img,header img.logo{height:10.5mm;width:auto;display:block;margin:0 auto}
 .hmeta{text-align:center}
 .chip{display:inline-block;background:var(--red);color:#fff;font-weight:700;font-size:11pt;padding:1.8mm 11mm;border-radius:20mm}
 .hmeta .row{font-size:9pt;color:var(--mut);margin-top:2mm}
@@ -44,7 +44,7 @@ header .logo img{height:12.5mm;width:auto;display:block;margin:0 auto}
 /* ===== عناوين الأقسام الموحدة ===== */
 .sec{display:flex;align-items:center;gap:3mm;margin-bottom:4.5mm}
 .sec i{display:inline-block;font-style:normal;color:var(--red);font-size:12.5pt;line-height:1;background:none}
-.sec i::before{content:'\2726'}
+
 .sec h2{font-size:12pt;font-weight:700}
 .sec span{font-size:8.5pt;color:var(--mut);margin-right:1mm}
 
@@ -90,7 +90,10 @@ td.num{color:var(--mut);width:8mm}
 #servicesTable.tbl-d3 td{padding:1.8mm 3.5mm;font-size:8.6pt;line-height:1.45}
 #servicesTable.tbl-d3 td.det{font-size:7.8pt}
 .p1-compact header .hcard{padding:4mm 6mm}
-.p1-compact header .logo img{height:11mm}
+.p1-compact header .logo img,.p1-compact header img.logo{height:9.5mm}
+#servicesTable.tbl-d4 th,#servicesCont table.tbl-d4 th{padding:1.8mm 3mm;font-size:8pt}
+#servicesTable.tbl-d4 td,#servicesCont table.tbl-d4 td{padding:1.3mm 3mm;font-size:8pt;line-height:1.35}
+#servicesCont table.tbl-d4 td.det{font-size:7.4pt}
 .p1-compact .card{padding:3.5mm 4mm}
 .p1-compact .party p{line-height:1.8}
 .p1-compact .shoot{padding:2.8mm 4mm;font-size:9.5pt}
@@ -340,36 +343,49 @@ function closeEmailPreview(){document.getElementById('emailPreview').classList.a
 async function fitServices(){
   try{
     await document.fonts.ready;
-    const pages=[...document.querySelectorAll('.page')];
-    const p1=pages[0];
+    const p1=document.querySelectorAll('.page')[0];
     const tb=document.getElementById('serviceRows');
     const t=document.getElementById('servicesTable');
     const contPage=document.getElementById('servicesCont');
+    const contBody=document.getElementById('serviceRowsCont');
+    const z=contPage.querySelector('.z');
     const over=()=>p1.getBoundingClientRect().height>1126;
     const steps=[()=>t.className='tbl-d2',()=>t.className='tbl-d3',()=>p1.classList.add('p1-compact')];
-    while(over()&&steps.length){steps.shift()()}
     const moved=[];
-    const contBody=document.getElementById('serviceRowsCont');
-    while(over()&&tb.children.length>1){
-      const row=tb.lastElementChild;tb.removeChild(row);moved.unshift(row);
+    if(tb.children.length>4){
+      while(tb.children.length){moved.push(tb.firstElementChild);tb.removeChild(tb.firstElementChild)}
+      contPage.querySelector('h2').textContent='الخدمات والمقابل المالي';
+      contPage.querySelector('.sec span').textContent='جزء لا يتجزأ من العقد';
+    }else{
+      while(over()&&steps.length){steps.shift()()}
+      while(over()&&tb.children.length>1){const r=tb.lastElementChild;tb.removeChild(r);moved.unshift(r)}
     }
-    const contTable=document.querySelector('#servicesCont table');
-    if(contTable)contTable.className=t.className;
     if(moved.length){
       moved.forEach(r=>contBody.appendChild(r));
-      [...contBody.children].forEach((r,i)=>{r.firstElementChild.textContent=i+1+tb.children.length});
-      const z=contPage.querySelector('.z');
+      [...contBody.children].forEach((r,i)=>{r.firstElementChild.textContent=i+1});
       const totals=p1.querySelector('.totals');
-      const note1=p1.querySelector('.note');
+      const note1=[...p1.querySelectorAll('.note')].find(n=>n.textContent.includes('الصفحتين'));
+      const zNote=z.querySelector('.note');
+      if(tb.children.length===0){
+        t.style.display='none';
+        zNote.textContent='تفصيل خدمات هذا العقد والمقابل المالي، ويُعد جزءًا لا يتجزأ منه.';
+        const sum=document.createElement('p');sum.className='note';
+        sum.textContent='تشمل هذه الاتفاقية '+moved.length+' خدمات، ويرد تفصيلها والمقابل المالي في الصفحة التالية.';
+        t.after(sum);
+      }else{
+        zNote.textContent='يُكمل هذا الجدول خدمات العقد الواردة في الصفحة السابقة، ويُعد جزءًا لا يتجزأ منه.';
+        const f=document.createElement('p');f.className='note';
+        f.textContent='يتبع في الصفحة التالية بقية الخدمات والإجمالي النهائي.';
+        t.after(f);
+      }
       if(totals)z.appendChild(totals);
       if(note1)z.appendChild(note1);
-      const follow=document.createElement('p');
-      follow.className='note';
-      follow.textContent='يتبع في الصفحة التالية بقية الخدمات والإجمالي النهائي.';
-      document.getElementById('servicesTable').after(follow);
+      const ct=z.querySelector('table');if(ct)ct.className=t.className;
       contPage.hidden=false;
+      const contOver=()=>contPage.getBoundingClientRect().height>1126;
+      const csteps=[()=>ct.className='tbl-d2',()=>ct.className='tbl-d3',()=>contPage.classList.add('p1-compact'),()=>ct.className='tbl-d4'];
+      while(contOver()&&csteps.length){csteps.shift()()}
     }
-    const all=pages.filter(p=>!p.hidden).concat(moved.length?[contPage]:[]);
     const visible=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);
     visible.forEach((p,i)=>{const g=p.querySelector('footer .pg');if(g)g.textContent='صفحة '+(i+1)+' من '+visible.length});
   }catch(e){console.warn('fitServices',e)}
