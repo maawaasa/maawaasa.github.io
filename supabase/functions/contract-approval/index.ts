@@ -93,10 +93,21 @@ async function loadContract(contractId: string): Promise<any> {
   return { contract, client: clients[0], services: services || [] };
 }
 
-function decodePdf(value: string): Uint8Array {
-  const encoded = value.replace(/^data:application\/pdf;base64,/, '');
+function pdfBase64(value: string): string {
+  const comma = value.indexOf(',');
+  const encoded = (comma >= 0 ? value.slice(comma + 1) : value).replace(/\s+/g, '');
   if (!encoded || encoded.length > 14_000_000) throw new Error('invalid_pdf');
-  const binary = atob(encoded);
+  if (!/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)) throw new Error('invalid_pdf');
+  return encoded;
+}
+
+function decodePdf(value: string): Uint8Array {
+  let binary = '';
+  try {
+    binary = atob(pdfBase64(value));
+  } catch {
+    throw new Error('invalid_pdf');
+  }
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
   if (bytes.length < 100 || new TextDecoder().decode(bytes.slice(0, 5)) !== '%PDF-') throw new Error('invalid_pdf');
@@ -140,7 +151,7 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
     body: JSON.stringify({
       from: 'عقود مأوى <info@maawaa.sa>', to: [details.client.email], subject,
       html: `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.9;color:#181818"><h2 style="color:#A4243B">عقد مأوى المعتمد</h2><p>مرحبًا ${details.client.full_name}،</p><p>نرفق لك عقد الطلب رقم <strong>${details.contract.contract_number || '—'}</strong> بعد اعتماده وختمه من مأوى.</p><p>تم تسجيل العربون وتأكيد الحجز. احتفظ بهذه الرسالة والعقد المرفق للرجوع إليهما.</p><p>مع التحية،<br><strong>مأوى للتصوير العقاري</strong><br>info@maawaa.sa</p></div>`,
-      attachments: [{ filename: `عقد-مأوى-${safeNumber}.pdf`, content: pdfData.replace(/^data:application\/pdf;base64,/, '') }],
+      attachments: [{ filename: `عقد-مأوى-${safeNumber}.pdf`, content: pdfBase64(pdfData) }],
     }),
   });
   const emailBody = await email.json().catch(() => ({}));
