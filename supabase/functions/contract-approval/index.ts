@@ -230,9 +230,9 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </td></tr>
     <tr><td style="padding:16px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
-        <tr><td style="padding:18px 20px;border-bottom:1px solid #ece8e3;">
-          <div style="font-size:11px;color:#8c847e;margin-bottom:7px;">رقم العقد</div>
-          <div dir="ltr" style="display:inline-block;padding:8px 12px;background:#f7eff0;border:1px solid #ead7db;border-radius:9px;font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;unicode-bidi:isolate;text-align:right;letter-spacing:.5px;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
+        <tr><td bgcolor="#a4243b" style="padding:20px 18px;background:#a4243b;background-color:#a4243b!important;text-align:center;">
+          <div style="font-size:11px;color:#f2d4da;font-weight:700;letter-spacing:1.2px;">رقم العقد</div>
+          <div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:7px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:1.5px;line-height:1.2;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
         </td></tr>
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
