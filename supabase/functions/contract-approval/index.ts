@@ -192,11 +192,8 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#fbfaf7;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
     <tr><td style="height:5px;background:#a4243b;font-size:0;line-height:0;">&nbsp;</td></tr>
-    <tr><td style="padding:28px 32px 24px;background:#090808;color:#fff;">
-      <table role="presentation" width="100%"><tr>
-        <td style="font-size:12px;color:#bcb5b0;text-align:left;direction:ltr;">MAAWAA / RIYADH</td>
-        <td style="font-size:26px;font-weight:900;letter-spacing:1px;text-align:right;">مأوى</td>
-      </tr></table>
+    <tr><td align="center" style="padding:24px 32px;background:#090808;color:#fff;text-align:center;">
+      <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white-email.png" width="150" alt="مأوى" style="display:block;width:150px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
     <tr><td style="padding:34px 32px 10px;">
       <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#166b3c;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
@@ -207,7 +204,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
         <tr><td style="padding:18px 20px;border-bottom:1px solid #ece8e3;">
           <div style="font-size:11px;color:#8c847e;margin-bottom:5px;">رقم الطلب / العقد</div>
-          <div style="font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;text-align:right;">${number}</div>
+          <div dir="ltr" style="font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;unicode-bidi:isolate;text-align:right;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
         </td></tr>
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
