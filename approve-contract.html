@@ -83,6 +83,24 @@ td.num{color:var(--mut);width:8mm}
 .tfinal .val{font-size:17pt;font-weight:700;line-height:1.2}
 .tfinal .sub{font-size:7.5pt;color:#8F887E}
 .note{font-size:8.5pt;color:var(--mut);line-height:1.9}
+#servicesTable.tbl-d2 th{padding:2.8mm 4mm;font-size:9pt}
+#servicesTable.tbl-d2 td{padding:2.4mm 4mm;font-size:9.2pt}
+#servicesTable.tbl-d2 td.det{font-size:8.2pt}
+#servicesTable.tbl-d3 th{padding:2.3mm 3.5mm;font-size:8.5pt}
+#servicesTable.tbl-d3 td{padding:1.8mm 3.5mm;font-size:8.6pt;line-height:1.45}
+#servicesTable.tbl-d3 td.det{font-size:7.8pt}
+.p1-compact header .hcard{padding:4mm 6mm}
+.p1-compact header .logo img{height:11mm}
+.p1-compact .card{padding:3.5mm 4mm}
+.p1-compact .party p{line-height:1.8}
+.p1-compact .shoot{padding:2.8mm 4mm;font-size:9.5pt}
+.p1-compact .tbreak{padding:3mm 5mm}
+.p1-compact .tbreak .r{padding:1.8mm 0}
+.p1-compact .tfinal{padding:4.5mm 5mm}
+.p1-compact .tfinal .val{font-size:15pt}
+.p1-compact .sec{margin-bottom:3.5mm}
+.p1-compact .totals{margin-bottom:3mm}
+.p1-compact .note{font-size:8pt}
 
 /* ===== الشروط ===== */
 ol.terms{list-style:none;counter-reset:c}
@@ -150,7 +168,7 @@ footer .bd{display:flex;gap:4mm}
     <div class="z">
       <div class="sec"><i>✦</i><h2>نطاق الخدمة والمقابل المالي</h2></div>
       <div class="shoot" id="shootRow" style="display:none"><i>✦</i><span>موعد جلسة التصوير: <b id="shootDate">—</b></span></div>
-      <table>
+      <table id="servicesTable">
         <thead><tr><th style="width:8mm">#</th><th style="width:52mm">الخدمة</th><th>التفاصيل / المُخرجات</th><th style="width:26mm">المبلغ</th></tr></thead>
         <tbody id="serviceRows"></tbody>
       </table>
@@ -174,6 +192,25 @@ footer .bd{display:flex;gap:4mm}
 
     <footer class="z">
       <span class="pg">صفحة 1 من 3</span>
+      <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
+      <span>مأوى للتصوير العقاري</span>
+    </footer>
+  </section>
+
+  <section class="page" id="servicesCont" hidden>
+    <div class="wm"><img src="assets/logo2026/mawa-mark.svg" alt=""></div>
+
+    <div class="z" style="margin-bottom:6mm">
+      <div class="sec"><i>✦</i><h2>تكملة الخدمات والمقابل المالي</h2><span>تابع للصفحة السابقة</span></div>
+      <table>
+        <thead><tr><th style="width:8mm">#</th><th style="width:52mm">الخدمة</th><th>التفاصيل / المُخرجات</th><th style="width:26mm">المبلغ</th></tr></thead>
+        <tbody id="serviceRowsCont"></tbody>
+      </table>
+      <p class="note">تُكمل هذه الصفحة جدول الخدمات الوارد في الصفحة الأولى، وتُعد جزءًا لا يتجزأ من العقد.</p>
+    </div>
+
+    <footer class="z">
+      <span class="pg"></span>
       <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
       <span>مأوى للتصوير العقاري</span>
     </footer>
@@ -294,11 +331,42 @@ const rows=sv.length?sv:[{service_name:c.service_type||'خدمات تصوير ع
 document.getElementById('serviceRows').innerHTML=rows.map((s,i)=>`<tr><td class="num">${i+1}</td><td>${esc(s.service_name)}</td><td class="det">${s.package_type==='pro'?'الباقة الاحترافية':'حسب تفاصيل الطلب المعتمدة'}</td><td class="amt">${i===0?money(total):'—'}</td></tr>`).join('');
 
 doc.classList.remove('hide');
+requestAnimationFrame(()=>fitServices());
 const status=!validEmail?`بريد العميل (${esc(u.email||'غير مسجل')}) غير صالح لاستقبال العقد. استخدمي طلبًا ببريد حقيقي.`:pay.sufficient?'تم تسجيل مبلغ كافٍ في نوشن ويمكن اعتماد العقد.':'لم يُسجل العربون كاملًا في نوشن. المدفوع: '+money(pay.paid);
 controls.innerHTML=`<h1>العقد رقم ${esc(c.contract_number||'—')}</h1><p class="muted">راجعي بيانات العقد ثم اضغطي الاعتماد والإرسال. لن يتم إرسال نسخة ثانية إذا سبق إرساله.</p><div class="facts"><div class="fact"><small>العميل</small><b>${esc(u.full_name)}</b></div><div class="fact"><small>الإجمالي</small><b>${money(total)}</b></div><div class="fact"><small>العربون المطلوب</small><b>${money(pay.required)}</b></div></div><div class="status ${canSend?'ok':'warn'}">${status}</div><div class="actions"><button class="btn secondary" id="previewEmailBtn">معاينة البريد</button><button class="btn" id="sendBtn" ${canSend?'':'disabled'}>اعتماد الختم وإرسال العقد للعميل</button></div>`;document.getElementById('previewEmailBtn').onclick=previewEmail;if(canSend)document.getElementById('sendBtn').onclick=()=>send(data)}
 async function previewEmail(){const btn=document.getElementById('previewEmailBtn');const original=btn.textContent;btn.disabled=true;btn.textContent='جاري تجهيز المعاينة…';try{const result=await call('email_preview');document.getElementById('emailPreviewFrame').srcdoc=result.html;document.getElementById('emailPreview').classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('closePreview').focus()}catch(e){controls.insertAdjacentHTML('beforeend','<div class="status err">تعذر تحميل معاينة البريد. حدّثي الصفحة ثم أعيدي المحاولة.</div>')}finally{btn.disabled=false;btn.textContent=original}}
 function closeEmailPreview(){document.getElementById('emailPreview').classList.add('hide');document.getElementById('emailPreviewFrame').srcdoc='';document.body.style.overflow=''}
-async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')];const wrap=document.createElement('div');wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach((p,i)=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);await inlineSvgImages(wrap);const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
+
+async function fitServices(){
+  try{
+    await document.fonts.ready;
+    const pages=[...document.querySelectorAll('.page')];
+    const p1=pages[0];
+    const tb=document.getElementById('serviceRows');
+    const t=document.getElementById('servicesTable');
+    const contPage=document.getElementById('servicesCont');
+    const over=()=>p1.getBoundingClientRect().height>1126;
+    const steps=[()=>t.className='tbl-d2',()=>t.className='tbl-d3',()=>p1.classList.add('p1-compact')];
+    while(over()&&steps.length){steps.shift()()}
+    const moved=[];
+    const contBody=document.getElementById('serviceRowsCont');
+    while(over()&&tb.children.length>1){
+      const row=tb.lastElementChild;tb.removeChild(row);moved.unshift(row);
+    }
+    const contTable=document.querySelector('#servicesCont table');
+    if(contTable)contTable.className=t.className;
+    if(moved.length){
+      moved.forEach(r=>contBody.appendChild(r));
+      [...contBody.children].forEach((r,i)=>{r.firstElementChild.textContent=i+1+tb.children.length});
+      contPage.hidden=false;
+    }
+    const all=pages.filter(p=>!p.hidden).concat(moved.length?[contPage]:[]);
+    const visible=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);
+    visible.forEach((p,i)=>{const g=p.querySelector('footer .pg');if(g)g.textContent='صفحة '+(i+1)+' من '+visible.length});
+  }catch(e){console.warn('fitServices',e)}
+}
+
+async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);const wrap=document.createElement('div');wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach((p,i)=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);await inlineSvgImages(wrap);const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
 async function send(data){const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='جاري إنشاء العقد وإرساله…';try{const pdf=await buildPdf();const result=await call('send',{pdf_base64:pdf});controls.innerHTML=`<div class="status ok"><b>تم اعتماد العقد وإرساله بنجاح</b><br>أُرسل العقد رقم ${esc(result.contract_number)} إلى ${esc(result.recipient)}، وحُفظت نسخته في نوشن.</div>`;window.scrollTo({top:0,behavior:'smooth'})}catch(e){const messages={deposit_not_received:'العربون المسجل في نوشن غير كافٍ.',already_sent:'سبق إرسال هذا العقد للعميل.',customer_email_missing:'بريد العميل غير مسجل.',customer_email_invalid:'بريد العميل غير حقيقي أو غير صالح لاستقبال العقد.',email_delivery_failed:'رفض مزود البريد الرسالة. تحققي من بريد العميل ثم أعيدي المحاولة.',contract_storage_failed:'تعذر حفظ نسخة العقد. أعيدي المحاولة بعد قليل.',invalid_pdf:'تعذر إنشاء ملف العقد بصورة صحيحة.'};controls.insertAdjacentHTML('beforeend',`<div class="status err">${messages[e.body?.error]||'تعذر إرسال العقد. أعيدي المحاولة أو راجعي بيانات الطلب.'}</div>`);btn.disabled=false;btn.textContent='إعادة المحاولة'}}
 document.getElementById('closePreview').onclick=closeEmailPreview;document.getElementById('emailPreview').addEventListener('click',e=>{if(e.target.id==='emailPreview')closeEmailPreview()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEmailPreview()});
 call('preview').then(fill).catch(()=>{controls.innerHTML=`<div class="status err">رابط الاعتماد غير صالح أو انتهت صلاحيته. افتحي الرابط الموجود في آخر إشعار للطلب.</div>`});
