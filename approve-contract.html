@@ -94,6 +94,24 @@ td.num{color:var(--mut);width:8mm}
 #servicesTable.tbl-d4 th,#servicesCont table.tbl-d4 th{padding:1.8mm 3mm;font-size:8pt}
 #servicesTable.tbl-d4 td,#servicesCont table.tbl-d4 td{padding:1.3mm 3mm;font-size:8pt;line-height:1.35}
 #servicesCont table.tbl-d4 td.det{font-size:7.4pt}
+.identity-mode header .hcard{padding:8mm 9mm;gap:4.5mm}
+.identity-mode header .logo img,.identity-mode header img.logo{height:13mm}
+.identity-mode .chip{font-size:12pt;padding:2.2mm 12mm}
+.identity-mode .hmeta .row{font-size:10pt;margin-top:2.5mm}
+.identity-mode .hmeta .row b{font-size:11pt}
+.identity-mode .card{padding:7mm 6mm}
+.identity-mode .party small{font-size:9pt}
+.identity-mode .party b{font-size:13pt;margin:2.5mm 0 2mm}
+.identity-mode .party p{font-size:10pt;line-height:2.2}
+.identity-mode .pid{font-size:11pt}
+.identity-mode .sec h2{font-size:13pt}
+.identity-mode .sec i{font-size:14pt}
+.identity-mode .shoot{padding:5mm 5.5mm;font-size:11pt}
+.identity-mode .note{font-size:9.5pt;line-height:2}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5mm;margin-bottom:5mm}
+.scard{background:#fff;border:1px solid var(--line);border-top:1mm solid var(--red);border-radius:2.5mm;padding:5mm 2.5mm 4.5mm;text-align:center}
+.scard small{display:block;font-size:8pt;color:var(--mut);margin-bottom:2mm;font-weight:600}
+.scard b{font-size:11.5pt;color:var(--ink)}
 .p1-compact .card{padding:3.5mm 4mm}
 .p1-compact .party p{line-height:1.8}
 .p1-compact .shoot{padding:2.8mm 4mm;font-size:9.5pt}
@@ -119,7 +137,7 @@ ol.terms+.sec{margin-top:6mm}
 .sign .stamp{width:26mm;height:auto;display:block}
 .sign .nm{font-size:10pt;font-weight:600;border-top:0.35mm solid #9C968C;padding-top:2.5mm;width:100%}
 .sign small{font-size:8pt;color:var(--mut)}
-footer{margin-top:auto;padding-top:4mm;border-top:0.35mm solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:7pt;color:var(--mut)}
+footer{padding-top:4mm;border-top:0.35mm solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:7pt;color:var(--mut)}
 footer .pg{background:#fff;border:1px solid var(--line);border-radius:5mm;padding:1mm 3.5mm;font-weight:600;color:var(--ink)}
 footer .bd{display:flex;gap:4mm}
 .hide{display:none}
@@ -368,10 +386,21 @@ async function fitServices(){
       const zNote=z.querySelector('.note');
       if(tb.children.length===0){
         t.style.display='none';
-        zNote.textContent='تفصيل خدمات هذا العقد والمقابل المالي، ويُعد جزءًا لا يتجزأ منه.';
+        p1.classList.add('identity-mode');
+        const sec=t.closest('.z').querySelector('.sec');
+        if(sec){sec.querySelector('h2').textContent='ملخص العقد';const sp=sec.querySelector('span');if(sp)sp.style.display='none'}
+        const g=id=>{const el=document.getElementById(id);return el?el.textContent.trim():'—'};
+        const grid=document.createElement('div');grid.className='sumgrid';
+        grid.innerHTML='<div class="scard"><small>الإجمالي النهائي</small><b>'+g('totalAmount')+'</b></div>'
+          +'<div class="scard"><small>العربون المطلوب</small><b>'+g('depositAmount')+'</b></div>'
+          +'<div class="scard"><small>المتبقي بعد العربون</small><b>'+g('remainingAmount')+'</b></div>'
+          +'<div class="scard"><small>مدة التسليم</small><b>7–10 أيام عمل</b></div>';
+        const shoot=document.getElementById('shootRow');
+        (shoot&&shoot.style.display!=='none'?shoot:t).after(grid);
+        zNote.textContent='تفصيل خدمات هذا العقد والمقابل المالي ويرد في الصفحة التالية، ويُعد جزءًا لا يتجزأ من العقد.';
         const sum=document.createElement('p');sum.className='note';
-        sum.textContent='تشمل هذه الاتفاقية '+moved.length+' خدمات، ويرد تفصيلها والمقابل المالي في الصفحة التالية.';
-        t.after(sum);
+        sum.textContent='تشمل هذه الاتفاقية '+moved.length+' خدمات تفصيلها الكامل في الصفحة التالية.';
+        grid.after(sum);
       }else{
         zNote.textContent='يُكمل هذا الجدول خدمات العقد الواردة في الصفحة السابقة، ويُعد جزءًا لا يتجزأ منه.';
         const f=document.createElement('p');f.className='note';
