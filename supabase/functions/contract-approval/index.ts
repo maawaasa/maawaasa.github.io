@@ -181,7 +181,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
       <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
     <tr><td style="padding:34px 32px 10px;">
-      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#f7eff0;color:#a4243b;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
+      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#18794e;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
       <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
       <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
     </td></tr>
@@ -206,11 +206,11 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
     </td></tr>
     <tr><td style="padding:26px 32px 0;">
       <div style="font-size:16px;font-weight:900;margin-bottom:10px;">الملخص المالي</div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#151311;border-radius:14px;color:#fff;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
         <tr>
-          <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;">${formatSar(total)}</div></td>
-          <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">المدفوع</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#72d89d;">${formatSar(paid)}</div></td>
-          <td style="padding:20px;"><div style="font-size:11px;color:#aaa29d;">المبلغ المعلّق</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#ff7b7b;">${formatSar(remaining)}</div></td>
+          <td style="padding:20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#211e1c;">${formatSar(total)}</div></td>
+          <td style="padding:20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">المدفوع</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#18794e;">${formatSar(paid)}</div></td>
+          <td style="padding:20px;"><div style="font-size:11px;color:#746d67;">المبلغ المعلّق</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#c9364f;">${formatSar(remaining)}</div></td>
         </tr>
       </table>
       ${paid >= required ? `<div style="margin-top:10px;color:#367452;font-size:12px;">تم استلام العربون المطلوب لتأكيد الحجز (${formatSar(required)}).</div>` : ''}
@@ -231,8 +231,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
       <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td style="background:#a4243b;border-radius:9px;"><a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 20px;color:#fff;text-decoration:none;font-size:13px;font-weight:900;">التواصل مع فريق مأوى</a></td></tr></table>
     </td></tr>
     <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
-      <strong style="color:#28231f;">مأوى للتصوير العقاري</strong><br>
-      الرياض، المملكة العربية السعودية &nbsp;·&nbsp; +966 53 164 6152 &nbsp;·&nbsp; info@maawaa.sa<br>
+      <a href="mailto:info@maawaa.sa" style="color:#756e68;text-decoration:none;">info@maawaa.sa</a> &nbsp;·&nbsp; <a href="https://instagram.com/maawaasa" style="color:#756e68;text-decoration:none;">@maawaasa</a> &nbsp;·&nbsp; <a href="https://www.maawaa.sa" style="color:#756e68;text-decoration:none;">www.maawaa.sa</a><br>
       <span style="color:#9a928c;">هذه رسالة آلية مرتبطة بطلبك لدى مأوى.</span>
     </td></tr>
   </table>
