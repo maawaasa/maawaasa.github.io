@@ -178,10 +178,10 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#fbfaf7;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
     <tr><td style="height:5px;background:#a4243b;font-size:0;line-height:0;">&nbsp;</td></tr>
     <tr><td align="center" style="padding:24px 32px;background:#090808;color:#fff;text-align:center;">
-      <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white-email.png" width="150" alt="مأوى" style="display:block;width:150px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
+      <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
     <tr><td style="padding:34px 32px 10px;">
-      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#166b3c;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
+      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#f7eff0;color:#a4243b;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
       <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
       <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
     </td></tr>
