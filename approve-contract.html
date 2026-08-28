@@ -75,10 +75,9 @@ ol.terms li::before{content:counter(c,decimal);position:absolute;right:2mm;top:0
 ol.terms li b{color:var(--ink)}
 ol.terms+.sec{margin-top:6mm}
 .consent{background:#F7EFF0;border:1px solid #EBD8DC;border-radius:2mm;padding:3mm 4.5mm;font-size:8pt;color:#5C2A34;line-height:1.7;margin-top:4mm}
-.signs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5mm;margin-top:3.5mm}
+.signs{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:3.5mm}
 .sign{background:#fff;border:1px solid var(--line);border-radius:2mm;padding:3.5mm 3mm;text-align:center;min-height:32mm;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:1.5mm}
 .sign .stamp{width:22mm;height:auto;display:block}
-.sign .qrimg{width:9.5mm;height:9.5mm;border:0.25mm solid var(--line);border-radius:1mm;padding:0.5mm;box-sizing:content-box;background:#fff}
 .sign .nm{font-size:9pt;font-weight:600;border-top:0.35mm solid #9C968C;padding-top:2mm;width:100%}
 .sign small{font-size:7pt;color:var(--mut)}
 footer{margin-top:auto;padding-top:4mm;border-top:0.35mm solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:7pt;color:var(--mut)}
@@ -228,11 +227,6 @@ footer .bd{display:flex;gap:4mm}
           <small>اعتماد وختم مؤسسة مأوى المهارة التجارية</small>
         </div>
         <div class="sign">
-          <img class="qrimg" id="qrImg" src="assets/logo2026/mawa-mark.svg" alt="رمز التحقق">
-          <span class="nm">التحقق من العقد</span>
-          <small>امسح الرمز للتأكد من صحة هذا العقد</small>
-        </div>
-        <div class="sign">
           <div style="flex:1"></div>
           <span class="nm" id="customerSign">—</span>
           <small>توقيع / ختم العميل — الطرف الثاني</small>
@@ -280,13 +274,13 @@ document.getElementById('depositAmount').textContent=money(pay.required);
 document.getElementById('remainingAmount').textContent=money(Math.max(0,total-Number(pay.required||0)));
 const rows=sv.length?sv:[{service_name:c.service_type||'خدمات تصوير عقاري',package_type:'basic'}];
 document.getElementById('serviceRows').innerHTML=rows.map((s,i)=>`<tr><td class="num">${i+1}</td><td>${esc(s.service_name)}</td><td class="det">${s.package_type==='pro'?'الباقة الاحترافية':'حسب تفاصيل الطلب المعتمدة'}</td><td class="amt">${i===0?money(total):'—'}</td></tr>`).join('');
-if(data.verify&&data.verify.url){const q=document.getElementById('qrImg');q.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=6&data='+encodeURIComponent(data.verify.url)}
+
 doc.classList.remove('hide');
 const status=!validEmail?`بريد العميل (${esc(u.email||'غير مسجل')}) غير صالح لاستقبال العقد. استخدمي طلبًا ببريد حقيقي.`:pay.sufficient?'تم تسجيل مبلغ كافٍ في نوشن ويمكن اعتماد العقد.':'لم يُسجل العربون كاملًا في نوشن. المدفوع: '+money(pay.paid);
 controls.innerHTML=`<h1>العقد رقم ${esc(c.contract_number||'—')}</h1><p class="muted">راجعي بيانات العقد ثم اضغطي الاعتماد والإرسال. لن يتم إرسال نسخة ثانية إذا سبق إرساله.</p><div class="facts"><div class="fact"><small>العميل</small><b>${esc(u.full_name)}</b></div><div class="fact"><small>الإجمالي</small><b>${money(total)}</b></div><div class="fact"><small>العربون المطلوب</small><b>${money(pay.required)}</b></div></div><div class="status ${canSend?'ok':'warn'}">${status}</div><div class="actions"><button class="btn secondary" id="previewEmailBtn">معاينة البريد</button><button class="btn" id="sendBtn" ${canSend?'':'disabled'}>اعتماد الختم وإرسال العقد للعميل</button></div>`;document.getElementById('previewEmailBtn').onclick=previewEmail;if(canSend)document.getElementById('sendBtn').onclick=()=>send(data)}
 async function previewEmail(){const btn=document.getElementById('previewEmailBtn');const original=btn.textContent;btn.disabled=true;btn.textContent='جاري تجهيز المعاينة…';try{const result=await call('email_preview');document.getElementById('emailPreviewFrame').srcdoc=result.html;document.getElementById('emailPreview').classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('closePreview').focus()}catch(e){controls.insertAdjacentHTML('beforeend','<div class="status err">تعذر تحميل معاينة البريد. حدّثي الصفحة ثم أعيدي المحاولة.</div>')}finally{btn.disabled=false;btn.textContent=original}}
 function closeEmailPreview(){document.getElementById('emailPreview').classList.add('hide');document.getElementById('emailPreviewFrame').srcdoc='';document.body.style.overflow=''}
-async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')];const wrap=document.createElement('div');wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach((p,i)=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);await inlineSvgImages(wrap);const qr=wrap.querySelector('#qrImg');if(qr&&!qr.src.includes('.svg')&&!qr.complete)await new Promise(ok=>{qr.onload=qr.onerror=ok});const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
+async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')];const wrap=document.createElement('div');wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach((p,i)=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);await inlineSvgImages(wrap);const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
 async function send(data){const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='جاري إنشاء العقد وإرساله…';try{const pdf=await buildPdf();const result=await call('send',{pdf_base64:pdf});controls.innerHTML=`<div class="status ok"><b>تم اعتماد العقد وإرساله بنجاح</b><br>أُرسل العقد رقم ${esc(result.contract_number)} إلى ${esc(result.recipient)}، وحُفظت نسخته في نوشن.</div>`;window.scrollTo({top:0,behavior:'smooth'})}catch(e){const messages={deposit_not_received:'العربون المسجل في نوشن غير كافٍ.',already_sent:'سبق إرسال هذا العقد للعميل.',customer_email_missing:'بريد العميل غير مسجل.',customer_email_invalid:'بريد العميل غير حقيقي أو غير صالح لاستقبال العقد.',email_delivery_failed:'رفض مزود البريد الرسالة. تحققي من بريد العميل ثم أعيدي المحاولة.',contract_storage_failed:'تعذر حفظ نسخة العقد. أعيدي المحاولة بعد قليل.',invalid_pdf:'تعذر إنشاء ملف العقد بصورة صحيحة.'};controls.insertAdjacentHTML('beforeend',`<div class="status err">${messages[e.body?.error]||'تعذر إرسال العقد. أعيدي المحاولة أو راجعي بيانات الطلب.'}</div>`);btn.disabled=false;btn.textContent='إعادة المحاولة'}}
 document.getElementById('closePreview').onclick=closeEmailPreview;document.getElementById('emailPreview').addEventListener('click',e=>{if(e.target.id==='emailPreview')closeEmailPreview()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEmailPreview()});
 call('preview').then(fill).catch(()=>{controls.innerHTML=`<div class="status err">رابط الاعتماد غير صالح أو انتهت صلاحيته. افتحي الرابط الموجود في آخر إشعار للطلب.</div>`});
