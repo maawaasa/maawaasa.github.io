@@ -112,8 +112,11 @@ async function loadContract(contractId: string): Promise<any> {
   const contract = contracts[0];
   const clients = await supabase(`/rest/v1/clients?id=eq.${contract.client_id}&select=id,full_name,phone_number,email,identity_number`);
   const services = await supabase(`/rest/v1/contract_services?contract_id=eq.${contractId}&select=service_name,package_type`);
+  const scheduleRows = await supabase(`/rest/v1/schedule?contract_id=eq.${contractId}&select=start_time&order=created_at.desc&limit=1`);
+  const assignmentRows = await supabase(`/rest/v1/assignments?contract_id=eq.${contractId}&select=employees(name)`);
+  const photographer = (assignmentRows || []).map((row: any) => row?.employees?.name).filter(Boolean).join('، ');
   if (!clients?.[0]) throw new Error('client_not_found');
-  return { contract, client: clients[0], services: services || [] };
+  return { contract, client: clients[0], services: services || [], photographer, schedule_time: scheduleRows?.[0]?.start_time || '' };
 }
 
 function pdfBase64(value: string): string {
@@ -143,6 +146,36 @@ function deliverableEmail(value: unknown): boolean {
     !/\.(example|invalid|test)$/.test(email);
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+}
+function formatSar(value: number): string {
+  return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(Number(value || 0))} ر.س`;
+}
+function shootDate(value: unknown): string {
+  if (!value) return '';
+  const d = new Date(String(value));
+  if (Number.isNaN(d.getTime())) return '';
+  try {
+    return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Riyadh' }).format(d);
+  } catch {
+    return '';
+  }
+}
+function shootTime(source: unknown): string {
+  const m = String(source || '').match(/([01]?\d|2[0-3]):([0-5]\d)/);
+  if (!m) return '';
+  const h = Number(m[1]);
+  const suffix = h < 12 ? 'صباحًا' : 'مساءً';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${m[2]} ${suffix}`;
+}
+const PROPERTY_LABELS: Record<string, string> = { apartment: 'شقة', villa: 'فيلا', studio: 'استوديو', floor: 'دور', land: 'أرض', commercial: 'عقار تجاري', palace: 'قصر' };
+function propertyLabel(value: unknown): string {
+  const key = String(value || '').trim();
+  return PROPERTY_LABELS[key] || key || 'غير محدد';
+}
+
 function buildContractEmail(details: any, paid: number, required: number, scheduleSignature = ''): { html: string; text: string } {
   const contract = details.contract;
   const client = details.client;
@@ -162,20 +195,26 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <td style="padding:13px 16px;border-bottom:1px solid #ece8e3;color:#817a74;font-size:12px;text-align:left;">مشمول بالعقد</td>
     </tr>`).join('');
   const appointmentDate = shootDate(contract.shoot_date);
-  const appointmentTime = shootTime(contract.notes);
+  const appointmentTime = shootTime(details.schedule_time || contract.notes);
+  const photographerName = escapeHtml(details.photographer || '');
   const appointment = appointmentDate ? `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px;background:#fff8e9;border:1px solid #ead8ad;border-radius:14px;">
-      <tr><td style="padding:18px 20px;">
-        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;color:#926b17;margin-bottom:7px;">موعد جلسة التصوير</div>
-        <div style="font-size:17px;font-weight:800;color:#2a251e;">${escapeHtml(appointmentDate)}</div>
-        ${appointmentTime ? `<div style="font-size:14px;color:#6e6252;margin-top:3px;">وقت البداية: <strong>${escapeHtml(appointmentTime)}</strong></div>` : ''}
+      <tr><td style="padding:15px 20px 5px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;color:#926b17;">موعد جلسة التصوير</div>
+      </td></tr>
+      <tr><td style="padding:0 10px 13px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td class="appt-col" width="40%" style="padding:7px 10px;border-left:1px solid #ead8ad;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">التاريخ</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;white-space:nowrap;">${escapeHtml(appointmentDate)}</div></td>
+          <td class="appt-col" width="25%" style="padding:7px 10px;border-left:1px solid #ead8ad;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">وقت البداية</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
+          <td class="appt-col" width="35%" style="padding:7px 10px;"><div style="font-size:10px;color:#8a7a55;font-weight:700;">المصور المسؤول</div><div style="font-size:15px;font-weight:800;color:#2a251e;margin-top:3px;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
+        </tr></table>
       </td></tr>
     </table>` : '';
   const infoRow = (label: string, value: unknown) => `
     <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
   const optionalInfoRow = (label: string, value: unknown) => value ? infoRow(label, value) : '';
   const html = `<!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media only screen and (max-width:520px){.appt-col{display:block!important;width:100%!important;border-left:0!important;padding:6px 10px!important}}</style></head>
 <body style="margin:0;padding:0;background:#f2f0ed;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">تم اعتماد عقد مأوى رقم ${number} وإرفاق نسختك الرسمية المختومة.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
@@ -239,12 +278,12 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">01</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">سيبقى فريق مأوى على تواصل معك لتأكيد تفاصيل الجلسة والاستعدادات.</td></tr>
         <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">02</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">يُرجى تجهيز العقار وإتاحة الدخول في الموعد المتفق عليه لضمان أفضل نتيجة.</td></tr>
-        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">03</td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي تعديل أو استفسار، رُد مباشرة على هذه الرسالة أو تواصل معنا عبر واتساب.</td></tr>
+        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">03</td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي تعديل أو استفسار، رُد مباشرة على هذه الرسالة أو تواصل معنا عبر واتساب على الرقم <span dir="ltr">+966 53 164 6152</span>.</td></tr>
       </table>
-      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td style="background:#a4243b;border-radius:9px;"><a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 20px;color:#fff;text-decoration:none;font-size:13px;font-weight:900;">التواصل مع فريق مأوى</a></td></tr></table>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td style="background:#18794e;border-radius:9px;"><a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 20px;color:#fff;text-decoration:none;font-size:13px;font-weight:900;">التواصل عبر واتساب &nbsp;·&nbsp; <span dir="ltr">+966 53 164 6152</span></a></td></tr></table>
     </td></tr>
     <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
-      <strong style="color:#28231f;">مأوى المهارة التجارية</strong><br>
+      <strong style="color:#28231f;">مؤسسة مأوى المهارة التجارية</strong><br>
       <a href="mailto:info@maawaa.sa" style="color:#756e68;text-decoration:none;">info@maawaa.sa</a> &nbsp;·&nbsp; <a href="https://instagram.com/maawaasa" style="color:#756e68;text-decoration:none;">@maawaasa</a> &nbsp;·&nbsp; <a href="https://www.maawaa.sa" style="color:#756e68;text-decoration:none;">www.maawaa.sa</a><br>
       <span style="color:#9a928c;">هذه رسالة آلية مرتبطة بطلبك لدى مأوى.</span>
     </td></tr>
@@ -300,8 +339,6 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
       attachments: [{ filename: `عقد-مأوى-${safeNumber}.pdf`, content: pdfBase64(pdfData) }],
     }),
   });
-  const emailBody = await email.json().catch(() => ({}));
-
   const emailBody = await email.json().catch(() => ({}));
   if (!email.ok) throw new Error(`resend_${email.status}:${emailBody?.message || ''}`);
 
