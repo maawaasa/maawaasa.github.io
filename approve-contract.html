@@ -206,7 +206,7 @@ footer .bd{display:flex;gap:4mm}
         <thead><tr><th style="width:8mm">#</th><th style="width:52mm">الخدمة</th><th>التفاصيل / المُخرجات</th><th style="width:26mm">المبلغ</th></tr></thead>
         <tbody id="serviceRowsCont"></tbody>
       </table>
-      <p class="note">تُكمل هذه الصفحة جدول الخدمات الوارد في الصفحة الأولى، وتُعد جزءًا لا يتجزأ من العقد.</p>
+      <p class="note" style="margin-bottom:4mm">يُكمل هذا الجدول خدمات العقد الواردة في الصفحة السابقة، ويُعد جزءًا لا يتجزأ منه.</p>
     </div>
 
     <footer class="z">
@@ -358,6 +358,15 @@ async function fitServices(){
     if(moved.length){
       moved.forEach(r=>contBody.appendChild(r));
       [...contBody.children].forEach((r,i)=>{r.firstElementChild.textContent=i+1+tb.children.length});
+      const z=contPage.querySelector('.z');
+      const totals=p1.querySelector('.totals');
+      const note1=p1.querySelector('.note');
+      if(totals)z.appendChild(totals);
+      if(note1)z.appendChild(note1);
+      const follow=document.createElement('p');
+      follow.className='note';
+      follow.textContent='يتبع في الصفحة التالية بقية الخدمات والإجمالي النهائي.';
+      document.getElementById('servicesTable').after(follow);
       contPage.hidden=false;
     }
     const all=pages.filter(p=>!p.hidden).concat(moved.length?[contPage]:[]);
