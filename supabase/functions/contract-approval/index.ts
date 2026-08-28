@@ -199,18 +199,16 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
   const appointmentTime = shootTime(details.schedule_time || contract.notes);
   const photographerName = escapeHtml(details.photographer || '');
   const appointment = appointmentDate ? `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px;background:#fff8e9;border:1px solid #ead8ad;border-radius:14px;">
-      <tr><td style="padding:15px 20px 5px;">
-        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;color:#926b17;">موعد جلسة التصوير</div>
-      </td></tr>
-      <tr><td style="padding:1px 12px 15px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #ead8ad;border-radius:10px;"><tr>
-          <td class="appt-col" width="30%" align="center" style="padding:10px 6px;border-left:1px solid #f0e4c8;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">التاريخ</div><div dir="ltr" style="direction:ltr;unicode-bidi:isolate;font-family:Arial,'Helvetica Neue',sans-serif;font-size:16px;font-weight:900;color:#2a251e;margin-top:4px;letter-spacing:.6px;">${escapeHtml(appointmentDate)}</div></td>
-          <td class="appt-col" width="26%" align="center" style="padding:10px 6px;border-left:1px solid #f0e4c8;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">وقت البداية</div><div style="font-size:14.5px;font-weight:800;color:#2a251e;margin-top:4px;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
-          <td class="appt-col" width="44%" align="center" style="padding:10px 6px;"><div style="font-size:9.5px;color:#9a8a60;font-weight:700;letter-spacing:.5px;">المصور المسؤول</div><div style="font-size:14.5px;font-weight:800;color:#2a251e;margin-top:4px;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
-        </tr></table>
-      </td></tr>
-    </table>` : '';
+    <tr><td style="padding:22px 32px 0;">
+      <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; موعد جلسة التصوير</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
+        <tr>
+          <td align="right" style="padding:17px 20px;border-left:1px solid #e5e0da;text-align:right;"><div style="font-size:11px;color:#746d67;text-align:right;">التاريخ</div><div dir="ltr" style="direction:ltr;unicode-bidi:isolate;margin-top:5px;font-family:Arial,'Helvetica Neue',sans-serif;font-size:17px;font-weight:900;color:#211e1c;letter-spacing:.5px;text-align:right;">${escapeHtml(appointmentDate)}</div></td>
+          <td style="padding:17px 20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">وقت البداية</div><div style="margin-top:5px;font-size:16px;font-weight:900;color:#211e1c;white-space:nowrap;">${escapeHtml(appointmentTime || 'غير محدد')}</div></td>
+          <td style="padding:17px 20px;"><div style="font-size:11px;color:#746d67;">المصور المسؤول</div><div style="margin-top:5px;font-size:16px;font-weight:900;color:#211e1c;">${photographerName || 'يُعلن قبل الجلسة'}</div></td>
+        </tr>
+      </table>
+    </td></tr>` : '';
   const infoRow = (label: string, value: unknown) => `
     <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
   const optionalInfoRow = (label: string, value: unknown) => value ? infoRow(label, value) : '';
@@ -224,10 +222,10 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     <tr><td align="center" bgcolor="#090808" style="padding:24px 32px;background-color:#090808!important;color:#fff;text-align:center;">
       <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
     </td></tr>
-    <tr><td style="padding:34px 32px 10px;">
+    <tr><td style="padding:34px 32px 10px;text-align:center;">
       <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#18794e;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
       <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
-      <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
+      <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;text-align:right;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
     </td></tr>
     <tr><td style="padding:16px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
@@ -246,14 +244,14 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
           ${infoRow('عدد الغرف / المساحة', contract.rooms_count)}
         </table></td></tr>
       </table>
-      ${appointment}
     </td></tr>
+    ${appointment}
     <tr><td style="padding:26px 32px 0;">
-      <div style="font-size:16px;font-weight:900;margin-bottom:10px;">الخدمات المعتمدة</div>
+      <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; الخدمات المعتمدة</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;">${serviceRows}</table>
     </td></tr>
     <tr><td style="padding:26px 32px 0;">
-      <div style="font-size:16px;font-weight:900;margin-bottom:10px;">الملخص المالي</div>
+      <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; الملخص المالي</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
         <tr>
           <td style="padding:20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#211e1c;">${formatSar(total)}</div></td>
@@ -277,14 +275,14 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       </td></tr></table>
     </td></tr>
     <tr><td style="padding:28px 32px 34px;">
-      <div style="font-size:15px;font-weight:900;margin-bottom:10px;">ماذا بعد؟</div>
+      <div style="font-size:15px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; ماذا بعد؟</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">01</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">سيبقى فريق مأوى على تواصل معك لتأكيد تفاصيل الجلسة والاستعدادات.</td></tr>
-        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">02</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">يُرجى تجهيز العقار وإتاحة الدخول في الموعد المتفق عليه لضمان أفضل نتيجة.</td></tr>
-        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">03</td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي استفسار أو تعديل، فريقنا جاهز لخدمتك عبر واتساب خلال ساعات العمل.</td></tr>
+        <tr><td style="width:44px;vertical-align:top;padding-top:1px;"><span dir="ltr" style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;background:#f7eff0;color:#a4243b;border-radius:999px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;">1</span></td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">سيبقى فريق مأوى على تواصل معك لتأكيد تفاصيل الجلسة والاستعدادات.</td></tr>
+        <tr><td style="width:44px;vertical-align:top;padding-top:1px;"><span dir="ltr" style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;background:#f7eff0;color:#a4243b;border-radius:999px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;">2</span></td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">يُرجى تجهيز العقار وإتاحة الدخول في الموعد المتفق عليه لضمان أفضل نتيجة.</td></tr>
+        <tr><td style="width:44px;vertical-align:top;padding-top:1px;"><span dir="ltr" style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;background:#f7eff0;color:#a4243b;border-radius:999px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;">3</span></td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي استفسار أو تعديل، فريقنا جاهز لخدمتك عبر واتساب خلال ساعات العمل.</td></tr>
       </table>
       <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin-top:22px;"><tr><td align="center" bgcolor="#18794e" style="background:#18794e;background-color:#18794e!important;border-radius:999px;">
-        <a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 30px;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;border-radius:999px;letter-spacing:.2px;">الدعم عبر واتساب &nbsp;·&nbsp; <span dir="ltr" style="color:#ffffff;">+966 53 164 6152</span></a>
+        <a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 30px;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;border-radius:999px;letter-spacing:.2px;">الدعم عبر واتساب</a>
       </td></tr></table>
     </td></tr>
     <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
