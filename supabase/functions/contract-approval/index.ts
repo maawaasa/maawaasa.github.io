@@ -103,12 +103,19 @@ function decodePdf(value: string): Uint8Array {
   return bytes;
 }
 
+function deliverableEmail(value: unknown): boolean {
+  const email = String(value || '').trim().toLowerCase();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+    !/\.(example|invalid|test)$/.test(email);
+}
+
 async function sendContract(contractId: string, pdfData: string, details: any, page: any): Promise<any> {
   const total = Number(details.contract.total_amount || 0);
   const { paid } = await notionOrder(contractId);
   const required = Math.round(total * 0.25 * 100) / 100;
   if (paid < required) return json({ error: 'deposit_not_received', paid, required }, 409);
   if (!details.client.email) return json({ error: 'customer_email_missing' }, 409);
+  if (!deliverableEmail(details.client.email)) return json({ error: 'customer_email_invalid' }, 409);
 
   const existing = await supabase(`/rest/v1/contract_deliveries?contract_id=eq.${contractId}&select=status,sent_at`);
   if (existing?.[0]?.status === 'sent') return json({ error: 'already_sent', sent_at: existing[0].sent_at }, 409);
@@ -162,8 +169,9 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
+  let body: Record<string, unknown> = {};
   try {
-    const body = await req.json();
+    body = await req.json();
     const contractId = String(body.contract_id || '');
     const expires = Number(body.expires || 0);
     const supplied = String(body.signature || '');
@@ -180,6 +188,21 @@ Deno.serve(async (req: Request) => {
     return json({ error: 'invalid_action' }, 400);
   } catch (error) {
     console.error(error);
-    return json({ error: 'contract_approval_failed' }, 500);
+    const contractId = String(body.contract_id || '');
+    const message = error instanceof Error ? error.message : String(error);
+    if (UUID.test(contractId)) {
+      await supabase(`/rest/v1/contract_deliveries?contract_id=eq.${contractId}`, {
+        method: 'PATCH', headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ status: 'failed', last_error: message.slice(0, 1000), updated_at: new Date().toISOString() }),
+      }).catch(() => null);
+    }
+    const publicError = message.startsWith('resend_')
+      ? 'email_delivery_failed'
+      : message.startsWith('storage_')
+      ? 'contract_storage_failed'
+      : message === 'invalid_pdf'
+      ? 'invalid_pdf'
+      : 'contract_approval_failed';
+    return json({ error: publicError }, 500);
   }
 });
