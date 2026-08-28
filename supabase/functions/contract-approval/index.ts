@@ -343,6 +343,10 @@ Deno.serve(async (req: Request) => {
     const order = await notionOrder(contractId);
     const required = Math.round(Number(details.contract.total_amount || 0) * 0.25 * 100) / 100;
     if (body.action === 'preview') return json({ ok: true, ...details, payment: { paid: order.paid, required, sufficient: order.paid >= required } });
+    if (body.action === 'email_preview') {
+      const email = buildContractEmail(details, order.paid, required);
+      return json({ ok: true, html: email.html });
+    }
     if (body.action === 'send') return await sendContract(contractId, String(body.pdf_base64 || ''), details, order.page);
     return json({ error: 'invalid_action' }, 400);
   } catch (error) {
