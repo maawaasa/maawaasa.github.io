@@ -149,6 +149,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
   const total = Number(contract.total_amount || 0);
   const remaining = Math.max(0, total - paid);
   const number = escapeHtml(contract.contract_number || '—');
+  const rescheduleUrl = `mailto:info@maawaa.sa?subject=${encodeURIComponent(`طلب تعديل موعد الحجز - ${contract.contract_number || '—'}`)}&body=${encodeURIComponent(`أرغب في تعديل موعد الحجز رقم ${contract.contract_number || '—'}.`)}`;
   const services = Array.isArray(details.services) && details.services.length
     ? details.services.map((item: any) => escapeHtml(item.service_name || 'خدمة تصوير عقاري'))
     : String(contract.service_type || 'خدمات تصوير عقاري').split(/[،,]/).map((item) => escapeHtml(item.trim())).filter(Boolean);
@@ -219,6 +220,13 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f3f1;border-right:4px solid #a4243b;border-radius:10px;"><tr><td style="padding:17px 18px;">
         <div style="font-size:13px;font-weight:900;color:#342e2a;">ملف العقد الرسمي مرفق</div>
         <div style="font-size:12px;color:#7b736d;margin-top:4px;line-height:1.7;">ستجد ملف PDF المتجهي المختوم مرفقًا بهذه الرسالة باسم عقد مأوى ${number}. احتفظ به ضمن مستندات الطلب.</div>
+      </td></tr></table>
+    </td></tr>
+    <tr><td style="padding:20px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7eff0;border:1px solid #ead7db;border-radius:10px;"><tr><td style="padding:17px 18px;">
+        <div style="font-size:13px;font-weight:900;color:#a4243b;">هل تحتاج إلى تعديل الموعد؟</div>
+        <div style="font-size:12px;color:#746d67;margin-top:4px;line-height:1.8;">يمكنك طلب إعادة الجدولة قبل 48 ساعة من الموعد وفق سياسة العقد.</div>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:12px;"><tr><td style="border:1px solid #a4243b;border-radius:8px;"><a href="${escapeHtml(rescheduleUrl)}" style="display:block;padding:10px 15px;color:#a4243b;text-decoration:none;font-size:12px;font-weight:900;">طلب تعديل الموعد</a></td></tr></table>
       </td></tr></table>
     </td></tr>
     <tr><td style="padding:28px 32px 34px;">
