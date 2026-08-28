@@ -213,11 +213,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
   const optionalInfoRow = (label: string, value: unknown) => value ? infoRow(label, value) : '';
   const html = `<!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media only screen and (max-width:520px){.appt-col{display:block!important;width:100%!important;border-left:0!important;padding:6px 10px!important}}</style></head>
-<body style="margin:0;padding:0;background:#f2f0ed;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="only light"><meta name="supported-color-schemes" content="only light"><style>@media only screen and (max-width:520px){.appt-col{display:block!important;width:100%!important;border-left:0!important;padding:6px 10px!important}}</style></head>
+<body style="margin:0;padding:0;background:#f2f0ed;background-color:#f2f0ed!important;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;color-scheme:only light;supported-color-schemes:only light;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">تم اعتماد عقد مأوى رقم ${number} وإرفاق نسختك الرسمية المختومة.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#fbfaf7;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#fbfaf7" style="max-width:640px;background:#fbfaf7;background-color:#fbfaf7!important;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
     <tr><td style="height:5px;background:#a4243b;font-size:0;line-height:0;">&nbsp;</td></tr>
     <tr><td align="center" bgcolor="#090808" style="padding:24px 32px;background-color:#090808!important;color:#fff;text-align:center;">
       <img src="https://maawaa.sa/assets/logo2026/mawa-wide-white.svg" width="170" alt="مأوى" style="display:block;width:170px;max-width:100%;height:auto;margin:0 auto;border:0;outline:none;">
@@ -229,7 +229,7 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </td></tr>
     ${appointment}
     <tr><td style="padding:22px 32px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="background:#ffffff;background-color:#ffffff!important;border:1px solid #e5e0da;border-radius:14px;">
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
           ${infoRow('اسم العميل', client.full_name)}
@@ -242,11 +242,11 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </td></tr>
     <tr><td style="padding:26px 32px 0;">
       <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; الخدمات المعتمدة</div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;">${serviceRows}</table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="background:#ffffff;background-color:#ffffff!important;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;">${serviceRows}</table>
     </td></tr>
     <tr><td style="padding:26px 32px 0;">
       <div style="font-size:16px;font-weight:900;margin-bottom:10px;"><span style="color:#a4243b;font-size:13px;">✦</span>&nbsp; الملخص المالي</div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="background:#ffffff;background-color:#ffffff!important;border:1px solid #e5e0da;border-radius:14px;color:#211e1c;">
         <tr>
           <td style="padding:20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#211e1c;">${formatSar(total)}</div></td>
           <td style="padding:20px;border-left:1px solid #e5e0da;"><div style="font-size:11px;color:#746d67;">المدفوع</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#18794e;">${formatSar(paid)}</div></td>
@@ -256,13 +256,13 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       ${paid >= required ? `<div style="margin-top:10px;color:#367452;font-size:12px;">تم استلام العربون المطلوب لتأكيد الحجز (${formatSar(required)}).</div>` : ''}
     </td></tr>
     <tr><td style="padding:26px 32px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f3f1;border-right:4px solid #a4243b;border-radius:10px;"><tr><td style="padding:17px 18px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f7f3f1" style="background:#f7f3f1;background-color:#f7f3f1!important;border-right:4px solid #a4243b;border-radius:10px;"><tr><td style="padding:17px 18px;">
         <div style="font-size:13px;font-weight:900;color:#342e2a;">ملف العقد الرسمي مرفق</div>
         <div style="font-size:12px;color:#7b736d;margin-top:4px;line-height:1.7;">ستجد ملف PDF المتجهي المختوم مرفقًا بهذه الرسالة باسم عقد مأوى ${number}. احتفظ به ضمن مستندات الطلب.</div>
       </td></tr></table>
     </td></tr>
     <tr><td style="padding:20px 32px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7eff0;border:1px solid #ead7db;border-radius:10px;"><tr><td style="padding:17px 18px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f7eff0" style="background:#f7eff0;background-color:#f7eff0!important;border:1px solid #ead7db;border-radius:10px;"><tr><td style="padding:17px 18px;">
         <div style="font-size:13px;font-weight:900;color:#a4243b;">هل تحتاج إلى تعديل الموعد؟</div>
         <div style="font-size:12px;color:#746d67;margin-top:4px;line-height:1.8;">يمكنك طلب إعادة الجدولة قبل 48 ساعة من الموعد وفق سياسة العقد.</div>
         <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:12px;"><tr><td style="border:1px solid #a4243b;border-radius:8px;"><a href="${escapeHtml(rescheduleUrl)}" style="display:block;padding:10px 15px;color:#a4243b;text-decoration:none;font-size:12px;font-weight:900;">طلب تعديل الموعد</a></td></tr></table>
@@ -279,7 +279,7 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
         <a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 30px;color:#ffffff;text-decoration:none;font-size:13px;font-weight:800;border-radius:999px;letter-spacing:.2px;">الدعم عبر واتساب</a>
       </td></tr></table>
     </td></tr>
-    <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
+    <tr><td bgcolor="#ece8e3" style="padding:22px 32px;background:#ece8e3;background-color:#ece8e3!important;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
       <strong style="color:#28231f;">مؤسسة مأوى المهارة التجارية</strong><br>
       <a href="mailto:info@maawaa.sa" style="color:#756e68;text-decoration:none;">info@maawaa.sa</a> &nbsp;·&nbsp; <a href="https://instagram.com/maawaasa" style="color:#756e68;text-decoration:none;">@maawaasa</a> &nbsp;·&nbsp; <a href="https://www.maawaa.sa" style="color:#756e68;text-decoration:none;">www.maawaa.sa</a><br>
       <span style="color:#9a928c;">هذه رسالة آلية مرتبطة بطلبك لدى مأوى.</span>
@@ -326,6 +326,8 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
   const approvalSecret = Deno.env.get('CONTRACT_APPROVAL_SECRET') || '';
   const scheduleSignature = approvalSecret ? await verifySignatureFor(contractId, approvalSecret) : '';
   const emailContent = buildContractEmail(details, paid, required, scheduleSignature);
+  const resendKey = Deno.env.get('RESEND_API_KEY') || '';
+  const subject = `عقد مأوى المعتمد — ${details.contract.contract_number || ''}`;
   const email = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
