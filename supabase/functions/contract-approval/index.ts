@@ -210,7 +210,7 @@ function buildContractEmail(details: any, paid: number, required: number): { htm
         <tr>
           <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;">${formatSar(total)}</div></td>
           <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">المدفوع</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#72d89d;">${formatSar(paid)}</div></td>
-          <td style="padding:20px;"><div style="font-size:11px;color:#aaa29d;">المتبقي</div><div style="margin-top:5px;font-size:18px;font-weight:900;">${formatSar(remaining)}</div></td>
+          <td style="padding:20px;"><div style="font-size:11px;color:#aaa29d;">المبلغ المعلّق</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#ff7b7b;">${formatSar(remaining)}</div></td>
         </tr>
       </table>
       ${paid >= required ? `<div style="margin-top:10px;color:#367452;font-size:12px;">تم استلام العربون المطلوب لتأكيد الحجز (${formatSar(required)}).</div>` : ''}
