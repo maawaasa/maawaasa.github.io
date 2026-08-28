@@ -1,0 +1,4 @@
+project_id = "fivrwlowntwacfrsocge"
+
+[functions.schedule-change]
+verify_jwt = false

@@ -143,13 +143,15 @@ function deliverableEmail(value: unknown): boolean {
     !/\.(example|invalid|test)$/.test(email);
 }
 
-function buildContractEmail(details: any, paid: number, required: number): { html: string; text: string } {
+function buildContractEmail(details: any, paid: number, required: number, scheduleSignature = ''): { html: string; text: string } {
   const contract = details.contract;
   const client = details.client;
   const total = Number(contract.total_amount || 0);
   const remaining = Math.max(0, total - paid);
   const number = escapeHtml(contract.contract_number || '—');
-  const rescheduleUrl = `mailto:info@maawaa.sa?subject=${encodeURIComponent(`طلب تعديل موعد الحجز - ${contract.contract_number || '—'}`)}&body=${encodeURIComponent(`أرغب في تعديل موعد الحجز رقم ${contract.contract_number || '—'}.`)}`;
+  const rescheduleUrl = scheduleSignature
+    ? `https://maawaa.sa/schedule-change.html?c=${encodeURIComponent(contract.id)}&s=${encodeURIComponent(scheduleSignature)}`
+    : `mailto:info@maawaa.sa?subject=${encodeURIComponent(`طلب تعديل موعد الحجز - ${contract.contract_number || '—'}`)}`;
   const services = Array.isArray(details.services) && details.services.length
     ? details.services.map((item: any) => escapeHtml(item.service_name || 'خدمة تصوير عقاري'))
     : String(contract.service_type || 'خدمات تصوير عقاري').split(/[،,]/).map((item) => escapeHtml(item.trim())).filter(Boolean);
@@ -281,7 +283,9 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
   const upload = await fetch(storageUrl, { method: 'POST', headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/pdf', 'x-upsert': 'true' }, body: pdf });
   if (!upload.ok) throw new Error(`storage_${upload.status}`);
 
-  const emailContent = buildContractEmail(details, paid, required);
+  const approvalSecret = Deno.env.get('CONTRACT_APPROVAL_SECRET') || '';
+  const scheduleSignature = approvalSecret ? await verifySignatureFor(contractId, approvalSecret) : '';
+  const emailContent = buildContractEmail(details, paid, required, scheduleSignature);
   const email = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -362,7 +366,7 @@ Deno.serve(async (req: Request) => {
     const verifyUrl = verifySig ? `https://maawaa.sa/verify.html?c=${contractId}&s=${verifySig}` : '';
     if (body.action === 'preview') return json({ ok: true, ...details, payment: { paid: order.paid, required, sufficient: order.paid >= required }, notion: order.extras, verify: { url: verifyUrl } });
     if (body.action === 'email_preview') {
-      const email = buildContractEmail(details, order.paid, required);
+      const email = buildContractEmail(details, order.paid, required, verifySig);
       return json({ ok: true, html: email.html, text: email.text });
     }
     if (body.action === 'send') return await sendContract(contractId, String(body.pdf_base64 || ''), details, order.page);
