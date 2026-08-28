@@ -120,6 +120,154 @@ function deliverableEmail(value: unknown): boolean {
     !/\.(example|invalid|test)$/.test(email);
 }
 
+function escapeHtml(value: unknown): string {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[char] || char);
+}
+
+function formatSar(value: number): string {
+  return `${new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(value)} ر.س`;
+}
+
+function propertyLabel(value: unknown): string {
+  const labels: Record<string, string> = {
+    villa: 'فيلا', apartment: 'شقة', office: 'مكتب', land: 'أرض',
+    commercial: 'عقار تجاري', compound: 'مجمع سكني', other: 'أخرى',
+  };
+  const key = String(value || '');
+  return labels[key] || key || 'غير محدد';
+}
+
+function shootTime(notes: unknown): string {
+  const match = String(notes || '').match(/الساعة\s+([01]?\d|2[0-3]):([0-5]\d)/);
+  if (!match) return '';
+  const hour = Number(match[1]);
+  const minute = match[2];
+  if (hour === 0) return `12:${minute} منتصف الليل`;
+  if (hour === 12) return `12:${minute} ظهرًا`;
+  return hour < 12 ? `${hour}:${minute} صباحًا` : `${hour - 12}:${minute} مساءً`;
+}
+
+function shootDate(value: unknown): string {
+  if (!value) return '';
+  const date = new Date(`${String(value)}T12:00:00+03:00`);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Riyadh',
+  }).format(date);
+}
+
+function buildContractEmail(details: any, paid: number, required: number): { html: string; text: string } {
+  const contract = details.contract;
+  const client = details.client;
+  const total = Number(contract.total_amount || 0);
+  const remaining = Math.max(0, total - paid);
+  const number = escapeHtml(contract.contract_number || '—');
+  const services = Array.isArray(details.services) && details.services.length
+    ? details.services.map((item: any) => escapeHtml(item.service_name || 'خدمة تصوير عقاري'))
+    : String(contract.service_type || 'خدمات تصوير عقاري').split(/[،,]/).map((item) => escapeHtml(item.trim())).filter(Boolean);
+  const serviceRows = services.map((name: string, index: number) => `
+    <tr>
+      <td style="padding:13px 16px;border-bottom:1px solid #ece8e3;color:#817a74;font-size:13px;width:34px;">${index + 1}</td>
+      <td style="padding:13px 0;border-bottom:1px solid #ece8e3;color:#201d1b;font-size:14px;font-weight:700;">${name}</td>
+      <td style="padding:13px 16px;border-bottom:1px solid #ece8e3;color:#817a74;font-size:12px;text-align:left;">مشمول بالعقد</td>
+    </tr>`).join('');
+  const appointmentDate = shootDate(contract.shoot_date);
+  const appointmentTime = shootTime(contract.notes);
+  const appointment = appointmentDate ? `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:18px;background:#fff8e9;border:1px solid #ead8ad;border-radius:14px;">
+      <tr><td style="padding:18px 20px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.8px;color:#926b17;margin-bottom:7px;">موعد جلسة التصوير</div>
+        <div style="font-size:17px;font-weight:800;color:#2a251e;">${escapeHtml(appointmentDate)}</div>
+        ${appointmentTime ? `<div style="font-size:14px;color:#6e6252;margin-top:3px;">وقت البداية: <strong>${escapeHtml(appointmentTime)}</strong></div>` : ''}
+      </td></tr>
+    </table>` : '';
+  const infoRow = (label: string, value: unknown) => `
+    <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
+  const html = `<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f2f0ed;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">تم اعتماد عقد مأوى رقم ${number} وإرفاق نسختك الرسمية المختومة.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f2f0ed;"><tr><td align="center" style="padding:34px 14px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#fbfaf7;border:1px solid #ded9d3;border-radius:20px;overflow:hidden;box-shadow:0 12px 34px rgba(28,24,22,.08);">
+    <tr><td style="height:5px;background:#a4243b;font-size:0;line-height:0;">&nbsp;</td></tr>
+    <tr><td style="padding:28px 32px 24px;background:#090808;color:#fff;">
+      <table role="presentation" width="100%"><tr>
+        <td style="font-size:12px;color:#bcb5b0;text-align:left;direction:ltr;">MAAWAA / RIYADH</td>
+        <td style="font-size:26px;font-weight:900;letter-spacing:1px;text-align:right;">مأوى</td>
+      </tr></table>
+    </td></tr>
+    <tr><td style="padding:34px 32px 10px;">
+      <span style="display:inline-block;padding:7px 12px;border-radius:999px;background:#e9f7ef;color:#166b3c;font-size:12px;font-weight:800;">تم اعتماد العقد وتأكيد الحجز</span>
+      <h1 style="margin:18px 0 9px;font-size:27px;line-height:1.35;color:#171412;">عقدك الرسمي أصبح جاهزًا</h1>
+      <p style="margin:0;color:#706963;font-size:15px;line-height:1.9;">مرحبًا <strong style="color:#211e1c;">${escapeHtml(client.full_name || 'عميلنا الكريم')}</strong>، تم اعتماد عقدك وختمه رسميًا من مأوى. أرفقنا النسخة النهائية بهذه الرسالة لسهولة الحفظ والرجوع إليها.</p>
+    </td></tr>
+    <tr><td style="padding:16px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
+        <tr><td style="padding:18px 20px;border-bottom:1px solid #ece8e3;">
+          <div style="font-size:11px;color:#8c847e;margin-bottom:5px;">رقم الطلب / العقد</div>
+          <div style="font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;text-align:right;">${number}</div>
+        </td></tr>
+        <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
+          ${infoRow('الموقع', contract.property_location)}
+          ${infoRow('عدد الغرف / المساحة', contract.rooms_count)}
+          ${infoRow('رقم التواصل', client.phone_number)}
+        </table></td></tr>
+      </table>
+      ${appointment}
+    </td></tr>
+    <tr><td style="padding:26px 32px 0;">
+      <div style="font-size:16px;font-weight:900;margin-bottom:10px;">الخدمات المعتمدة</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;overflow:hidden;">${serviceRows}</table>
+    </td></tr>
+    <tr><td style="padding:26px 32px 0;">
+      <div style="font-size:16px;font-weight:900;margin-bottom:10px;">الملخص المالي</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#151311;border-radius:14px;color:#fff;">
+        <tr>
+          <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">إجمالي العقد</div><div style="margin-top:5px;font-size:18px;font-weight:900;">${formatSar(total)}</div></td>
+          <td style="padding:20px;border-left:1px solid #393431;"><div style="font-size:11px;color:#aaa29d;">المدفوع</div><div style="margin-top:5px;font-size:18px;font-weight:900;color:#72d89d;">${formatSar(paid)}</div></td>
+          <td style="padding:20px;"><div style="font-size:11px;color:#aaa29d;">المتبقي</div><div style="margin-top:5px;font-size:18px;font-weight:900;">${formatSar(remaining)}</div></td>
+        </tr>
+      </table>
+      ${paid >= required ? `<div style="margin-top:10px;color:#367452;font-size:12px;">تم استلام العربون المطلوب لتأكيد الحجز (${formatSar(required)}).</div>` : ''}
+    </td></tr>
+    <tr><td style="padding:26px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f3f1;border-right:4px solid #a4243b;border-radius:10px;"><tr><td style="padding:17px 18px;">
+        <div style="font-size:13px;font-weight:900;color:#342e2a;">ملف العقد الرسمي مرفق</div>
+        <div style="font-size:12px;color:#7b736d;margin-top:4px;line-height:1.7;">ستجد ملف PDF المتجهي المختوم مرفقًا بهذه الرسالة باسم عقد مأوى ${number}. احتفظ به ضمن مستندات الطلب.</div>
+      </td></tr></table>
+    </td></tr>
+    <tr><td style="padding:28px 32px 34px;">
+      <div style="font-size:15px;font-weight:900;margin-bottom:10px;">ماذا بعد؟</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">01</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">سيبقى فريق مأوى على تواصل معك لتأكيد تفاصيل الجلسة والاستعدادات.</td></tr>
+        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">02</td><td style="padding-bottom:10px;color:#655e58;font-size:13px;line-height:1.7;">يُرجى تجهيز العقار وإتاحة الدخول في الموعد المتفق عليه لضمان أفضل نتيجة.</td></tr>
+        <tr><td style="width:26px;vertical-align:top;color:#a4243b;font-weight:900;">03</td><td style="color:#655e58;font-size:13px;line-height:1.7;">لأي تعديل أو استفسار، رُد مباشرة على هذه الرسالة أو تواصل معنا عبر واتساب.</td></tr>
+      </table>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td style="background:#a4243b;border-radius:9px;"><a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 20px;color:#fff;text-decoration:none;font-size:13px;font-weight:900;">التواصل مع فريق مأوى</a></td></tr></table>
+    </td></tr>
+    <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
+      <strong style="color:#28231f;">مأوى للتصوير العقاري</strong><br>
+      الرياض، المملكة العربية السعودية &nbsp;·&nbsp; +966 53 164 6152 &nbsp;·&nbsp; info@maawaa.sa<br>
+      <span style="color:#9a928c;">هذه رسالة آلية مرتبطة بطلبك لدى مأوى.</span>
+    </td></tr>
+  </table>
+</td></tr></table></body></html>`;
+  const text = [
+    `تم اعتماد عقد مأوى رقم ${contract.contract_number || '—'}`,
+    `العميل: ${client.full_name || '—'}`,
+    `الخدمات: ${services.join('، ')}`,
+    appointmentDate ? `موعد التصوير: ${appointmentDate}${appointmentTime ? ` — ${appointmentTime}` : ''}` : '',
+    `إجمالي العقد: ${formatSar(total)}`,
+    `المدفوع: ${formatSar(paid)}`,
+    `المتبقي: ${formatSar(remaining)}`,
+    '', 'العقد الرسمي المختوم مرفق بهذه الرسالة.', 'مأوى للتصوير العقاري', '+966 53 164 6152', 'info@maawaa.sa',
+  ].filter(Boolean).join('\n');
+  return { html, text };
+}
+
 async function sendContract(contractId: string, pdfData: string, details: any, page: any): Promise<any> {
   const total = Number(details.contract.total_amount || 0);
   const { paid } = await notionOrder(contractId);
@@ -145,12 +293,15 @@ async function sendContract(contractId: string, pdfData: string, details: any, p
   if (!upload.ok) throw new Error(`storage_${upload.status}`);
 
   const resendKey = Deno.env.get('RESEND_API_KEY') || '';
-  const subject = `عقد مأوى المعتمد — ${details.contract.contract_number || ''}`;
+  const subject = `تم اعتماد عقدك | مأوى — ${details.contract.contract_number || ''}`;
+  const emailContent = buildContractEmail(details, paid, required);
   const email = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'عقود مأوى <info@maawaa.sa>', to: [details.client.email], subject,
-      html: `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.9;color:#181818"><h2 style="color:#A4243B">عقد مأوى المعتمد</h2><p>مرحبًا ${details.client.full_name}،</p><p>نرفق لك عقد الطلب رقم <strong>${details.contract.contract_number || '—'}</strong> بعد اعتماده وختمه من مأوى.</p><p>تم تسجيل العربون وتأكيد الحجز. احتفظ بهذه الرسالة والعقد المرفق للرجوع إليهما.</p><p>مع التحية،<br><strong>مأوى للتصوير العقاري</strong><br>info@maawaa.sa</p></div>`,
+      from: 'مأوى للتصوير العقاري <info@maawaa.sa>', to: [details.client.email], subject,
+      reply_to: 'info@maawaa.sa',
+      html: emailContent.html,
+      text: emailContent.text,
       attachments: [{ filename: `عقد-مأوى-${safeNumber}.pdf`, content: pdfBase64(pdfData) }],
     }),
   });
