@@ -110,7 +110,7 @@ async function loadContract(contractId: string): Promise<any> {
   const contracts = await supabase(`/rest/v1/contracts?id=eq.${contractId}&select=id,contract_number,client_id,service_type,total_amount,property_type,property_location,rooms_count,shoot_date,notes,created_at`);
   if (!contracts?.[0]) throw new Error('contract_not_found');
   const contract = contracts[0];
-  const clients = await supabase(`/rest/v1/clients?id=eq.${contract.client_id}&select=id,full_name,phone_number,email`);
+  const clients = await supabase(`/rest/v1/clients?id=eq.${contract.client_id}&select=id,full_name,phone_number,email,identity_number`);
   const services = await supabase(`/rest/v1/contract_services?contract_id=eq.${contractId}&select=service_name,package_type`);
   if (!clients?.[0]) throw new Error('client_not_found');
   return { contract, client: clients[0], services: services || [] };
@@ -173,6 +173,7 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     </table>` : '';
   const infoRow = (label: string, value: unknown) => `
     <tr><td style="padding:8px 0;color:#857e78;font-size:13px;width:38%;">${label}</td><td style="padding:8px 0;color:#211e1c;font-size:13px;font-weight:700;">${escapeHtml(value || 'غير محدد')}</td></tr>`;
+  const optionalInfoRow = (label: string, value: unknown) => value ? infoRow(label, value) : '';
   const html = `<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f2f0ed;font-family:Tahoma,Arial,sans-serif;color:#211e1c;direction:rtl;">
@@ -191,14 +192,16 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
     <tr><td style="padding:16px 32px 0;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #e5e0da;border-radius:14px;">
         <tr><td style="padding:18px 20px;border-bottom:1px solid #ece8e3;">
-          <div style="font-size:11px;color:#8c847e;margin-bottom:5px;">رقم الطلب / العقد</div>
-          <div dir="ltr" style="font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;unicode-bidi:isolate;text-align:right;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
+          <div style="font-size:11px;color:#8c847e;margin-bottom:7px;">رقم العقد</div>
+          <div dir="ltr" style="display:inline-block;padding:8px 12px;background:#f7eff0;border:1px solid #ead7db;border-radius:9px;font-family:Arial,sans-serif;font-size:21px;font-weight:900;color:#a4243b;direction:ltr;unicode-bidi:isolate;text-align:right;letter-spacing:.5px;"><span dir="ltr" style="direction:ltr;unicode-bidi:isolate;">${number}</span></div>
         </td></tr>
         <tr><td style="padding:12px 20px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
           ${infoRow('نوع العقار', propertyLabel(contract.property_type))}
+          ${infoRow('اسم العميل', client.full_name)}
+          ${infoRow('رقم التواصل', client.phone_number)}
+          ${optionalInfoRow('رقم الهوية / السجل التجاري', client.identity_number)}
           ${infoRow('الموقع', contract.property_location)}
           ${infoRow('عدد الغرف / المساحة', contract.rooms_count)}
-          ${infoRow('رقم التواصل', client.phone_number)}
         </table></td></tr>
       </table>
       ${appointment}
@@ -241,6 +244,7 @@ function buildContractEmail(details: any, paid: number, required: number, schedu
       <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td style="background:#a4243b;border-radius:9px;"><a href="https://wa.me/966531646152" style="display:inline-block;padding:12px 20px;color:#fff;text-decoration:none;font-size:13px;font-weight:900;">التواصل مع فريق مأوى</a></td></tr></table>
     </td></tr>
     <tr><td style="padding:22px 32px;background:#ece8e3;color:#756e68;font-size:11px;line-height:1.8;text-align:center;">
+      <strong style="color:#28231f;">مأوى المهارة التجارية</strong><br>
       <a href="mailto:info@maawaa.sa" style="color:#756e68;text-decoration:none;">info@maawaa.sa</a> &nbsp;·&nbsp; <a href="https://instagram.com/maawaasa" style="color:#756e68;text-decoration:none;">@maawaasa</a> &nbsp;·&nbsp; <a href="https://www.maawaa.sa" style="color:#756e68;text-decoration:none;">www.maawaa.sa</a><br>
       <span style="color:#9a928c;">هذه رسالة آلية مرتبطة بطلبك لدى مأوى.</span>
     </td></tr>
