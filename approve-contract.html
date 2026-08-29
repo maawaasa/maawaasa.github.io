@@ -141,7 +141,7 @@ footer{padding-top:4mm;border-top:0.35mm solid var(--line);display:flex;justify-
 footer .pg{background:#fff;border:1px solid var(--line);border-radius:5mm;padding:1mm 3.5mm;font-weight:600;color:var(--ink)}
 footer .bd{display:flex;gap:4mm}
 .hide{display:none}
-.preview-modal{position:fixed;inset:0;z-index:1000;background:#171515cc;padding:18px;display:flex;align-items:center;justify-content:center}
+.preview-modal{position:fixed;inset:0;z-index:1000;background:#171515cc;padding:18px;display:flex;align-items:center;justify-content:center}.preview-modal.hide{display:none}
 .preview-window{width:min(920px,100%);height:min(92vh,900px);background:#fff;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px #0008}
 .preview-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 16px;border-bottom:1px solid #ded9d3}
 .preview-note{color:#706b67;font-size:.82rem}
@@ -214,7 +214,7 @@ footer .bd{display:flex;gap:4mm}
     <footer class="z">
       <span class="pg">صفحة 1 من 3</span>
       <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
-      <span>مأوى للتصوير العقاري</span>
+      <span>مؤسسة مأوى المهارة التجارية</span>
     </footer>
   </section>
 
@@ -233,7 +233,7 @@ footer .bd{display:flex;gap:4mm}
     <footer class="z">
       <span class="pg"></span>
       <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
-      <span>مأوى للتصوير العقاري</span>
+      <span>مؤسسة مأوى المهارة التجارية</span>
     </footer>
   </section>
 
@@ -268,7 +268,7 @@ footer .bd{display:flex;gap:4mm}
     <footer class="z">
       <span class="pg">صفحة 2 من 3</span>
       <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
-      <span>مأوى للتصوير العقاري</span>
+      <span>مؤسسة مأوى المهارة التجارية</span>
     </footer>
   </section>
 
@@ -313,7 +313,7 @@ footer .bd{display:flex;gap:4mm}
     <footer class="z">
       <span class="pg">صفحة 3 من 3</span>
       <div class="bd"><span>www.maawaa.sa</span><span>·</span><span dir="ltr">@maawaasa</span><span>·</span><span>info@maawaa.sa</span></div>
-      <span>مأوى للتصوير العقاري</span>
+      <span>مؤسسة مأوى المهارة التجارية</span>
     </footer>
   </section>
   <div class="preview-modal hide" id="emailPreview" role="dialog" aria-modal="true">
@@ -355,7 +355,7 @@ doc.classList.remove('hide');
 requestAnimationFrame(()=>fitServices());
 const status=!validEmail?`بريد العميل (${esc(u.email||'غير مسجل')}) غير صالح لاستقبال العقد. استخدمي طلبًا ببريد حقيقي.`:pay.sufficient?'تم تسجيل مبلغ كافٍ في نوشن ويمكن اعتماد العقد.':'لم يُسجل العربون كاملًا في نوشن. المدفوع: '+money(pay.paid);
 controls.innerHTML=`<h1>العقد رقم ${esc(c.contract_number||'—')}</h1><p class="muted">راجعي بيانات العقد ثم اضغطي الاعتماد والإرسال. لن يتم إرسال نسخة ثانية إذا سبق إرساله.</p><div class="facts"><div class="fact"><small>العميل</small><b>${esc(u.full_name)}</b></div><div class="fact"><small>الإجمالي</small><b>${money(total)}</b></div><div class="fact"><small>العربون المطلوب</small><b>${money(pay.required)}</b></div></div><div class="status ${canSend?'ok':'warn'}">${status}</div><div class="actions"><button class="btn secondary" id="previewEmailBtn">معاينة البريد</button><button class="btn" id="sendBtn" ${canSend?'':'disabled'}>اعتماد الختم وإرسال العقد للعميل</button></div>`;document.getElementById('previewEmailBtn').onclick=previewEmail;if(canSend)document.getElementById('sendBtn').onclick=()=>send(data)}
-async function previewEmail(){const btn=document.getElementById('previewEmailBtn');const original=btn.textContent;btn.disabled=true;btn.textContent='جاري تجهيز المعاينة…';try{const result=await call('email_preview');document.getElementById('emailPreviewFrame').srcdoc=result.html;document.getElementById('emailPreview').classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('closePreview').focus()}catch(e){controls.insertAdjacentHTML('beforeend','<div class="status err">تعذر تحميل معاينة البريد. حدّثي الصفحة ثم أعيدي المحاولة.</div>')}finally{btn.disabled=false;btn.textContent=original}}
+async function previewEmail(){const btn=document.getElementById('previewEmailBtn');const original=btn.textContent;btn.disabled=true;btn.textContent='جاري تجهيز المعاينة…';try{const result=await call('email_preview');if(typeof result?.html!=='string'||!result.html.trim())throw new Error('email_preview_empty');document.getElementById('emailPreviewFrame').srcdoc=result.html;document.getElementById('emailPreview').classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('closePreview').focus()}catch(e){closeEmailPreview();controls.insertAdjacentHTML('beforeend','<div class="status err">تعذر تحميل معاينة البريد. حدّثي الصفحة ثم أعيدي المحاولة.</div>')}finally{btn.disabled=false;btn.textContent=original}}
 function closeEmailPreview(){document.getElementById('emailPreview').classList.add('hide');document.getElementById('emailPreviewFrame').srcdoc='';document.body.style.overflow=''}
 
 async function fitServices(){
