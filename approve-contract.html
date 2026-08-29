@@ -371,7 +371,9 @@ async function fitServices(){
     const over=()=>p1.getBoundingClientRect().height>1126;
     const steps=[()=>t.className='tbl-d2',()=>t.className='tbl-d3',()=>p1.classList.add('p1-compact')];
     const moved=[];
-    if(tb.children.length>4){
+    if(tb.children.length<=2){
+      // يبقى العقد القصير في الصفحة الأولى؛ لا تُنشأ صفحة تكملة بلا حاجة.
+    }else if(tb.children.length>4){
       while(tb.children.length){moved.push(tb.firstElementChild);tb.removeChild(tb.firstElementChild)}
       contPage.querySelector('h2').textContent='الخدمات والمقابل المالي';
       contPage.querySelector('.sec span').textContent='جزء لا يتجزأ من العقد';
