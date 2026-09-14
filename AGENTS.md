@@ -25,7 +25,10 @@ Guidance for AI agents working on the مأوى (MAWA) website.
 |--------|--------|--------|--------|
 | 2026-08-28 | opencode | إصلاح سكيما + ترقية قانونية للعقد + نظام صفحات الخدمات (عبر نسخة `~/mawa-app`) | منشور على main |
 | 2026-08-28 | opencode | تبني تصميم العقد المعتمد الجديد بمحرك المتجهات — فرع `agent/opencode-contract` | منتهية (سلمها Codex) |
-| 2026-08-28 | opencode | استلام جلسة من Codex: واتساب بكل بريد العميل + صف موعد ثلاثي متجاوب + اسم رسمي + إصلاحات schedule/Notion/التأكيد | جارية |
+| 2026-08-28 | opencode | استلام جلسة من Codex: واتساب بكل بريد العميل + صف موعد ثلاثي متجاوب + اسم رسمي + إصلاحات schedule/Notion/التأكيد | منتهية — سُلمت إلى ChatGPT عبر HANDOFF-CHATGPT.md |
+| 2026-09-09 | opencode | الحاسبة: Multi-Unit (1 Site + N Units) بلا خصومات تلقائية + فصل Save Quote (Q-XXXX/14 يوم) عن Booking + إلغاء رسوم التنقل وخارج الرياض تسعير يدوي + `sql/013_quotes_mvp.sql` | منتهية — بانتظار مراجعة المالك قبل الـcommit |
+| 2026-09-09 | opencode | جلسة ليلية: 013b إغلاق anon-INSERT ديناميكيًا + 014/015 (email_log + Hold + action_tokens) + 7 دوال جديدة (send-email/email-automation/action-token-create/receipt-submit/coverage-confirm/payment-approve + C-03 في notify-lead) + 43 قالب إيميل P0+P1 + receipt.html + جناح انحدار الحاسبة 18 فحصًا | منتهية — بانتظار تشغيل 013b و014/015 ونشر الدوال (NEEDS_OWNER_ACTION.md) |
+| 2026-09-09 | opencode | روابط الحاسبة النظيفة: `calculator/index.html` هو التطبيق الفعلي على `/calculator`، الحالة في مسار URL (`/calculator/<type>/<rooms>/<units>/<services>/<extras>`) بدل query، `calculator.html` جسر توافق للروابط القديمة، `404.html` جديد لدعم الروابط العميقة، وتحديث الروابط في index/blog/sitemap/llms.txt | منتهية — بانتظار مراجعة المالك |
 
 ## Repository scope
 
@@ -43,7 +46,7 @@ Guidance for AI agents working on the مأوى (MAWA) website.
 | File | Purpose | Supabase |
 |------|---------|----------|
 | `index.html` | Public marketing page (indexable) | no |
-| `calculator.html` | Price calculator + quote/booking (indexable) | yes — leads |
+| `calculator/index.html` | Price calculator + quote/booking (indexable). العنوان الرسمي: `https://maawaa.sa/calculator` — الحالة في مسار URL نظيف (`/calculator/villa/6/2/photo+drone/rush`) بدل query. `calculator.html` جسر توافق يحوّل الروابط القديمة `?t=&r=...`، و`404.html` يلقط روابط المسارات العميقة على GitHub Pages | yes — leads |
 | `form.html` | Service-request form (noindex) | yes — inserts |
 | `admin.html` | Private contract-management tool (noindex, disallowed) | yes — full CRUD |
 | `approve-contract.html` | عقد الاعتماد: معاينة العقد + معاينة البريد + توليد PDF متجهي (jsPDF + خط IBM Plex العربي مغرّس + شعارات SVG عبر svg2pdf) وإرساله للعميل | yes — via Edge Function |

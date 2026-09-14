@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بانر يوتيوب مأوى — 2048 × 1152</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#111;--red:#A4243B;--paper:#fbfaf8}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#ddd}
+  .banner{width:2048px;height:1152px;position:relative;overflow:hidden;background:var(--paper);font-family:'IBM Plex Sans Arabic',sans-serif;color:var(--ink)}
+  /* منطقة يوتيوب الآمنة تقريباً: وسط البانر */
+  .safe{position:absolute;inset:300px 250px;display:grid;grid-template-columns:350px 1fr;align-items:center;gap:86px}
+  .logo{width:310px;max-height:230px;object-fit:contain;object-position:center}
+  .copy{padding-right:62px}
+  h1{margin:0 0 18px;font-size:70px;line-height:1.16;font-weight:700;letter-spacing:-1px}
+  .tagline{margin:0 0 30px;font-size:29px;font-weight:500;color:#343434}
+  .services{display:flex;gap:18px;align-items:center;font-size:24px;font-weight:600}
+  .services span:not(:last-child)::after{content:'•';color:var(--red);margin-right:21px}
+  .links{position:absolute;right:50%;transform:translateX(50%);bottom:105px;display:flex;gap:30px;align-items:center;font-size:23px;font-weight:600;direction:ltr}
+  .links a{color:inherit;text-decoration:none}.links b{color:var(--red)}
+  .guide{display:none} /* فعّلها فقط عند مراجعة مساحة الأمان */
+</style>
+</head>
+<body>
+<section class="banner" aria-label="بانر يوتيوب مأوى للتصوير العقاري">
+  <div class="safe">
+    <img class="logo" src="assets/logo2026/mawa-vertical-approved.svg" alt="شعار مأوى الرسمي">
+    <div class="copy">
+      <h1>مأوى للتصوير العقاري</h1>
+      <p class="tagline">نحوّل العقار إلى تجربة بصرية تستحق أن تُشاهَد</p>
+      <div class="services"><span>تصوير HDR</span><span>فيديو سينمائي</span><span>درون 4K</span><span>جولات 360°</span></div>
+    </div>
+  </div>
+
+  <div class="links">
+    <a href="https://maawaa.sa">maawaa.sa</a><b>•</b>
+    <a href="https://maawaa.sa/calculator">حاسبة الأسعار</a><b>•</b>
+    <a href="https://wa.me/966531646152">واتساب: +966 53 164 6152</a>
+  </div>
+</section>
+</body>
+</html>

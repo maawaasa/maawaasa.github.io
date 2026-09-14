@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B0B0B" />
+  <title>مأوى | تصوير عقاري جوي بالدرون</title>
+  <link rel="preload" as="image" href="assets/drone.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0B0B0B;
+      --wine: #7A1F2B;
+      --wine-dark: #5C1620;
+      --wine-soft: #B24E5A;
+      --wine-bright: #D98A93;
+      --ink: #F5F1EC;
+      --muted: rgba(245, 241, 236, .64);
+      --faint: rgba(245, 241, 236, .4);
+      --line: rgba(245, 241, 236, .1);
+      --pad: clamp(20px, 5vw, 72px);
+      --radius: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { background: var(--bg); scroll-behavior: auto; }
+
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img { display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    ::selection { background: var(--wine); color: #fff; }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #2A1116; border-radius: 8px; border: 2px solid var(--bg); }
+
+    :focus-visible { outline: 2px solid var(--wine-bright); outline-offset: 3px; border-radius: 4px; }
+
+    .accent {
+      background: linear-gradient(120deg, var(--wine-bright) 10%, var(--wine-soft) 55%, var(--wine) 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--wine-bright);
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .kicker::before {
+      content: '';
+      width: 36px;
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(to left, var(--wine), var(--wine-bright));
+    }
+    .kicker.center::after {
+      content: '';
+      width: 36px;
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(to right, var(--wine), var(--wine-bright));
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 32px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background-color .35s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #8E2634, var(--wine-dark));
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 12px 34px rgba(122, 31, 43, .38);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(122, 31, 43, .5); }
+    .btn-ghost {
+      color: var(--muted);
+      border: 1px solid rgba(245, 241, 236, .22);
+      background: rgba(245, 241, 236, .03);
+      backdrop-filter: blur(6px);
+    }
+    .btn-ghost:hover { transform: translateY(-3px); color: #fff; border-color: var(--wine-bright); }
+
+    /* ============ المشهد 1 — الافتتاحية ============ */
+    .hero {
+      position: relative;
+      height: 100vh;
+      height: 100svh;
+      min-height: 620px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .hero-parallax { position: absolute; inset: 0; will-change: transform; }
+
+    .drone-box {
+      position: absolute;
+      top: -3%;
+      left: 0;
+      height: 106%;
+      aspect-ratio: 1672 / 941;
+      z-index: 1;
+      will-change: transform;
+    }
+    .drone-box img { width: 100%; height: 100%; }
+
+    .prop {
+      position: absolute;
+      translate: -50% -50%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      filter: blur(7px);
+      opacity: .55;
+      background: conic-gradient(from 0deg,
+        rgba(255, 255, 255, 0) 0deg,
+        rgba(255, 255, 255, .32) 45deg,
+        rgba(255, 255, 255, 0) 100deg,
+        rgba(217, 138, 147, .26) 160deg,
+        rgba(255, 255, 255, 0) 220deg,
+        rgba(255, 255, 255, .24) 290deg,
+        rgba(255, 255, 255, 0) 360deg);
+      animation: prop-spin .22s linear infinite;
+    }
+    @keyframes prop-spin { to { rotate: 360deg; } }
+
+    .prop-1 { left: 11.5%; top: 43%; width: 19%; }
+    .prop-2 { left: 16.8%; top: 59%; width: 21%; }
+    .prop-3 { left: 48.3%; top: 38%; width: 21%; }
+    .prop-4 { left: 66%;   top: 49%; width: 21.5%; }
+
+    .hero-shade {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(to left, rgba(11, 11, 11, .9) 0%, rgba(11, 11, 11, .4) 32%, rgba(11, 11, 11, 0) 62%),
+        linear-gradient(to top, var(--bg) 0%, rgba(11, 11, 11, 0) 24%),
+        linear-gradient(to bottom, rgba(11, 11, 11, .65) 0%, rgba(11, 11, 11, 0) 18%);
+    }
+
+    .site-header {
+      position: absolute;
+      top: 0;
+      inset-inline: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px var(--pad);
+    }
+    .brand { font-size: 30px; font-weight: 700; line-height: 1; }
+    .nav-links { display: flex; align-items: center; gap: clamp(18px, 3vw, 38px); }
+    .nav-links a {
+      position: relative;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--muted);
+      transition: color .3s ease;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      inset-inline-start: 0;
+      width: 100%;
+      height: 1.5px;
+      background: linear-gradient(to left, var(--wine), var(--wine-bright));
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s ease;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      max-width: min(660px, 100%);
+      padding: 90px var(--pad) 70px;
+    }
+    .hero-title {
+      margin-top: 20px;
+      font-size: clamp(2.5rem, 5.4vw + .6rem, 5.2rem);
+      line-height: 1.22;
+      font-weight: 700;
+    }
+    .hero-title .line { display: block; }
+    .hero-desc {
+      margin-top: 22px;
+      max-width: 50ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.1vw + .5rem, 1.15rem);
+      font-weight: 300;
+      line-height: 2;
+    }
+    .hero-actions { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 16px; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 26px;
+      inset-inline: 0;
+      z-index: 5;
+      margin-inline: auto;
+      width: max-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--faint);
+      font-size: 12.5px;
+      font-weight: 300;
+    }
+    .mouse {
+      width: 24px;
+      height: 40px;
+      border: 1.5px solid rgba(245, 241, 236, .35);
+      border-radius: 999px;
+      display: flex;
+      justify-content: center;
+      padding-top: 7px;
+    }
+    .mouse i {
+      width: 3px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--wine-bright);
+      animation: wheel 1.7s ease-in-out infinite;
+    }
+    @keyframes wheel {
+      0%   { transform: translateY(0);    opacity: 1; }
+      70%  { transform: translateY(13px); opacity: 0; }
+      100% { transform: translateY(13px); opacity: 0; }
+    }
+
+    /* ============ المشهدان المثبتان — قاعدة مشتركة ============ */
+    .stage {
+      position: relative;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* ============ المشهد 2 — انتقال العدسة ============ */
+    .lens-media {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      clip-path: circle(75% at 50% 52%);
+      transform-origin: 50% 52%;
+      will-change: transform, clip-path;
+    }
+    .lens-media img { width: 100%; height: 100%; object-fit: cover; }
+
+    .lens-caption {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      padding-inline: 20px;
+      pointer-events: none;
+    }
+    .cap-main {
+      font-size: clamp(1.35rem, 3vw, 2.3rem);
+      font-weight: 600;
+      text-shadow: 0 6px 40px rgba(0, 0, 0, .85);
+    }
+    .cap-sub {
+      font-size: clamp(.85rem, 1.4vw, 1rem);
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    /* ============ المشهد 3 — داخل العدسة / HUD ============ */
+    .aerial-media {
+      position: absolute;
+      inset: -7%;
+      z-index: 1;
+      will-change: transform;
+    }
+    .aerial-media img { width: 100%; height: 100%; object-fit: cover; }
+
+    .hud {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      direction: ltr;
+      color: rgba(245, 241, 236, .85);
+      pointer-events: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hud-corner {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border: 1.5px solid rgba(245, 241, 236, .45);
+    }
+    .hud-corner.tl { top: 26px;    left: 26px;  border-right: none; border-bottom: none; }
+    .hud-corner.tr { top: 26px;    right: 26px; border-left: none;  border-bottom: none; }
+    .hud-corner.bl { bottom: 26px; left: 26px;  border-right: none; border-top: none; }
+    .hud-corner.br { bottom: 26px; right: 26px; border-left: none;  border-top: none; }
+
+    .hud-reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: clamp(92px, 12vw, 140px);
+      aspect-ratio: 1;
+    }
+    .hud-reticle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(217, 138, 147, .85);
+      border-radius: 50%;
+      box-shadow: 0 0 26px rgba(122, 31, 43, .4), inset 0 0 26px rgba(122, 31, 43, .28);
+    }
+    .hud-reticle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--wine-bright);
+      box-shadow: 0 0 10px rgba(217, 138, 147, .9);
+    }
+    .ret-h {
+      position: absolute;
+      top: 50%;
+      left: -16%;
+      right: -16%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 241, 236, .65) 22%, rgba(245, 241, 236, .65) 78%, transparent);
+    }
+    .ret-v {
+      position: absolute;
+      left: 50%;
+      top: -16%;
+      bottom: -16%;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(245, 241, 236, .65) 22%, rgba(245, 241, 236, .65) 78%, transparent);
+    }
+
+    .hud-rec {
+      position: absolute;
+      top: 40px;
+      left: 46px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .18em;
+    }
+    .rec-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #FF414D;
+      box-shadow: 0 0 12px #FF414D;
+      animation: rec-blink 1.1s steps(1) infinite;
+    }
+    @keyframes rec-blink { 50% { opacity: .15; } }
+    .rec-time { font-weight: 400; font-size: 13px; letter-spacing: .12em; color: var(--faint); }
+
+    .hud-batt {
+      position: absolute;
+      top: 40px;
+      right: 46px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .16em;
+      color: var(--muted);
+    }
+    .batt {
+      position: relative;
+      width: 24px;
+      height: 12px;
+      border: 1px solid rgba(245, 241, 236, .55);
+      border-radius: 2px;
+      padding: 1.5px;
+    }
+    .batt::after {
+      content: '';
+      position: absolute;
+      top: 2.5px;
+      right: -4px;
+      width: 2.5px;
+      height: 4px;
+      border-radius: 0 1px 1px 0;
+      background: rgba(245, 241, 236, .55);
+    }
+    .batt i { display: block; height: 100%; width: 76%; border-radius: 1px; background: var(--wine-bright); }
+
+    .hud-stat {
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 132px;
+    }
+    .hud-alt  { right: 46px; text-align: right; }
+    .hud-spd  { left: 46px;  text-align: left; }
+    .hud-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .22em;
+      color: rgba(245, 241, 236, .5);
+    }
+    .hud-value {
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      font-weight: 600;
+      line-height: 1;
+    }
+    .hud-bar {
+      height: 2px;
+      border-radius: 2px;
+      background: rgba(245, 241, 236, .16);
+      overflow: hidden;
+    }
+    .hud-bar i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--wine), var(--wine-bright));
+      transition: width .15s linear;
+    }
+
+    .hud-coords {
+      position: absolute;
+      bottom: 38px;
+      left: 50%;
+      translate: -50% 0;
+      font-size: 12.5px;
+      letter-spacing: .14em;
+      color: var(--faint);
+    }
+
+    /* ============ المشهد 4 — المعرض الأفقي ============ */
+    .work {
+      padding: clamp(90px, 14vh, 150px) var(--pad) 20px;
+      text-align: center;
+    }
+    .work-head h2 { margin-top: 18px; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 700; }
+    .work-sub { margin-top: 14px; color: var(--muted); font-weight: 300; font-size: clamp(.95rem, 1.2vw, 1.1rem); }
+
+    .gallery { position: relative; overflow: clip; }
+
+    .g-track {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 3vw, 44px);
+      height: 100vh;
+      height: 100svh;
+      width: max-content;
+      padding-inline: var(--pad);
+      will-change: transform;
+    }
+
+    .g-card {
+      position: relative;
+      flex-shrink: 0;
+      width: min(58vw, 860px);
+      max-height: 74vh;
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(245, 241, 236, .08);
+      background: #141014;
+    }
+    .g-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(.22, .61, .36, 1);
+    }
+    .g-card:hover img { transform: scale(1.05); }
+
+    .g-veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11, 11, 11, .88) 0%, rgba(11, 11, 11, .25) 45%, rgba(11, 11, 11, 0) 70%);
+    }
+
+    .g-info {
+      position: absolute;
+      bottom: 0;
+      inset-inline: 0;
+      padding: clamp(20px, 2.4vw, 32px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .g-info h3 { font-size: clamp(1.2rem, 1.8vw, 1.7rem); font-weight: 600; }
+    .g-info p { margin-top: 8px; color: var(--muted); font-weight: 300; font-size: clamp(.85rem, 1vw, 1rem); }
+    .g-num {
+      direction: ltr;
+      font-size: clamp(2.6rem, 5vw, 4.6rem);
+      font-weight: 700;
+      line-height: .85;
+      color: rgba(217, 138, 147, .3);
+      flex-shrink: 0;
+    }
+    @supports (-webkit-text-stroke: 1px black) {
+      .g-num { color: transparent; -webkit-text-stroke: 1px rgba(217, 138, 147, .55); }
+    }
+
+    /* ============ الختام ============ */
+    .outro {
+      position: relative;
+      padding: clamp(90px, 14vh, 170px) var(--pad) 0;
+      text-align: center;
+      overflow: clip;
+    }
+    .outro-brand {
+      position: absolute;
+      top: 4%;
+      inset-inline: 0;
+      font-size: clamp(9rem, 28vw, 26rem);
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(122, 31, 43, .1);
+      pointer-events: none;
+      user-select: none;
+    }
+    @supports (-webkit-text-stroke: 1px black) {
+      .outro-brand { color: transparent; -webkit-text-stroke: 1px rgba(122, 31, 43, .3); }
+    }
+
+    .outro-inner { position: relative; z-index: 2; max-width: 740px; margin-inline: auto; }
+    .outro-inner h2 { margin-top: 20px; font-size: clamp(2.1rem, 4.6vw, 4rem); font-weight: 700; line-height: 1.35; }
+    .outro-desc {
+      margin-top: 20px;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 2;
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+    }
+    .outro-inner .btn { margin-top: 34px; }
+
+    .contact-row {
+      position: relative;
+      z-index: 2;
+      margin-top: clamp(50px, 9vh, 90px);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(26px, 6vw, 84px);
+    }
+    .contact-item { display: flex; flex-direction: column; gap: 9px; }
+    .c-label { color: var(--wine-bright); font-size: 13px; font-weight: 500; }
+    .c-value { color: var(--muted); font-weight: 300; font-size: 15.5px; }
+    .c-value[dir="ltr"] { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+
+    .foot {
+      position: relative;
+      z-index: 2;
+      margin-top: clamp(60px, 10vh, 100px);
+      border-top: 1px solid var(--line);
+      padding: 26px 0 30px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      color: var(--faint);
+      font-size: 13.5px;
+      font-weight: 300;
+    }
+
+    /* ============ الجوال ============ */
+    @media (max-width: 819px) {
+      .drone-box {
+        top: auto;
+        bottom: 5%;
+        left: 0;
+        height: auto;
+        width: 155%;
+        min-width: 540px;
+      }
+      .hero-content {
+        justify-content: flex-start;
+        padding-top: 120px;
+      }
+      .g-track {
+        flex-direction: column;
+        align-items: stretch;
+        height: auto;
+        width: auto;
+        gap: 26px;
+        padding: 20px var(--pad) 70px;
+      }
+      .g-card { width: 100%; max-height: none; aspect-ratio: 4 / 3; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .brand { font-size: 26px; }
+      .hud-corner { width: 36px; height: 36px; }
+      .hud-corner.tl { top: 16px;    left: 16px; }
+      .hud-corner.tr { top: 16px;    right: 16px; }
+      .hud-corner.bl { bottom: 16px; left: 16px; }
+      .hud-corner.br { bottom: 16px; right: 16px; }
+      .hud-rec { top: 24px; left: 62px; }
+      .hud-batt { display: none; }
+      .hud-stat { width: 88px; }
+      .hud-alt  { right: 16px; }
+      .hud-spd  { left: 16px; }
+      .hud-value { font-size: 1.05rem; }
+      .hud-reticle { width: 78px; }
+      .hud-coords { bottom: 22px; font-size: 10.5px; }
+      .foot { flex-direction: column; align-items: center; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .prop, .mouse i, .rec-dot { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ المشهد 1 — الافتتاحية ============ -->
+  <section class="hero" id="top">
+    <header class="site-header">
+      <a class="brand" href="#top">مأوى</a>
+      <nav class="nav-links" aria-label="روابط رئيسية">
+        <a href="#work">أعمالنا</a>
+        <a href="#lens">التقنية</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+    </header>
+
+    <div class="hero-parallax">
+      <div class="drone-box">
+        <img src="assets/drone.jpg" alt="درون مأوى بإضاءة نبيذية على خلفية سوداء" />
+        <span class="prop prop-1" aria-hidden="true"></span>
+        <span class="prop prop-2" aria-hidden="true"></span>
+        <span class="prop prop-3" aria-hidden="true"></span>
+        <span class="prop prop-4" aria-hidden="true"></span>
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="kicker">مأوى — تصوير عقاري جوي بالدرون</p>
+        <h1 class="hero-title">
+          <span class="line">عقارك يستحق أن يُرى</span>
+          <span class="line accent">من الأعلى</span>
+        </h1>
+        <p class="hero-desc">نحوّل مشاريعك العقارية إلى لقطات سينمائية عالية الدقة يلتقطها دروننا من زوايا لا تصلها العين — من لحظة الإقلاع حتى اللقطة الأخيرة.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">احجز جولتك الجوية</a>
+          <a class="btn btn-ghost" href="#work">شاهد أعمالنا</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span class="mouse"><i></i></span>
+      <span>مرّر لبدء الرحلة</span>
+    </div>
+  </section>
+
+  <!-- ============ المشهد 2 — انتقال العدسة ============ -->
+  <section class="lens-scene" id="lens" aria-label="انتقال عبر العدسة">
+    <div class="stage lens-stage">
+      <div class="lens-media">
+        <img src="assets/lens.jpg" alt="لقطة مقربة لعدسة الدرون" />
+      </div>
+      <div class="lens-caption">
+        <p class="cap-main">كل لقطة عظيمة… تبدأ من هنا</p>
+        <p class="cap-sub">استمر بالتمرير لتدخل من العدسة</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ المشهد 3 — داخل العدسة ============ -->
+  <section class="aerial-scene" aria-label="لقطة جوية ليلية">
+    <div class="stage aerial-stage">
+      <div class="aerial-media">
+        <img src="assets/aerial-night.jpg" alt="لقطة جوية ليلية لحي سكني" />
+      </div>
+      <div class="hud" aria-hidden="true">
+        <span class="hud-corner tl"></span>
+        <span class="hud-corner tr"></span>
+        <span class="hud-corner bl"></span>
+        <span class="hud-corner br"></span>
+
+        <div class="hud-rec">
+          <span class="rec-dot"></span>
+          <span>REC</span>
+          <span class="rec-time" id="recTime">00:00:00</span>
+        </div>
+
+        <div class="hud-batt">
+          <span class="batt"><i></i></span>
+          <span>BATT 84%</span>
+        </div>
+
+        <div class="hud-stat hud-alt">
+          <span class="hud-label"><span>ALT</span><span>M</span></span>
+          <span class="hud-value" id="altVal">128.0</span>
+          <span class="hud-bar"><i id="altBar" style="width:86%"></i></span>
+        </div>
+
+        <div class="hud-stat hud-spd">
+          <span class="hud-label"><span>SPD</span><span>M/S</span></span>
+          <span class="hud-value" id="spdVal">7.2</span>
+          <span class="hud-bar"><i id="spdBar" style="width:12%"></i></span>
+        </div>
+
+        <div class="hud-reticle">
+          <span class="ret-h"></span>
+          <span class="ret-v"></span>
+        </div>
+
+        <div class="hud-coords" id="hudCoords">24.7136 N / 46.6753 E</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ المشهد 4 — المعرض الأفقي ============ -->
+  <section class="work" id="work">
+    <div class="work-head" data-reveal>
+      <p class="kicker center">معرض الأعمال</p>
+      <h2>مشاريع حلّقنا فوقها</h2>
+      <p class="work-sub">ثلاث لقطات من أعمالنا الأخيرة — تابع التمرير ودع المشهد ينزلق أمامك</p>
+    </div>
+  </section>
+
+  <section class="gallery" aria-label="شريط الأعمال">
+    <div class="g-track">
+      <article class="g-card" data-reveal>
+        <img src="assets/villa.jpg" alt="فيلا من الأعلى ليلاً" loading="lazy" />
+        <div class="g-veil" aria-hidden="true"></div>
+        <div class="g-info">
+          <div class="g-text">
+            <h3>فلل خاصة</h3>
+            <p>زوايا علوية تُبرز الفخامة والخصوصية</p>
+          </div>
+          <span class="g-num">01</span>
+        </div>
+      </article>
+
+      <article class="g-card" data-reveal>
+        <img src="assets/community.jpg" alt="حي سكني مسور من الأعلى" loading="lazy" />
+        <div class="g-veil" aria-hidden="true"></div>
+        <div class="g-info">
+          <div class="g-text">
+            <h3>مجمعات سكنية</h3>
+            <p>نظرة شاملة على التخطيط والمرافق</p>
+          </div>
+          <span class="g-num">02</span>
+        </div>
+      </article>
+
+      <article class="g-card" data-reveal>
+        <img src="assets/desert.jpg" alt="فلل على أطراف الصحراء ليلاً" loading="lazy" />
+        <div class="g-veil" aria-hidden="true"></div>
+        <div class="g-info">
+          <div class="g-text">
+            <h3>أطراف المدينة</h3>
+            <p>فلل تحتضنها الكثبان تحت أنوار الليل</p>
+          </div>
+          <span class="g-num">03</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ الختام ============ -->
+  <section class="outro" id="contact">
+    <div class="outro-brand" aria-hidden="true">مأوى</div>
+
+    <div class="outro-inner" data-reveal>
+      <p class="kicker center">جاهزون للتحليق؟</p>
+      <h2>أعطِ عقارك <span class="accent">لقطة لا تُنسى</span></h2>
+      <p class="outro-desc">فريق مأوى جاهز للتحليق في الرياض وجميع مناطق المملكة. احجز موعدك ونحن نتولى الباقي — من الإقلاع حتى تسليم اللقطات.</p>
+      <a class="btn btn-primary" href="tel:+966500000000">احجز جولتك الجوية</a>
+    </div>
+
+    <div class="contact-row" data-reveal>
+      <div class="contact-item">
+        <span class="c-label">اتصال</span>
+        <span class="c-value" dir="ltr">+966 50 000 0000</span>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">بريد</span>
+        <span class="c-value" dir="ltr">fly@mawa.sa</span>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">المقر</span>
+        <span class="c-value">الرياض، المملكة العربية السعودية</span>
+      </div>
+    </div>
+
+    <footer class="foot">
+      <span>© ٢٠٢٦ مأوى — جميع الحقوق محفوظة</span>
+      <span>صُنعت كل لقطة على ارتفاع يليق بها</span>
+    </footer>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- التمرير الناعم Lenis ---------- */
+      var lenis = null;
+      if (!prefersReduced && typeof Lenis !== 'undefined') {
+        lenis = new Lenis({
+          duration: 1.15,
+          easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+          smoothWheel: true,
+          touchMultiplier: 1.4
+        });
+        window.lenis = lenis;
+      }
+
+      /* ---------- روابط التمرير الداخلي ---------- */
+      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var id = link.getAttribute('href');
+          if (!id || id.length < 2) return;
+          var target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          if (lenis) { lenis.scrollTo(target, { duration: 1.5 }); }
+          else { target.scrollIntoView({ behavior: 'smooth' }); }
+        });
+      });
+
+      /* ---------- حراسة توفر المكتبات ---------- */
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      if (lenis) {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      /* ---------- المشهد 1: دخول الافتتاحية + طفو الدرون ---------- */
+      var intro = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: .15 });
+      intro
+        .from('.site-header', { y: -34, autoAlpha: 0, duration: .9 })
+        .from('.hero-content > *', { y: 48, autoAlpha: 0, duration: .9, stagger: .12 }, '-=.55')
+        .from('.scroll-hint', { autoAlpha: 0, y: 16, duration: .8 }, '-=.5');
+
+      gsap.to('.drone-box', {
+        y: -18,
+        duration: 3.4,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1
+      });
+
+      gsap.to('.hero-parallax', {
+        yPercent: 12,
+        autoAlpha: .3,
+        ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+      });
+
+      /* ---------- المشهد 2: التضخيم نحو العدسة + إغلاق القناع الدائري ---------- */
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.lens-stage',
+          start: 'top top',
+          end: '+=170%',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1
+        }
+      })
+        .to('.lens-media', { scale: 1.9, ease: 'power2.in', duration: 1 }, 0)
+        .to('.lens-media', { clipPath: 'circle(0% at 50% 52%)', ease: 'power2.inOut', duration: 1 }, 0)
+        .to('.lens-caption', { autoAlpha: 0, y: -44, ease: 'power1.out', duration: .3 }, 0)
+        .to({}, { duration: .12 });
+
+      /* ---------- المشهد 3: لقطة جوية + واجهة HUD ---------- */
+      var els = {
+        alt: document.getElementById('altVal'),
+        spd: document.getElementById('spdVal'),
+        rec: document.getElementById('recTime'),
+        coords: document.getElementById('hudCoords'),
+        altBar: document.getElementById('altBar'),
+        spdBar: document.getElementById('spdBar')
+      };
+
+      function updateHUD(p) {
+        if (!els.alt) return;
+        els.alt.textContent = (128 - 46 * p).toFixed(1);
+        els.spd.textContent = (7.2 + 9.6 * Math.sin(Math.PI * p)).toFixed(1);
+        els.altBar.style.width = (16 + 70 * (1 - p)).toFixed(1) + '%';
+        els.spdBar.style.width = (12 + 76 * p).toFixed(1) + '%';
+        var total = Math.floor(p * 47);
+        var mm = String(Math.floor(total / 60)).padStart(2, '0');
+        var ss = String(total % 60).padStart(2, '0');
+        els.rec.textContent = '00:' + mm + ':' + ss;
+        els.coords.textContent = (24.7136 - p * 0.0021).toFixed(4) + ' N / ' + (46.6753 + p * 0.0018).toFixed(4) + ' E';
+      }
+
+      gsap.set('.aerial-media', { scale: 1.35, yPercent: 6, autoAlpha: 0 });
+      updateHUD(0);
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.aerial-stage',
+          start: 'top top',
+          end: '+=170%',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          onUpdate: function (self) { updateHUD(self.progress); }
+        }
+      })
+        .to('.aerial-media', { autoAlpha: 1, duration: .14, ease: 'none' }, 0)
+        .to('.aerial-media', { scale: 1.08, yPercent: -5, duration: 1, ease: 'none' }, 0)
+        .to({}, { duration: .1 });
+
+      /* ---------- المشهد 4: الشريط الأفقي (سطح المكتب فقط) ---------- */
+      var mm = gsap.matchMedia();
+      mm.add('(min-width: 820px)', function () {
+        var track = document.querySelector('.g-track');
+        var distance = function () { return Math.max(0, track.scrollWidth - window.innerWidth); };
+        gsap.to(track, {
+          x: function () { return distance(); },
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.gallery',
+            start: 'top top',
+            end: function () { return '+=' + distance(); },
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
+          }
+        });
+      });
+
+      /* ---------- ظهور العناصر عند التمرير ---------- */
+      gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+        gsap.from(el, {
+          y: 44,
+          autoAlpha: 0,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 86%' }
+        });
+      });
+
+      window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+    })();
+  </script>
+</body>
+</html>

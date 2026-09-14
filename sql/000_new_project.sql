@@ -2,6 +2,13 @@
 -- مأوى — ملف التأسيس الكامل لبروجكت Supabase جديد
 -- ينشئ: كل الجداول + الحماية + البيانات المبدئية
 -- انسخه كاملاً والصقه في: SQL Editor → New Query → Run
+--
+-- ترتيب تأسيس بيئة جديدة كاملة الوظائف:
+--   1) 000_new_project.sql  (هذا الملف)
+--   2) 013_quotes_mvp.sql   (submit_lead الموسعة + submit_quote + sanitize_units
+--                            + تسلسلات Q-XXXX/MAW-XXXX + trigger الترقيم
+--                            + إغلاق الإدخال المجهول المباشر)
+--   (008 اختياري كخطوة وسيطة — 013 يستبدل submit_lead بنسخة موسعة محصّنة)
 -- =====================================================
 
 -- ==========================================
@@ -22,6 +29,10 @@ CREATE TABLE IF NOT EXISTS contracts (
     contract_number TEXT UNIQUE,
     service_type TEXT,
     total_amount NUMERIC(12,2) DEFAULT 0,
+    language TEXT NOT NULL DEFAULT 'ar'
+        CHECK (language IN ('ar', 'en')),
+    currency CHAR(3) NOT NULL DEFAULT 'SAR'
+        CHECK (currency IN ('SAR', 'USD')),
     delivery_days INT DEFAULT 10,
     contract_date DATE DEFAULT CURRENT_DATE,
     status TEXT NOT NULL DEFAULT 'new'
@@ -219,19 +230,24 @@ ALTER TABLE leave_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profit_settings ENABLE ROW LEVEL SECURITY;
 
--- العملاء والعقود: العام يقدر يرسل طلبات (نموذج الموقع)، الفريق فقط يقرأ/يعدل
+-- العملاء والعقود: لا يوجد INSERT مباشر لـanon — الإنشاء العام من الموقع
+-- يمر حصريًا عبر الدوال المحصّنة submit_lead / submit_quote (SECURITY DEFINER).
+-- الفريق (authenticated) يملك INSERT حسب حاجة admin.html.
 DROP POLICY IF EXISTS "public_insert_clients" ON clients;
-CREATE POLICY "public_insert_clients" ON clients FOR INSERT TO anon, authenticated WITH CHECK (true);
+DROP POLICY IF EXISTS "auth_insert_clients" ON clients;
+CREATE POLICY "auth_insert_clients" ON clients FOR INSERT TO authenticated WITH CHECK (true);
 DROP POLICY IF EXISTS "auth_all_clients" ON clients;
 CREATE POLICY "auth_all_clients" ON clients FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "public_insert_contracts" ON contracts;
-CREATE POLICY "public_insert_contracts" ON contracts FOR INSERT TO anon, authenticated WITH CHECK (true);
+DROP POLICY IF EXISTS "auth_insert_contracts" ON contracts;
+CREATE POLICY "auth_insert_contracts" ON contracts FOR INSERT TO authenticated WITH CHECK (true);
 DROP POLICY IF EXISTS "auth_all_contracts" ON contracts;
 CREATE POLICY "auth_all_contracts" ON contracts FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "public_insert_cs" ON contract_services;
-CREATE POLICY "public_insert_cs" ON contract_services FOR INSERT TO anon, authenticated WITH CHECK (true);
+DROP POLICY IF EXISTS "auth_insert_cs" ON contract_services;
+CREATE POLICY "auth_insert_cs" ON contract_services FOR INSERT TO authenticated WITH CHECK (true);
 DROP POLICY IF EXISTS "auth_all_cs" ON contract_services;
 CREATE POLICY "auth_all_cs" ON contract_services FOR ALL TO authenticated USING (true) WITH CHECK (true);
 

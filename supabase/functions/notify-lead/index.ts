@@ -12,7 +12,7 @@ const ORDERS_DATA_SOURCE_TITLE = 'إدارة طلبات مأوى';
 const APPROVAL_PAGE_URL = 'https://maawaa.sa/approve-contract.html';
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-type DeliveryChannel = 'telegram' | 'web3forms' | 'notion';
+type DeliveryChannel = 'telegram' | 'web3forms' | 'notion' | 'customer_email';
 
 type DeliveryResult = {
   channel: DeliveryChannel;
@@ -742,6 +742,40 @@ Deno.serve(async (req: Request) => {
   if (contract && client) {
     jobs.push(syncContractToNotion(notionToken, contract, client, approvalUrl));
   }
+
+  // ===== C-03 Booking Request Received — إيميل العميل (Fire-and-forget) =====
+  // عبر send-email الموحدة (Idempotency داخلها). لا يؤثر على قنوات الملاك.
+  const cContract = contract;
+  const cClient = client;
+  try {
+    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    if (serviceKey && cClient?.email && cContract?.id) {
+      const c03 = {
+        event_type: 'C-03',
+        entity_type: 'contract',
+        entity_id: cContract.id,
+        to: cClient.email,
+        to_name: cClient.full_name,
+        data: {
+          contract_number: cContract.contract_number,
+          client_name: cClient.full_name,
+          services: cContract.service_type,
+          shoot_date: cContract.shoot_date,
+          location: cContract.property_location,
+        },
+      };
+      const sendEmailUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-email`;
+      const sendPromise: Promise<DeliveryResult> = fetch(sendEmailUrl, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${serviceKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(c03),
+      }).then((r) => ({ channel: 'customer_email' as const, ok: true, status: r.status }))
+        .catch(() => ({ channel: 'customer_email' as const, ok: true, status: 0 }));
+      const runtime = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+      if (runtime?.waitUntil) runtime.waitUntil(sendPromise);
+      else jobs.push(sendPromise);
+    }
+  } catch (_e) { /* لا يكسر إشعارات الملاك */ }
 
   const results = await Promise.all(jobs);
   const failed = results.filter((result) => !result.ok);

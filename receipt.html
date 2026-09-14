@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رفع إيصال الدفع | مأوى للتصوير العقاري</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23020001'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23A4243B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#0B0B0B;--red:#A4243B;--wine:#7A1F2B;--off:#F7F5F2;--gray:#6B6B6B;--border:#E5E0DA;--green:#1F7A4D;--f:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif}
+body{font-family:var(--f);background:var(--off);color:var(--black);min-height:100vh;line-height:1.8}
+.wrap{max-width:520px;margin:0 auto;padding:22px 16px 40px}
+.top{text-align:center;padding:14px 0 22px}
+.logo{font-size:22px;font-weight:800;letter-spacing:4px}
+.logo b{color:var(--red)}
+.sub{color:var(--gray);font-size:12px;letter-spacing:2px;margin-top:2px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px 18px;box-shadow:0 10px 30px rgba(11,11,11,.05)}
+h1{font-size:17px;margin-bottom:6px}
+.hint{color:var(--gray);font-size:13px;margin-bottom:16px}
+.state{text-align:center;padding:36px 10px}
+.state .ico{font-size:40px;margin-bottom:10px}
+.state h1{margin-bottom:8px}
+.state p{color:var(--gray);font-size:14px}
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;margin:0 auto 12px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.drop{border:2px dashed #CFC8BF;border-radius:14px;padding:26px 14px;text-align:center;cursor:pointer;transition:.2s;background:#FBFAF7}
+.drop:hover,.drop.on{border-color:var(--red);background:#FDF6F7}
+.drop .dico{font-size:30px;margin-bottom:6px}
+.drop b{font-size:14px}
+.drop span{display:block;color:var(--gray);font-size:12px;margin-top:3px}
+input[type=file]{display:none}
+.preview{margin-top:14px;display:none}
+.preview img{width:100%;max-height:260px;object-fit:contain;border-radius:10px;border:1px solid var(--border)}
+.fname{font-size:12px;color:var(--gray);margin-top:6px;word-break:break-all}
+.btn{width:100%;padding:15px;border:none;border-radius:11px;background:var(--red);color:#fff;font-family:var(--f);font-size:15px;font-weight:800;cursor:pointer;margin-top:16px;transition:.2s}
+.btn:hover{background:var(--wine)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.err{display:none;background:#FDF1F2;border:1px solid #EBC7CC;color:var(--wine);border-radius:10px;padding:11px 14px;font-size:13px;margin-top:12px}
+.ok-ico{width:64px;height:64px;border-radius:50%;background:#EEF4EC;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px}
+.foot{text-align:center;color:var(--gray);font-size:12px;margin-top:18px;line-height:2}
+.foot a{color:var(--red);text-decoration:none}
+.rules{background:#F8F6F2;border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gray);margin-top:14px;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo">مأوى<b>.</b></div>
+    <div class="sub">للتصوير العقاري</div>
+  </div>
+
+  <div class="card" id="cardLoading">
+    <div class="state"><div class="spin"></div><p>جارٍ التحقق من الرابط الآمن…</p></div>
+  </div>
+
+  <div class="card" id="cardError" style="display:none">
+    <div class="state">
+      <div class="ico">⚠️</div>
+      <h1 id="errTitle">الرابط غير صالح</h1>
+      <p id="errMsg">يبدو أن الرابط منتهي أو مستخدم مسبقًا. تواصل معنا وسنرسل لك رابطًا جديدًا فورًا.</p>
+      <p style="margin-top:14px"><a href="https://wa.me/966531646152" style="color:var(--red);font-weight:700">تواصل عبر واتساب</a></p>
+    </div>
+  </div>
+
+  <div class="card" id="cardForm" style="display:none">
+    <h1 id="formTitle">رفع إيصال العربون</h1>
+    <div class="hint" id="formHint">صوّر إيصال التحويل وارفعه هنا — الموعد محفوظ لك أثناء المراجعة.</div>
+    <label class="drop" id="drop" for="file">
+      <div class="dico">🧾</div>
+      <b>اضغط لاختيار صورة الإيصال</b>
+      <span>JPG أو PNG — حتى 8 ميجابايت</span>
+    </label>
+    <input type="file" id="file" accept="image/jpeg,image/png,image/webp">
+    <div class="preview" id="preview">
+      <img id="pv" alt="معاينة الإيصال">
+      <div class="fname" id="fname"></div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="submit" disabled>إرسال الإيصال</button>
+    <div class="rules">
+      بعد الإرسال: يصل الإيصال لفريق مأوى للمراجعة، و<b>موعدك يبقى محفوظًا</b> حتى انتهاء المراجعة. ستصلك رسالة تأكيد الحجز فور الاعتماد.
+    </div>
+  </div>
+
+  <div class="card" id="cardDone" style="display:none">
+    <div class="state">
+      <div class="ok-ico">✓</div>
+      <h1>تم استلام الإيصال بنجاح</h1>
+      <p id="doneMsg">إيصالك تحت المراجعة الآن، وموعدك محفوظ أثناء المراجعة. سنرسل لك تأكيد الحجز على بريدك فور الاعتماد.</p>
+      <p style="margin-top:14px;color:var(--gray);font-size:13px" id="doneRef"></p>
+    </div>
+  </div>
+
+  <div class="foot">
+    مأوى للتصوير العقاري · <a href="https://maawaa.sa">maawaa.sa</a><br>
+    <a href="mailto:info@maawaa.sa">info@maawaa.sa</a>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const token = new URLSearchParams(location.search).get('t') || '';
+const purpose = new URLSearchParams(location.search).get('p') || 'deposit_receipt';
+let file = null;
+
+function show(id){ ['cardLoading','cardError','cardForm','cardDone'].forEach(x => $(x).style.display = x===id?'block':'none'); }
+function fail(title, msg){ $('errTitle').textContent = title; $('errMsg').textContent = msg; show('cardError'); }
+function showErr(code){
+  const map = {
+    invalid_token: ['الرابط غير صالح','تأكد من فتح الرابط كاملًا من رسالة مأوى.'],
+    token_used: ['الرابط مستخدم مسبقًا','تم استلام إيصال عبر هذا الرابط من قبل. إن أردت تعديله تواصل معنا.'],
+    token_expired: ['انتهت صلاحية الرابط','اطلب رابطًا جديدًا من فريق مأوى عبر واتساب.'],
+    wrong_purpose: ['رابط غير مطابق','هذا الرابط مخصص لإجراء آخر.'],
+    image_too_large: ['الصورة كبيرة','الحد الأقصى 8 ميجابايت — جرّب تصوير الشاشة بحجم أقل.'],
+    image_too_small: ['الصورة غير مقروءة','اختر صورة أوضح للإيصال.'],
+    outdated_state: ['الطلب في مرحلة أخرى','يبدو أن الدفعة اعتمدت مسبقًا أو تغيّرت حالة الطلب. تواصل معنا للتأكد.'],
+  };
+  const e = map[code] || ['تعذر رفع الإيصال','حدث خطأ غير متوقع — حاول مرة أخرى أو تواصل معنا.'];
+  $('err').style.display = 'block';
+  $('err').innerHTML = '<b>' + e[0] + ':</b> ' + e[1];
+}
+
+// واجهة حسب الغرض
+if (purpose === 'balance_receipt') {
+  $('formTitle').textContent = 'رفع إيصال السداد النهائي';
+  $('formHint').textContent = 'ارفع إيصال سداد الرصيد المتبقي — التسليم النهائي مباشرة بعد الاعتماد.';
+}
+
+if (!token) { fail('الرابط غير مكتمل','افتح الرابط من رسالة مأوى مباشرة.'); }
+else {
+  // لا حاجة للتحقق المسبق من الخادم — التحقق النهائي عند الإرسال
+  show('cardForm');
+}
+
+$('drop').addEventListener('click', e => { e.preventDefault(); $('file').click(); });
+$('file').addEventListener('change', e => {
+  file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (file.size > 8*1024*1024) { showErr('image_too_large'); file = null; return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    $('pv').src = ev.target.result;
+    $('fname').textContent = file.name;
+    $('preview').style.display = 'block';
+    $('submit').disabled = false;
+    $('err').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+});
+
+$('submit').addEventListener('click', async () => {
+  if (!file) return;
+  $('submit').disabled = true; $('submit').textContent = 'جارٍ الإرسال…'; $('err').style.display = 'none';
+  try {
+    const dataUrl = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = ev => res(ev.target.result); r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const res = await fetch((typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://fivrwlowntwacfrsocge.supabase.co') + '/functions/v1/receipt-submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, image_data_url: dataUrl }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (res.ok && body.ok) {
+      $('doneRef').textContent = body.contract_number ? ('رقم الطلب: ' + body.contract_number) : '';
+      show('cardDone');
+    } else {
+      $('submit').disabled = false; $('submit').textContent = 'إرسال الإيصال';
+      showErr(body.error || 'server_error');
+    }
+  } catch (e) {
+    $('submit').disabled = false; $('submit').textContent = 'إرسال الإيصال';
+    showErr('network');
+  }
+});
+</script>
+</body>
+</html>

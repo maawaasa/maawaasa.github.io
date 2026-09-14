@@ -2,3 +2,27 @@ project_id = "fivrwlowntwacfrsocge"
 
 [functions.schedule-change]
 verify_jwt = false
+
+# المرسل الموحد — داخلي: service_role فقط (الفحص داخل الكود أيضًا)
+[functions.send-email]
+verify_jwt = false
+
+# الأتمتة الزمنية — تُجدول من: Dashboard → Edge Functions → email-automation → Schedules (كل ساعة)
+[functions.email-automation]
+verify_jwt = false
+
+# توليد روابط الإجراءات الآمنة — داخلي: service_role فقط
+[functions.action-token-create]
+verify_jwt = false
+
+# رفع الإيصالات — عام عبر رمز آمن من action_tokens (تحقق داخلي)
+[functions.receipt-submit]
+verify_jwt = false
+
+# تأكيد تغطية الجلسة — ملاك (authenticated) أو service_role
+[functions.coverage-confirm]
+verify_jwt = false
+
+# اعتماد الدفعات — ملاك (authenticated) أو service_role
+[functions.payment-approve]
+verify_jwt = false

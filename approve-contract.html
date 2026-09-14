@@ -40,6 +40,8 @@ header .logo img,header img.logo{height:10.5mm;width:auto;display:block;margin:0
 .chip{display:inline-block;background:var(--red);color:#fff;font-weight:700;font-size:11pt;padding:1.8mm 11mm;border-radius:20mm}
 .hmeta .row{font-size:9pt;color:var(--mut);margin-top:2mm}
 .hmeta .row b{color:var(--ink);font-size:10pt}
+.meta-row{display:flex;align-items:center;justify-content:center;gap:1.6mm;flex-wrap:wrap}
+.meta-row .ltr{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 .rule{height:0.8mm;background:var(--red);border-radius:1mm;margin-bottom:7mm}
 
 /* ===== عناوين الأقسام الموحدة ===== */
@@ -58,6 +60,11 @@ header .logo img,header img.logo{height:10.5mm;width:auto;display:block;margin:0
 .party b{display:block;font-size:11.5pt;margin:2mm 0 1.5mm}
 .party p{font-size:9pt;color:var(--mut);line-height:1.95}
 .pid{font-size:10pt;font-weight:600;color:var(--ink);direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.party-lines{display:flex;flex-direction:column;gap:1.1mm;font-size:9pt;color:var(--mut);line-height:1.6}
+.data-line{display:flex;align-items:baseline;gap:1.6mm;min-width:0}
+.data-line .label{white-space:nowrap}
+.data-line .value{min-width:0}
+.ltr{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
 
 .shoot{background:#fff;border:1px solid var(--line);border-radius:2.5mm;padding:3.8mm 5mm;font-size:10pt;display:flex;align-items:center;gap:3.5mm;margin-bottom:5mm}
 .shoot i{color:var(--red);font-style:normal;font-size:12pt;line-height:1}
@@ -70,6 +77,7 @@ th:last-child{text-align:left}
 td{font-size:10pt;padding:3.8mm 4.5mm;border-top:1px solid var(--line);vertical-align:top}
 tbody tr:nth-child(even) td{background:#F7F4EE}
 td.amt{text-align:left;font-weight:700;white-space:nowrap}
+.amt,.tbreak .r b,.tfinal .val{direction:ltr;unicode-bidi:isolate;text-align:left;font-variant-numeric:tabular-nums}
 td.det{color:var(--mut);font-size:9pt}
 td.num{color:var(--mut);width:8mm}
 
@@ -129,6 +137,7 @@ ol.terms{list-style:none;counter-reset:c}
 ol.terms li{font-size:8.7pt;line-height:1.68;color:#3F3A35;padding-right:8.8mm;position:relative;margin-bottom:2.6mm;counter-increment:c}
 ol.terms li::before{content:counter(c,decimal);position:absolute;right:2mm;top:0.3mm;width:7mm;height:5.5mm;color:var(--red);font-weight:700;font-size:8.5pt;display:flex;align-items:center;justify-content:flex-end;direction:ltr;padding-right:0;font-variant-numeric:tabular-nums;box-sizing:border-box;white-space:nowrap;flex:none}
 ol.terms li b{color:var(--ink)}
+ol.terms li b{margin-left:.35em}
 ol.terms+.sec{margin-top:6mm}
 .consent{background:var(--red-soft);border:1px solid #EBD8DC;border-radius:2.5mm;padding:4.5mm 5.5mm;font-size:9pt;color:#5C2A34;line-height:1.9;margin-top:5mm}
 
@@ -141,8 +150,11 @@ ol.terms+.sec{margin-top:6mm}
 footer{padding-top:4mm;border-top:0.35mm solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:7pt;color:var(--mut)}
 footer .pg{background:#fff;border:1px solid var(--line);border-radius:5mm;padding:1mm 3.5mm;font-weight:600;color:var(--ink)}
 footer .bd{display:flex;gap:4mm}
+.pdf-export{word-spacing:.12em}
+.pdf-export .ltr,.pdf-export .pid,.pdf-export .amt,.pdf-export .tbreak .r b,.pdf-export .tfinal .val{word-spacing:normal}
 .hide{display:none}
-.preview-modal{position:fixed;inset:0;z-index:1000;background:#171515cc;padding:18px;display:flex;align-items:center;justify-content:center}.preview-modal.hide{display:none}
+.preview-modal{position:fixed;inset:0;z-index:1000;background:#171515cc;padding:18px;display:flex;align-items:center;justify-content:center}
+.preview-modal.hide{display:none}
 .preview-window{width:min(920px,100%);height:min(92vh,900px);background:#fff;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px #0008}
 .preview-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 16px;border-bottom:1px solid #ded9d3}
 .preview-note{color:#706b67;font-size:.82rem}
@@ -166,7 +178,7 @@ footer .bd{display:flex;gap:4mm}
         <img class="logo" src="assets/logo2026/mawa-wide.svg" alt="مأوى">
         <div class="hmeta">
           <span class="chip">عقد تقديم خدمات</span>
-          <div class="row" style="margin-top:1.8mm">رقم العقد: <b id="contractNumber">—</b> · التاريخ: <b id="contractDate">—</b></div>
+          <div class="row meta-row" style="margin-top:1.8mm"><span>رقم العقد</span><span>:</span><b class="ltr" id="contractNumber">—</b><span>·</span><span>التاريخ</span><span>:</span><b class="ltr" id="contractDate">—</b></div>
         </div>
       </div>
     </header>
@@ -177,12 +189,12 @@ footer .bd{display:flex;gap:4mm}
         <div class="card party">
           <small>الطرف الأول — مقدّم الخدمة</small>
           <b>مؤسسة مأوى المهارة التجارية</b>
-          <p>سجل تجاري: <span class="pid">1009034486</span><br>الرياض، المملكة العربية السعودية<br>info@maawaa.sa · <span class="pid">+966 53 164 6152</span></p>
+          <div class="party-lines"><div class="data-line"><span class="label">سجل تجاري</span><span>:</span><span class="pid value">1009034486</span></div><div>الرياض، المملكة العربية السعودية</div><div class="data-line"><span class="ltr value">info@maawaa.sa</span><span>·</span><span class="pid value">+966 53 164 6152</span></div></div>
         </div>
         <div class="card party">
           <small>الطرف الثاني — العميل</small>
           <b id="customerName">—</b>
-          <p>جوال: <span class="pid" id="customerPhone">—</span><br>البريد: <span id="customerEmail">—</span><br><span id="propertyLine">العقار: —</span><br>الصفة: فرد (وفي حال المنشأة يُذكر السجل التجاري واسم الممثل المفوض)</p>
+          <div class="party-lines"><div class="data-line"><span class="label">الجوال</span><span>:</span><span class="pid value" id="customerPhone">—</span></div><div class="data-line"><span class="label">البريد</span><span>:</span><span class="ltr value" id="customerEmail">—</span></div><div class="data-line"><span class="label">العقار</span><span>:</span><span class="value" id="propertyLine">—</span></div><div class="data-line"><span class="label">الصفة</span><span>:</span><span class="value">فرد - وللمنشأة يُذكر السجل التجاري واسم الممثل المفوض</span></div></div>
         </div>
       </div>
     </div>
@@ -199,7 +211,7 @@ footer .bd{display:flex;gap:4mm}
         <div class="tbreak">
           <div class="r" id="grossRow" style="display:none"><span>الإجمالي قبل الخصم</span><b class="strike" id="grossAmount">0</b></div>
           <div class="r" id="discountRow" style="display:none"><span id="discountLabel">الخصم</span><b class="disc" id="discountAmount">0</b></div>
-          <div class="r"><span>عربون تأكيد الحجز (<span id="depositPct">25</span>٪)</span><b id="depositAmount">0</b></div>
+          <div class="r"><span>عربون تأكيد الحجز - <bdi class="ltr"><span id="depositPct">25</span>٪</bdi></span><b id="depositAmount">0</b></div>
           <div class="r"><span>المتبقي بعد العربون</span><b id="remainingAmount">0</b></div>
         </div>
         <div class="tfinal">
@@ -247,16 +259,16 @@ footer .bd{display:flex;gap:4mm}
         <li><b>تأكيد الحجز:</b> يُؤكد الحجز بسداد عربون قدره 25٪ من إجمالي العقد، ويُعد دفعة أولى من قيمة الخدمة.</li>
         <li><b>استحقاق المقابل:</b> يستحق الرصيد المتبقي قبل تسليم المخرجات النهائية، ولا تلتزم مأوى بالتسليم أو إتاحة التحميل قبل سداد كامل المستحقات، ولا يُعد إرسال نسخة معاينة أو منخفضة الدقة تسليمًا نهائيًا.</li>
         <li><b>نطاق الخدمة:</b> داخل مدينة الرياض، وأي موقع خارجها يستلزم اتفاقًا وتسعيرًا مسبقين.</li>
-        <li><b>العربون والإلغاء:</b> أ) الإلغاء قبل أكثر من 48 ساعة: إعادة جدولة مجانية واحدة أو استرداد 50٪ من العربون. ب) خلال 24 إلى 48 ساعة: استرداد 50٪ من العربون دون إعادة جدولة. ج) أقل من 24 ساعة أو التأخر عن الموعد أكثر من 30 دقيقة أو عدم الحضور: العربون غير مسترد. د) إذا ألغت مأوى لسبب يرجع إليها: يُسترد كامل ما دُفع عن الخدمة غير المنفذة أو تُعاد الجدولة باتفاق الطرفين.</li>
-        <li><b>رسوم الزيارة:</b> إذا تعذر بدء التصوير أو استكماله لسبب راجع للعميل أو العقار أو ضمن مسؤوليته (عدم السماح بالدخول، عدم الجاهزية، التصاريح، انقطاع الكهرباء)، تُحتسب رسوم زيارة بنسبة 25٪ من قيمة العمل دون اعتبار ذلك إخلالًا من مأوى.</li>
-        <li><b>القوة القاهرة:</b> لا تسأل مأوى عن التأخير أو التعذر الناتج عن ظروف خارجة عن سيطرتها المعقولة (حالة جوية مانعة، أوامر الجهات، إغلاق الموقع، أعطال طارئة غير ناتجة عن إهمال)، ويُعلق التنفيذ أو تُعاد الجدولة حتى زوال السبب.</li>
+        <li><b>العربون والإلغاء:</b> أ - الإلغاء قبل أكثر من 48 ساعة: إعادة جدولة مجانية واحدة أو استرداد 50٪ من العربون. ب - خلال 24 إلى 48 ساعة: استرداد 50٪ من العربون دون إعادة جدولة. ج - أقل من 24 ساعة أو التأخر عن الموعد أكثر من 30 دقيقة أو عدم الحضور: العربون غير مسترد. د - إذا ألغت مأوى لسبب يرجع إليها: يُسترد كامل ما دُفع عن الخدمة غير المنفذة أو تُعاد الجدولة باتفاق الطرفين.</li>
+        <li><b>رسوم الزيارة:</b> إذا تعذر بدء التصوير أو استكماله لسبب راجع للعميل أو العقار أو ضمن مسؤوليته، مثل عدم السماح بالدخول أو عدم الجاهزية أو غياب التصاريح أو انقطاع الكهرباء، تُحتسب رسوم زيارة بنسبة 25٪ من قيمة العمل دون اعتبار ذلك إخلالًا من مأوى.</li>
+        <li><b>القوة القاهرة:</b> لا تسأل مأوى عن التأخير أو التعذر الناتج عن ظروف خارجة عن سيطرتها المعقولة، مثل الحالة الجوية المانعة أو أوامر الجهات أو إغلاق الموقع أو الأعطال الطارئة غير الناتجة عن إهمال، ويُعلق التنفيذ أو تُعاد الجدولة حتى زوال السبب.</li>
         <li><b>التسليم:</b> خلال 7 إلى 10 أيام عمل تبدأ من اليوم التالي لاكتمال جلسة التصوير، ولا تدخل فيها تأخيرات العميل أو طلباته الإضافية أو الظروف الخارجة عن سيطرة مأوى. التسليم العاجل خلال 3 أيام عمل برسوم إضافية 25٪.</li>
-        <li><b>التعديلات:</b> تشمل الخدمة جولة واحدة من التعديلات الطفيفة (معالجة ألوان، إضاءة خفيفة، قص بسيط) خلال 7 أيام من التسليم؛ أما التعديلات الجوهرية (إعادة مونتاج، إزالة أو تركيب عناصر، تغيير الموسيقى بعد الاعتماد، إعادة تصوير) فتُسعر منفصلة.</li>
+        <li><b>التعديلات:</b> تشمل الخدمة جولة واحدة من التعديلات الطفيفة، وتشمل معالجة الألوان والإضاءة الخفيفة والقص البسيط، خلال 7 أيام من التسليم؛ أما التعديلات الجوهرية، مثل إعادة المونتاج أو إزالة العناصر أو تركيبها أو تغيير الموسيقى بعد الاعتماد أو إعادة التصوير، فتُسعر منفصلة.</li>
         <li><b>اعتماد الأعمال:</b> يُعد عدم تقديم اعتراض مكتوب ومحدد خلال 7 أيام من التسليم قبولًا نهائيًا للمخرجات، ولا تُقبل المطالبات الفنية بعد انتهاء هذه المدة، دون إخلال بما لا يجوز الاتفاق على إسقاطه نظامًا.</li>
         <li><b>المواد الخام والحفظ:</b> تُسلّم المخرجات النهائية المعالجة فقط دون ملفات RAW، وتُحفظ على سحابة مأوى 30 يومًا من التسليم ثم تُحذف تلقائيًا ولا تتحمل مأوى مسؤولية بعدها، ويُستثنى من ذلك رابط الجولة الافتراضية 360° المشار إليه أدناه.</li>
         <li><b>الجولة الافتراضية 360°:</b> تُستضاف 12 شهرًا من تاريخ تفعيل الرابط وتسليمه للعميل، وتنتهي تلقائيًا ما لم تُجدد بمقابل وفق الأسعار السارية، ويجوز لمأوى إيقاف الرابط بعد انتهاء المدة بعد إشعار العميل.</li>
         <li><b>الملكية والترخيص:</b> تبقى الملكية الفكرية الأصلية للأعمال لمأوى، ويُمنح العميل ترخيصًا دائمًا غير حصري لاستخدام المخرجات النهائية في تسويق عقاره، ويحق لمأوى استخدام المخرجات ونماذج منها في معرض أعمالها وقنواتها التسويقية والإعلانية، مع استثناء ما يتضمن بيانات شخصية أو أشخاصًا طلب العميل كتابيًا عدم إظهارهم.</li>
-        <li><b>المواد المقدمة من العميل:</b> يضمن العميل حقه في استخدام ما يزود مأوى به من مواد (شعارات، موسيقى، محتوى) ويتحمل أي مطالبات ناشئة عنها، وتلتزم مأوى بتراخيص المواد التي تختارها بنفسها.</li>
+        <li><b>المواد المقدمة من العميل:</b> يضمن العميل حقه في استخدام ما يزود مأوى به من مواد، ومنها الشعارات والموسيقى والمحتوى، ويتحمل أي مطالبات ناشئة عنها، وتلتزم مأوى بتراخيص المواد التي تختارها بنفسها.</li>
         <li><b>البيانات الشخصية:</b> تخضع معالجة البيانات الشخصية لسياسة الخصوصية المنشورة في موقع مأوى وتُعد مكملة لهذا العقد، وتُشارك البيانات بالقدر اللازم مع مزودي الخدمة والجهات النظامية وفق الأنظمة.</li>
         <li><b>حدود المسؤولية:</b> في الحدود التي يجيزها النظام، لا تسأل مأوى عن الأضرار غير المباشرة أو فوات الربح، ويتحدد سقف مسؤوليتها التعاقدية بقيمة هذا العقد، مع استثناء الحالات التي لا يجوز نظامًا الحد من المسؤولية فيها.</li>
         <li><b>الاستخدام النظامي:</b> يقر العميل بأن التصوير داخل عقاره وعلى واجهاته لا يخالف الأنظمة، ويتحمل مسؤولية أي تصريح داخلي يلزم من مالك العقار أو الجهات المختصة.</li>
@@ -279,7 +291,7 @@ footer .bd{display:flex;gap:4mm}
     <div class="z">
       <div class="sec" style="margin-top:6mm"><i>✦</i><h2>مسؤوليات العميل قبل الجلسة</h2><span>لضمان أفضل نتيجة</span></div>
       <ol class="terms">
-        <li><b>التهيئة والنظافة:</b> تجهيز العقار نظيفًا ومرتبًا قبل وصول الفريق — ترتيب الأثاث وإخلاء الأسطح من الأغراض الشخصية؛ فالصورة تُظهر العقار كما هو. وإذا وُجد العقار غير جاهز تُطبق رسوم الزيارة (البند الخامس) دون اعتبار ذلك إخلالًا من مأوى.</li>
+        <li><b>التهيئة والنظافة:</b> تجهيز العقار نظيفًا ومرتبًا قبل وصول الفريق - ترتيب الأثاث وإخلاء الأسطح من الأغراض الشخصية؛ فالصورة تُظهر العقار كما هو. وإذا وُجد العقار غير جاهز تُطبق رسوم الزيارة الواردة في البند الخامس دون اعتبار ذلك إخلالًا من مأوى.</li>
         <li><b>الإضاءة:</b> التأكد من عمل جميع إضاءات العقار واستبدال اللمبات المعطلة أو التالفة.</li>
         <li><b>الحضور أو التفويض:</b> حضور العميل أو من يفوضه لتسليم العقار أثناء الجلسة، أو توفير وصول مسبق متفق عليه.</li>
         <li><b>الطاقة والتشغيل:</b> تأمين مصدر كهرباء يعمل داخل العقار، ويرجى تبريد المكان خاصة في الصيف؛ حيث إن معدات التصوير حساسة للحرارة وتتوقف عن العمل في حالة الحرارة.</li>
@@ -333,6 +345,8 @@ const money=n=>new Intl.NumberFormat('en-US',{minimumFractionDigits:0,maximumFra
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function call(action,extra={}){const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON_KEY,'apikey':SUPABASE_ANON_KEY},body:JSON.stringify({...auth,action,...extra})});const body=await res.json().catch(()=>({}));if(!res.ok)throw Object.assign(new Error(body.error||'failed'),{body,status:res.status});return body}
 async function inlineSvgImages(root){const images=[...root.querySelectorAll('img[src$=".svg"]')];await Promise.all(images.map(async img=>{const text=await fetch(img.getAttribute('src')).then(r=>r.text());const url=URL.createObjectURL(new Blob([text],{type:'image/svg+xml'}));const loaded=new Image();await new Promise((ok,bad)=>{loaded.onload=ok;loaded.onerror=bad;loaded.src=url});const m=text.match(/viewBox\s*=\s*["']\s*[\d.]+[ ,]+[\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)/);const vw=m?+m[1]:loaded.naturalWidth||1200,vh=m?+m[2]:loaded.naturalHeight||1200;const scale=Math.min(1600/vw,1600/vh);const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(vw*scale));canvas.height=Math.max(1,Math.round(vh*scale));const ctx=canvas.getContext('2d');ctx.drawImage(loaded,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);img.src=canvas.toDataURL('image/png')}))}
+function isolatePercentages(root){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{if(!/\d+(?:[.,]\d+)?٪/.test(node.nodeValue)||node.parentElement?.closest('.ltr'))return;const parts=node.nodeValue.split(/(\d+(?:[.,]\d+)?٪)/g);const fragment=document.createDocumentFragment();parts.forEach(part=>{if(/^\d+(?:[.,]\d+)?٪$/.test(part)){const bdi=document.createElement('bdi');bdi.className='ltr';bdi.textContent=part;fragment.appendChild(bdi)}else fragment.appendChild(document.createTextNode(part))});node.replaceWith(fragment)})}
+function preserveArabicWordSpacing(root){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{if(!/[\u0600-\u06FF]/.test(node.nodeValue)||!node.nodeValue.includes(' ')||node.parentElement?.closest('.ltr,.pid,.amt,.tbreak,.tfinal'))return;const parts=node.nodeValue.split(' ');const fragment=document.createDocumentFragment();parts.forEach((part,index)=>{fragment.appendChild(document.createTextNode(part));if(index<parts.length-1){fragment.appendChild(document.createTextNode('\u00A0'));fragment.appendChild(document.createElement('wbr'))}});node.replaceWith(fragment)})}
 function fill(data){const c=data.contract,u=data.client,sv=data.services||[],pay=data.payment||{},nx=data.notion||{};const validEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u.email||'')&&!/\.(example|invalid|test)$/i.test(u.email||'');const canSend=pay.sufficient&&validEmail;
 document.getElementById('contractNumber').textContent=c.contract_number||'—';
 document.getElementById('contractDate').textContent=c.created_at?new Date(c.created_at).toLocaleDateString('en-GB').replace(/\//g,' / '):'—';
@@ -340,7 +354,7 @@ document.getElementById('customerName').textContent=u.full_name||'—';
 document.getElementById('customerPhone').textContent=u.phone_number||'—';
 document.getElementById('customerEmail').textContent=u.email||'—';
 document.getElementById('customerSign').textContent=u.full_name||'—';
-document.getElementById('propertyLine').textContent='العقار: '+[c.property_type,c.property_location].filter(Boolean).join(' — ')||'—';
+document.getElementById('propertyLine').textContent=[c.property_type,c.property_location].filter(Boolean).join(' — ')||'—';
 const shoot=nx.shooting_date||c.shoot_date;
 if(shoot){document.getElementById('shootRow').style.display='flex';document.getElementById('shootDate').textContent=new Date(shoot).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(new Date(shoot).getHours()?' — '+new Date(shoot).toLocaleTimeString('ar-SA-u-nu-latn',{hour:'numeric',minute:'2-digit'}):'')}
 const total=Number(c.total_amount||0);const disc=Number(nx.discount_amount||0);
@@ -446,7 +460,7 @@ async function fitServices(){
   }catch(e){console.warn('fitServices',e)}
 }
 
-async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);const wrap=document.createElement('div');wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach((p,i)=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);await inlineSvgImages(wrap);const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
+async function buildPdf(){await document.fonts.ready;const pages=[...document.querySelectorAll('.page')].filter(p=>!p.hidden);const wrap=document.createElement('div');wrap.className='pdf-export';wrap.style.cssText='width:210mm;background:#FBFAF6';pages.forEach(p=>{const c=p.cloneNode(true);c.style.margin='0';c.style.boxShadow='none';c.style.borderRadius='0';c.style.pageBreakAfter='auto';wrap.appendChild(c)});document.body.appendChild(wrap);isolatePercentages(wrap);preserveArabicWordSpacing(wrap);await inlineSvgImages(wrap);const opt={margin:0,filename:'عقد-مأوى.pdf',image:{type:'png',quality:1},html2canvas:{scale:4,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['css','legacy']}};const out=await html2pdf().set(opt).from(wrap).outputPdf('datauristring');wrap.remove();return out}
 async function send(data){const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='جاري إنشاء العقد وإرساله…';try{const pdf=await buildPdf();const result=await call('send',{pdf_base64:pdf});controls.innerHTML=`<div class="status ok"><b>تم اعتماد العقد وإرساله بنجاح</b><br>أُرسل العقد رقم ${esc(result.contract_number)} إلى ${esc(result.recipient)}، وحُفظت نسخته في نوشن.</div>`;window.scrollTo({top:0,behavior:'smooth'})}catch(e){const messages={deposit_not_received:'العربون المسجل في نوشن غير كافٍ.',already_sent:'سبق إرسال هذا العقد للعميل.',customer_email_missing:'بريد العميل غير مسجل.',customer_email_invalid:'بريد العميل غير حقيقي أو غير صالح لاستقبال العقد.',email_delivery_failed:'رفض مزود البريد الرسالة. تحققي من بريد العميل ثم أعيدي المحاولة.',contract_storage_failed:'تعذر حفظ نسخة العقد. أعيدي المحاولة بعد قليل.',invalid_pdf:'تعذر إنشاء ملف العقد بصورة صحيحة.'};controls.insertAdjacentHTML('beforeend',`<div class="status err">${messages[e.body?.error]||'تعذر إرسال العقد. أعيدي المحاولة أو راجعي بيانات الطلب.'}</div>`);btn.disabled=false;btn.textContent='إعادة المحاولة'}}
 document.getElementById('closePreview').onclick=closeEmailPreview;document.getElementById('emailPreview').addEventListener('click',e=>{if(e.target.id==='emailPreview')closeEmailPreview()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEmailPreview()});
 call('preview').then(fill).catch(()=>{controls.innerHTML=`<div class="status err">رابط الاعتماد غير صالح أو انتهت صلاحيته. افتحي الرابط الموجود في آخر إشعار للطلب.</div>`});
