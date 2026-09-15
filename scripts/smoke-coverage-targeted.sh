@@ -191,7 +191,7 @@ HOLD_OK=$(printf '%s' "$ROW" | jq -r --argjson now "$(date -u +%s)" '
   .[0] as $r
   | ($r.hold_started_at != null) as $s
   | ($r.hold_expires_at != null) as $e
-  | (($r.hold_expires_at | sub("\\+00:00$";"Z") | fromdateiso8601) - $now) as $diff
+  | (($r.hold_expires_at | sub("\\.\\d+(Z|\\+00:00)$";"Z") | sub("\\+00:00$";"Z") | fromdateiso8601) - $now) as $diff
   | if $r.status == "awaiting_payment" and $s and $e
        and $diff >= 82800 and $diff <= 90000 then "OK" else "BAD" end')
 
@@ -223,13 +223,15 @@ PAYLOAD=$(jq -n --arg c "$CD" --arg p "$PID" \
   '{contract_id:$c, photographer_employee_id:$p, start_time:"10:00", end_time:"12:00"}')
 printf '%s' "$PAYLOAD" | jq -e . >/dev/null || { echo "FAIL: PAYLOAD"; exit 1; }
 
-A=$(curl -s -o /tmp/cc_a.txt -w "%{http_code}" -X POST "$BASE/functions/v1/coverage-confirm" \
-  "${H[@]}" -H "Content-Type: application/json" --data "$PAYLOAD") &
+curl -s -o /tmp/cc_a.txt -w "%{http_code}" -X POST "$BASE/functions/v1/coverage-confirm" \
+  "${H[@]}" -H "Content-Type: application/json" --data "$PAYLOAD" > /tmp/cc_a.code 2>/dev/null &
 PA=$!
-B=$(curl -s -o /tmp/cc_b.txt -w "%{http_code}" -X POST "$BASE/functions/v1/coverage-confirm" \
-  "${H[@]}" -H "Content-Type: application/json" --data "$PAYLOAD") &
+curl -s -o /tmp/cc_b.txt -w "%{http_code}" -X POST "$BASE/functions/v1/coverage-confirm" \
+  "${H[@]}" -H "Content-Type: application/json" --data "$PAYLOAD" > /tmp/cc_b.code 2>/dev/null &
 PB=$!
 wait $PA $PB
+A=$(cat /tmp/cc_a.code 2>/dev/null || echo '?')
+B=$(cat /tmp/cc_b.code 2>/dev/null || echo '?')
 
 echo "request A: HTTP $(cat /tmp/cc_a.code 2>/dev/null || echo '?') body=$(head -c 120 /tmp/cc_a.txt 2>/dev/null)"
 echo "request B: HTTP $(cat /tmp/cc_b.code 2>/dev/null || echo '?') body=$(head -c 120 /tmp/cc_b.txt 2>/dev/null)"
