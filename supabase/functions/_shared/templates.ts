@@ -69,19 +69,28 @@ function layout(
   note?: string,
   status?: Status,
   secondary?: { url: string; label: string },
+  ref?: string,
   preheader?: string
 ): string {
   const pre = esc(preheader || title);
   const banner = status ? statusHtml(status) : '';
+  const refHtml = ref
+    ? `<div style="margin:0 0 16px;"><span dir="ltr" style="display:inline-block;padding:6px 16px;border:1.5px solid #E5DED6;border-radius:999px;font-size:13px;font-weight:700;color:${C.black};background:${C.offWhite};">${esc(ref)}</span></div>`
+    : '';
   const ctaHtml = cta
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td align="center">
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;"><tr><td align="center">
         ${btnHtml(cta.url, cta.label, 'primary')}
-        ${secondary ? `<div style="height:10px;line-height:10px;font-size:0;">&nbsp;</div>${btnHtml(secondary.url, secondary.label, 'secondary')}` : ''}
+        ${secondary ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${btnHtml(secondary.url, secondary.label, 'secondary')}` : ''}
       </td></tr></table>`
     : '';
   const noteHtml = note
-    ? `<p style="margin:16px 0 0;font-size:12px;color:${C.gray};line-height:1.9;">${esc(note)}</p>`
+    ? `<p style="margin:18px 0 0;font-size:12px;color:${C.gray};line-height:1.9;">${esc(note)}</p>`
     : '';
+  const signatureHtml = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;">
+<tr><td style="padding-top:18px;border-top:1px solid #F0EDE8;">
+  <p style="margin:0;font-size:13.5px;color:#3A3A3A;line-height:1.9;">مع تحيات فريق <span style="font-weight:700;color:${C.black};">مأوى</span> للتصوير العقاري</p>
+  <p style="margin:2px 0 0;font-size:12px;color:${C.gray};">نشكر ثقتكم — نحن على واتساب دائمًا في خدمتكم</p>
+</td></tr></table>`;
   return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -93,10 +102,10 @@ function layout(
 <style>
   @media only screen and (max-width:600px){
     .ma-card{width:100%!important;border-radius:0!important}
-    .ma-head{padding:18px 16px!important}
-    .ma-body{padding:26px 18px 10px!important}
-    .ma-h1{font-size:17px!important}
-    .ma-foot{padding:16px 18px 24px!important}
+    .ma-head{padding:20px 16px!important}
+    .ma-body{padding:30px 20px 12px!important}
+    .ma-h1{font-size:18px!important}
+    .ma-foot{padding:18px 20px 26px!important}
     .ma-btn{display:block!important}
   }
 </style>
@@ -104,21 +113,24 @@ function layout(
 <body style="margin:0;padding:0;width:100%;background:${C.offWhite};font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 <div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:transparent;mso-hide:all;">${pre}&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.offWhite};">
-<tr><td align="center" style="padding:26px 12px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-card" style="max-width:560px;background:${C.white};border-radius:16px;overflow:hidden;border:1px solid #ECE8E0;direction:rtl;">
+<tr><td align="center" style="padding:32px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-card" style="max-width:560px;background:${C.white};border-radius:18px;overflow:hidden;border:1px solid #ECE8E0;direction:rtl;">
     <tr><td style="height:5px;background:${C.wine};font-size:0;line-height:0;">&nbsp;</td></tr>
-    <tr><td class="ma-head" align="center" style="background:${C.black};padding:22px 28px;direction:rtl;">
-      <div style="color:${C.white};font-size:21px;font-weight:700;">مأوى<span style="color:#C9506A;">.</span></div>
-      <div style="color:#A19B97;font-size:11px;margin-top:4px;">للتصوير العقاري</div>
+    <tr><td class="ma-head" align="center" style="background:${C.black};padding:24px 28px;direction:rtl;">
+      <div style="color:${C.white};font-size:22px;font-weight:700;">مأوى<span style="color:#C9506A;">.</span></div>
+      <div style="color:#A19B97;font-size:11px;margin-top:5px;">للتصوير العقاري</div>
     </td></tr>
-    <tr><td class="ma-body" style="padding:30px 30px 12px;direction:rtl;text-align:right;">
+    <tr><td class="ma-body" style="padding:36px 34px 14px;direction:rtl;text-align:right;">
       ${banner}
-      <h1 class="ma-h1" style="margin:0 0 16px;font-size:18px;color:${C.black};line-height:1.7;text-align:right;">${esc(title)}</h1>
+      ${refHtml}
+      <h1 class="ma-h1" style="margin:0 0 10px;font-size:20px;color:${C.black};line-height:1.7;text-align:right;">${esc(title)}</h1>
+      <div style="width:44px;height:3px;background:${C.wine};border-radius:2px;margin:0 0 20px;"></div>
       ${bodyHtml}
       ${ctaHtml}
       ${noteHtml}
+      ${signatureHtml}
     </td></tr>
-    <tr><td class="ma-foot" style="padding:18px 30px 26px;border-top:1px solid #ECE8E0;" align="center">
+    <tr><td class="ma-foot" style="padding:20px 30px 28px;border-top:1px solid #ECE8E0;" align="center">
       <div style="font-size:12px;color:${C.gray};line-height:2;direction:rtl;">
         ${esc(BRAND.name)} · <a href="${BRAND.site}" style="color:${C.wine};text-decoration:none;">maawaa.sa</a>
         · <a href="mailto:${BRAND.customerEmail}" style="color:${C.wine};text-decoration:none;">${BRAND.customerEmail}</a>
@@ -134,13 +146,13 @@ function layout(
 
 function kv(rows: Array<[string, unknown]>): string {
   const hasAr = (v: unknown) => /[\u0600-\u06FF]/.test(String(v ?? ''));
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 2px;">${rows
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 4px;">${rows
     .filter(([, v]) => v !== undefined && v !== null && String(v) !== '')
     .map(([k, v]) => {
       const dir = hasAr(v) ? 'rtl' : 'ltr';
       return `<tr>` +
-        `<td style="padding:8px 0;border-bottom:1px dashed #ECE8E0;font-size:13px;color:${C.gray};white-space:nowrap;">${esc(k)}</td>` +
-        `<td style="padding:8px 0;border-bottom:1px dashed #ECE8E0;font-size:13px;font-weight:700;color:${C.black};text-align:left;"><span dir="${dir}">${esc(v)}</span></td>` +
+        `<td style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:12.5px;color:${C.gray};white-space:nowrap;">${esc(k)}</td>` +
+        `<td style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:13.5px;font-weight:700;color:${C.black};text-align:left;"><span dir="${dir}">${esc(v)}</span></td>` +
         `</tr>`;
     })
     .join('')}</table>`;
@@ -191,14 +203,15 @@ export function C01_quoteReady(q: QuoteCtx): EmailRender {
       p(`عزيزنا ${q.client_name || 'العميل الكريم'}،`) +
         p('أرفقنا لك تفاصيل عرض السعر كما تم تحضيره من فريق مأوى:') +
         kv([
-          ['رقم العرض', q.quote_number],
           ['الإجمالي', fmt(q.total)],
           ['الصلاحية حتى', q.valid_until],
           ['الخدمات', q.summary || '—'],
         ]),
       q.quote_url ? { url: q.quote_url, label: 'عرض تفاصيل عرض السعر' } : undefined,
       'العرض سارٍ 14 يومًا من تاريخه. لا يتم إنشاء أي حجز تلقائيًا.',
-      { label: 'عرض سعر جديد — بانتظار ردك', tone: 'info' }
+      { label: 'عرض سعر جديد — بانتظار ردك', tone: 'info' },
+      undefined,
+      q.quote_number
     ),
     text: `عرض السعر ${q.quote_number} جاهز. الإجمالي ${fmt(q.total)} — الصلاحية حتى ${q.valid_until}. ${q.quote_url || ''}`,
   };
@@ -213,7 +226,9 @@ export function C02_quoteExpired(q: QuoteCtx): EmailRender {
         p('يمكنك طلب تحديث العرض بأحدث الأسعار في أي وقت — يسرّنا خدمتك.'),
       q.quote_url ? { url: q.quote_url, label: 'طلب تحديث عرض السعر' } : undefined,
       undefined,
-      { label: 'انتهت صلاحية العرض', tone: 'danger' }
+      { label: 'انتهت صلاحية العرض', tone: 'danger' },
+      undefined,
+      q.quote_number
     ),
     text: `انتهت صلاحية عرض السعر ${q.quote_number}. لتحديث العرض تواصل معنا.`,
   };
@@ -227,14 +242,15 @@ export function C03_bookingReceived(c: ContractCtx): EmailRender {
       p(`عزيزنا ${c.client_name || 'العميل الكريم'}،`) +
         p('وصلنا طلبك بنجاح، وفريق مأوى يراجعه الآن. لا يلزمك أي إجراء في هذه المرحلة.') +
         kv([
-          ['رقم الطلب', c.contract_number],
           ['الخدمات', c.services],
           ['الموعد المطلوب', c.shoot_date ? `${c.shoot_date}${c.shoot_time ? ' — ' + c.shoot_time : ''}` : '—'],
           ['الموقع', c.location],
         ]),
       undefined,
       'سنراسلك عند الحاجة للخطوة التالية — تأكيد التغطية وتوفر الموعد ثم بيانات العربون.',
-      { label: 'تم الاستلام — قيد المراجعة', tone: 'info', detail: 'لا يلزمك أي إجراء الآن' }
+      { label: 'تم الاستلام — قيد المراجعة', tone: 'info', detail: 'لا يلزمك أي إجراء الآن' },
+      undefined,
+      c.contract_number
     ),
     text: `تم استلام طلب الحجز ${c.contract_number}. سنتواصل معك عند الحاجة للخطوة التالية.`,
   };
@@ -247,7 +263,6 @@ export function C04_depositHold(c: ContractCtx): EmailRender {
       'موعدك محفوظ مؤقتًا — أكمل العربون خلال 24 ساعة',
       p('تم تأكيد تغطية الجلسة وتوفر الموعد والمعدات، وحُفظ موعدك مؤقتًا لمدة 24 ساعة.') +
         kv([
-          ['رقم الطلب', c.contract_number],
           ['العربون المطلوب (25%)', fmt(c.deposit)],
           ['الإجمالي', fmt(c.total)],
           ['المتبقي بعد الجلسة', fmt(c.remaining)],
@@ -257,6 +272,7 @@ export function C04_depositHold(c: ContractCtx): EmailRender {
       'بعد رفع الإيصال يبقى موعدك محفوظًا أثناء مراجعة مأوى — لن تخسر الموعد بسبب مدة المراجعة.',
       { label: 'بانتظار العربون — مهلة 24 ساعة', tone: 'warning', detail: 'موعدك محفوظ مؤقتًا ولا يثبت إلا برفع الإيصال' },
       WA_BTN,
+      c.contract_number,
       'خطوة واحدة متبقية: تحويل العربون ورفع الإيصال خلال 24 ساعة'
     ),
     text: `موعدك محفوظ 24 ساعة. العربون ${fmt(c.deposit)} — ارفع الإيصال: ${c.deposit_upload_url || ''}`,
@@ -269,10 +285,12 @@ export function C05_receiptReceived(c: ContractCtx): EmailRender {
     html: layout(
       'استلمنا إيصال العربون',
       p('وصلنا إيصال التحويل بنجاح، وهو الآن تحت المراجعة من فريق مأوى.') +
-        kv([['رقم الطلب', c.contract_number], ['الموعد', c.shoot_date]]),
+        kv([['الموعد', c.shoot_date]]),
       undefined,
       'موعدك يبقى محفوظًا أثناء المراجعة — سنؤكد لك الحجز فور اعتماد الدفعة.',
-      { label: 'الإيصال تحت المراجعة', tone: 'info', detail: 'موعدك محفوظ — لا يلزمك أي إجراء' }
+      { label: 'الإيصال تحت المراجعة', tone: 'info', detail: 'موعدك محفوظ — لا يلزمك أي إجراء' },
+      undefined,
+      c.contract_number
     ),
     text: `استلمنا إيصال العربون لطلب ${c.contract_number} وهو تحت المراجعة. موعدك محفوظ.`,
   };
@@ -286,7 +304,9 @@ export function C06_receiptCorrection(c: ContractCtx): EmailRender {
       p('الإيصال المرفوع غير واضح أو غير مطابق للمبلغ المطلوب. نرجو إعادة رفع إيصال واضح خلال ساعات، فموعدك يبقى محفوظًا مؤقتًا.'),
       c.deposit_upload_url ? { url: c.deposit_upload_url, label: 'إعادة رفع الإيصال' } : undefined,
       undefined,
-      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', tone: 'danger', detail: 'موعدك يبقى محفوظًا مؤقتًا' }
+      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', tone: 'danger', detail: 'موعدك يبقى محفوظًا مؤقتًا' },
+      undefined,
+      c.contract_number
     ),
     text: `يرجى إعادة رفع إيصال العربون واضحًا: ${c.deposit_upload_url || ''}`,
   };
@@ -301,7 +321,9 @@ export function C07_holdExpired(c: ContractCtx): EmailRender {
         p('إن كنت ما زلت مهتمًا، يمكنك طلب موعد جديد وسنحاول توفيره.'),
       c.calendar_url ? { url: c.calendar_url, label: 'طلب موعد جديد' } : undefined,
       undefined,
-      { label: 'انتهت المهلة — تم تحرير الحجز المؤقت', tone: 'danger' }
+      { label: 'انتهت المهلة — تم تحرير الحجز المؤقت', tone: 'danger' },
+      undefined,
+      c.contract_number
     ),
     text: `انتهت مهلة العربون للطلب ${c.contract_number} وحُرر الحجز المؤقت. لطلب موعد جديد: ${c.calendar_url || ''}`,
   };
@@ -315,7 +337,6 @@ export function C08_bookingConfirmed(c: ContractCtx): EmailRender {
       p(`عزيزنا ${c.client_name || 'العميل الكريم'}،`) +
         p('تم اعتماد العربون وتأكيد الحجز. هذه تفاصيل جلستك:') +
         kv([
-          ['رقم الطلب', c.contract_number],
           ['الموعد', c.shoot_date ? `${c.shoot_date}${c.shoot_time ? ' — ' + c.shoot_time : ''}` : '—'],
           ['الموقع', c.location],
           ['الخدمات', c.services],
@@ -327,6 +348,7 @@ export function C08_bookingConfirmed(c: ContractCtx): EmailRender {
       'التسليم القياسي خلال 7–10 أيام عمل من اليوم التالي لاكتمال الجلسة.',
       { label: 'الحجز مؤكد — العربون معتمد', tone: 'success', detail: 'لا يلزمك أي إجراء دفع الآن — نراك يوم الجلسة' },
       undefined,
+      c.contract_number,
       `تم تأكيد حجزك ${c.contract_number || ''} — نراك يوم الجلسة`
     ),
     text: `حجزك ${c.contract_number} مؤكد — ${c.shoot_date || ''} ${c.shoot_time || ''}. العقد: ${c.contract_url || ''}`,
@@ -339,10 +361,12 @@ export function C14_readyBalance(c: ContractCtx): EmailRender {
     html: layout(
       'المخرجات جاهزة — يتبقى سداد الرصيد',
       p('اكتملت معالجة مخرجات جلستك وهي جاهزة للتسليم النهائي.') +
-        kv([['رقم الطلب', c.contract_number], ['المتبقي المطلوب', fmt(c.remaining)]]),
+        kv([['المتبقي المطلوب', fmt(c.remaining)]]),
       c.balance_upload_url ? { url: c.balance_upload_url, label: 'رفع إيصال السداد النهائي' } : undefined,
       'التسليم النهائي يتم بعد اكتمال السداد مباشرة.',
-      { label: 'بانتظار السداد النهائي', tone: 'warning', detail: 'المخرجات جاهزة والتسليم ينتظر اكتمال السداد' }
+      { label: 'بانتظار السداد النهائي', tone: 'warning', detail: 'المخرجات جاهزة والتسليم ينتظر اكتمال السداد' },
+      undefined,
+      c.contract_number
     ),
     text: `مخرجاتك جاهزة — المتبقي ${fmt(c.remaining)}. ارفع الإيصال: ${c.balance_upload_url || ''}`,
   };
@@ -383,11 +407,12 @@ export function C17_delivery(c: ContractCtx): EmailRender {
       'مخرجاتك جاهزة',
       p(`عزيزنا ${c.client_name || 'العميل الكريم'}،`) +
         p('مخرجات جلستك المعالجة جاهزة الآن عبر الرابط:') +
-        kv([['رقم الطلب', c.contract_number], ['التسليم', 'مخرجات معالجة فقط — RAW غير مشمول']]),
+        kv([['التسليم', 'مخرجات معالجة فقط — RAW غير مشمول']]),
       c.delivery_url ? { url: c.delivery_url, label: 'فتح وتحميل المخرجات' } : undefined,
       'الملفات تُحفظ 30 يومًا من التسليم. لك جولة تعديلات طفيفة واحدة خلال 7 أيام من اليوم.',
       { label: 'جاهز للتحميل', tone: 'success', detail: 'المخرجات مكتملة — الحفظ 30 يومًا من الآن' },
       WA_BTN,
+      c.contract_number,
       `مخرجات طلبك ${c.contract_number || ''} جاهزة للتحميل`
     ),
     text: `مخرجاتك جاهزة: ${c.delivery_url || ''} — الحفظ 30 يومًا، التعديلات الطفيفة خلال 7 أيام.`,
@@ -520,10 +545,12 @@ export function C09_contractReady(c: ContractCtx): EmailRender {
     html: layout(
       'عقد جلستك جاهز',
       p('أصبح عقد جلستك جاهزًا للاطلاع والاعتماد.') +
-        kv([['رقم الطلب', c.contract_number], ['الموعد', c.shoot_date]]),
+        kv([['الموعد', c.shoot_date]]),
       c.contract_url ? { url: c.contract_url, label: 'عرض العقد' } : undefined,
       undefined,
-      { label: 'العقد جاهز للاطلاع والاعتماد', tone: 'info' }
+      { label: 'العقد جاهز للاطلاع والاعتماد', tone: 'info' },
+      undefined,
+      c.contract_number
     ),
     text: `عقد جلستك ${c.contract_number} جاهز: ${c.contract_url || ''}`,
   };
@@ -536,13 +563,14 @@ export function C10_appointmentUpdated(c: ContractCtx): EmailRender {
       'تم تحديث موعد جلستك',
       p('بعد الاعتماد، هذا موعد جلستك الجديد:') +
         kv([
-          ['رقم الطلب', c.contract_number],
           ['الموعد الجديد', c.shoot_date ? `${c.shoot_date}${c.shoot_time ? ' — ' + c.shoot_time : ''}` : '—'],
           ['الموقع', c.location],
         ]),
       c.calendar_url ? { url: c.calendar_url, label: 'تحديث الموعد في تقويمي' } : undefined,
       undefined,
-      { label: 'تم تحديث الموعد', tone: 'info' }
+      { label: 'تم تحديث الموعد', tone: 'info' },
+      undefined,
+      c.contract_number
     ),
     text: `موعدك الجديد: ${c.shoot_date || ''} ${c.shoot_time || ''} — ${c.location || ''}`,
   };
@@ -561,7 +589,9 @@ export function C11_shootReminder(c: ContractCtx): EmailRender {
         p('العقار نظيف ومرتب، جميع الإضاءات تعمل، وإخلاء مدخل الواجهة من السيارات إن أمكن.'),
       c.maps_url ? { url: c.maps_url, label: 'فتح الموقع على الخرائط' } : undefined,
       undefined,
-      { label: 'غدًا جلسة التصوير', tone: 'info' }
+      { label: 'غدًا جلسة التصوير', tone: 'info' },
+      undefined,
+      c.contract_number
     ),
     text: `تذكير: جلستك غدًا ${c.shoot_time || ''} — ${c.location || ''}`,
   };
@@ -604,10 +634,12 @@ export function C12_operationalUpdate(c: ContractCtx, variant: C12Variant): Emai
     : variant === 'force_majeure' || variant === 'visit_fee' ? 'warning' : 'danger';
   return {
     subject: `${v.t} — ${c.contract_number || ''} — مأوى`,
-    html: layout(v.t, kv([['رقم الطلب', c.contract_number]]) + v.b,
+    html: layout(v.t, v.b,
       variant === 'reschedule' && c.calendar_url ? { url: c.calendar_url, label: 'تحديث التقويم' } : undefined,
       undefined,
-      { label: v.t, tone }),
+      { label: v.t, tone },
+      undefined,
+      c.contract_number),
     text: `${v.t} — الطلب ${c.contract_number}. التفاصيل وفق العقد.`,
   };
 }
@@ -619,12 +651,13 @@ export function C13_processingStarted(c: ContractCtx): EmailRender {
       'بدأت معالجة مخرجات جلستك',
       p('اكتملت جلسة التصوير بنجاح، ومخرجاتك الآن في مرحلة المعالجة (تصحيح ألوان وتدقيق).') +
         kv([
-          ['رقم الطلب', c.contract_number],
           ['التسليم القياسي', '7–10 أيام عمل من اليوم التالي للجلسة'],
         ]),
       undefined,
       'لا يلزمك أي إجراء الآن — سنخبرك عند الجاهزية.',
-      { label: 'قيد المعالجة', tone: 'info', detail: 'التسليم خلال 7–10 أيام عمل' }
+      { label: 'قيد المعالجة', tone: 'info', detail: 'التسليم خلال 7–10 أيام عمل' },
+      undefined,
+      c.contract_number
     ),
     text: `بدأت معالجة مخرجات الطلب ${c.contract_number}. التسليم خلال 7–10 أيام عمل.`,
   };
@@ -635,11 +668,12 @@ export function C18_retentionReminder(c: ContractCtx): EmailRender {
     subject: `تذكير: ملفاتك تُحفظ 30 يومًا ${c.contract_number || ''} — مأوى`,
     html: layout(
       'ملفاتك محفوظة لمدة محدودة',
-      p('نذكّرك بأن ملفات جلستك تُحفظ على سحابة مأوى 30 يومًا من تاريخ التسليم ثم تُحذف تلقائيًا.') +
-        kv([['رقم الطلب', c.contract_number]]),
+      p('نذكّرك بأن ملفات جلستك تُحفظ على سحابة مأوى 30 يومًا من تاريخ التسليم ثم تُحذف تلقائيًا.'),
       c.delivery_url ? { url: c.delivery_url, label: 'تحميل نسختك الآن' } : undefined,
       undefined,
-      { label: 'تنتهي مدة الحفظ قريبًا', tone: 'warning' }
+      { label: 'تنتهي مدة الحفظ قريبًا', tone: 'warning' },
+      undefined,
+      c.contract_number
     ),
     text: `ملفاتك تُحفظ 30 يومًا من التسليم — حمّلها الآن: ${c.delivery_url || ''}`,
   };
@@ -654,7 +688,9 @@ export function C19_v360Expiry(c: ContractCtx & { tour_url?: string }): EmailRen
         p('للتجديد تواصل مع مأوى وفق الأسعار السارية، وإلا يتوقف الرابط بعد انتهاء المدة.'),
       c.tour_url ? { url: c.tour_url, label: 'فتح الجولة الحالية' } : undefined,
       undefined,
-      { label: 'استضافة الجولة تقترب من الانتهاء', tone: 'warning' }
+      { label: 'استضافة الجولة تقترب من الانتهاء', tone: 'warning' },
+      undefined,
+      c.contract_number
     ),
     text: `استضافة جولة 360° (${c.contract_number}) تنتهي قريبًا — للتجديد تواصل معنا.`,
   };
@@ -668,7 +704,9 @@ export function C20_rating(c: ContractCtx & { rating_url?: string }): EmailRende
       p(`عزيزنا ${c.client_name || 'العميل الكريم'}، اكتملت خدمتك معنا. نرجو تخصيص دقيقة لتقييم التجربة — ملاحظاتك تنعكس مباشرة على جودة خدمتنا.`),
       c.rating_url ? { url: c.rating_url, label: 'تقييم التجربة' } : undefined,
       undefined,
-      { label: 'خدمتك اكتملت — رأيك يهمنا', tone: 'info' }
+      { label: 'خدمتك اكتملت — رأيك يهمنا', tone: 'info' },
+      undefined,
+      c.contract_number
     ),
     text: `كيف كانت تجربتك مع مأوى؟ قيّم هنا: ${c.rating_url || ''}`,
   };
