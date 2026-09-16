@@ -34,15 +34,21 @@ const esc = (s: unknown): string =>
 
 const C = BRAND.colors;
 
-// ===== شريط حالة الطلب/الدفع =====
+// ===== نظام حالة الرسائل المعتمد (Email Design System) =====
+// REVIEW          = Burgundy  #7A1F2B — استلام / تحت المراجعة
+// ACTION_REQUIRED = Amber     #B08A2E — مطلوب إجراء من العميل / دفع معلق
+// CONFIRMED       = Green     #3E7A52 — مؤكد / مدفوع
+// COMPLETED       = Green     #3E7A52 — مكتمل / جاهز للتسليم
+// ERROR           = Dark red  #8F2A22 — مشكلة / تصحيح (عند الحاجة فقط)
+// الهوية: Black #0B0B0B · Off-white #F7F5F2 · Burgundy #7A1F2B · Gray #6B6B6B
 export type StatusTone = 'info' | 'success' | 'warning' | 'danger';
 export type Status = { label: string; tone?: StatusTone; detail?: string };
 
 const TONE: Record<StatusTone, { bg: string; edge: string; fg: string; mark: string }> = {
-  info:    { bg: '#F5EEF0', edge: '#7A1F2B', fg: '#5C1620', mark: '◆' },
-  success: { bg: '#EEF5EF', edge: '#2E7D46', fg: '#1F5433', mark: '✓' },
-  warning: { bg: '#FBF3E3', edge: '#B7791F', fg: '#7A5316', mark: '!' },
-  danger:  { bg: '#FBECEA', edge: '#B3392F', fg: '#7C261F', mark: '!' },
+  info:    { bg: '#F6F1F0', edge: '#7A1F2B', fg: '#5C1620', mark: '◆' },
+  success: { bg: '#EEF4EC', edge: '#3E7A52', fg: '#275938', mark: '✓' },
+  warning: { bg: '#FBF4E4', edge: '#B08A2E', fg: '#6E5314', mark: '!' },
+  danger:  { bg: '#F9ECEA', edge: '#8F2A22', fg: '#6E211B', mark: '!' },
 };
 
 function statusHtml(s: Status): string {
@@ -102,11 +108,15 @@ function layout(
 <style>
   @media only screen and (max-width:600px){
     .ma-card{width:100%!important;border-radius:0!important}
-    .ma-head{padding:20px 16px!important}
-    .ma-body{padding:30px 20px 12px!important}
-    .ma-h1{font-size:18px!important}
-    .ma-foot{padding:18px 20px 26px!important}
-    .ma-btn{display:block!important}
+    .ma-head{padding:18px 16px!important}
+    .ma-body{padding:24px 16px 10px!important}
+    .ma-h1{font-size:17px!important}
+    .ma-foot{padding:16px 18px 24px!important}
+    .ma-btn{display:block!important;padding:15px 16px!important}
+    .ma-kv-body{padding:6px 14px!important}
+    .ma-kv-l,.ma-kv-v{display:block!important;width:100%!important;white-space:normal!important;text-align:right!important}
+    .ma-kv-l{padding-bottom:2px!important;font-size:11.5px!important;border-bottom:none!important}
+    .ma-kv-v{padding-bottom:9px!important}
   }
 </style>
 </head>
@@ -146,16 +156,22 @@ function layout(
 
 function kv(rows: Array<[string, unknown]>): string {
   const hasAr = (v: unknown) => /[\u0600-\u06FF]/.test(String(v ?? ''));
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 4px;">${rows
+  const inner = rows
     .filter(([, v]) => v !== undefined && v !== null && String(v) !== '')
     .map(([k, v]) => {
       const dir = hasAr(v) ? 'rtl' : 'ltr';
       return `<tr>` +
-        `<td style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:12.5px;color:${C.gray};white-space:nowrap;">${esc(k)}</td>` +
-        `<td style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:13.5px;font-weight:700;color:${C.black};text-align:left;"><span dir="${dir}">${esc(v)}</span></td>` +
+        `<td class="ma-kv-l" style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:12.5px;color:${C.gray};white-space:nowrap;">${esc(k)}</td>` +
+        `<td class="ma-kv-v" style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:13.5px;font-weight:700;color:${C.black};text-align:left;word-break:break-word;"><span dir="${dir}">${esc(v)}</span></td>` +
         `</tr>`;
     })
-    .join('')}</table>`;
+    .join('');
+  if (!inner) return '';
+  // بطاقة التفاصيل الموحدة — Key details card
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:10px 0 6px;background:#FAF8F6;border:1px solid #EFEAE3;border-radius:12px;">
+<tr><td class="ma-kv-body" style="padding:6px 16px;direction:rtl;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${inner}</table>
+</td></tr></table>`;
 }
 
 const p = (t: string) => `<p style="margin:0 0 12px;font-size:14px;color:#3A3A3A;line-height:2;">${esc(t)}</p>`;
