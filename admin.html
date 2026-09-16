@@ -1540,6 +1540,23 @@
         </div>
 
         <div class="section-bar">
+            <h2>&#128179; إيصالات بانتظار الاعتماد</h2>
+            <div class="bar-actions">
+                <span class="stat-num" id="receiptsCount" style="font-size:1rem;">0</span>
+            </div>
+        </div>
+
+        <div class="contracts-table-wrapper" style="margin-bottom:50px;">
+            <div id="receiptsContent">
+                <div class="empty-state">
+                    <div class="empty-icon">&#9989;</div>
+                    <h3>لا توجد إيصالات بانتظار المراجعة</h3>
+                    <p>عند رفع العميل إيصال العربون سيظهر هنا لاعتماده</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-bar">
             <h2>جميع العقود</h2>
             <div class="bar-actions">
                 <button class="btn btn-gold" onclick="showNewContract()">
@@ -2034,6 +2051,7 @@
                 updateStats();
                 renderContracts();
                 renderNewRequests();
+                renderReceipts();
                 loadTerms();
             } catch (err) {
                 errEl.textContent = 'خطأ في الدخول: ' + (err.message || 'تحقق من بياناتك');
@@ -2192,7 +2210,9 @@
                 requests.forEach(c => {
                     const client = c.clients || {};
                     const services = (c.contract_services || []).map(s => escapeHTML(s.service_name)).join('، ') || escapeHTML(c.service_type || '-');
-                    html += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + escapeHTML(client.full_name || '-') + '</td><td dir="ltr">' + escapeHTML(client.phone_number || '-') + '</td><td>' + escapeHTML(propertyLabels[c.property_type] || c.property_type || '-') + '</td><td>' + escapeHTML(c.property_location || '-') + '</td><td>' + services + '</td><td>' + escapeHTML(c.contract_date || '-') + '</td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button class="btn btn-gold btn-sm" onclick="editContract(\'' + c.id + '\')" title="تحويل لعقد" style="width:auto;padding:6px 14px;font-size:0.75rem;">تحويل لعقد</button></div></td></tr>';
+                    const st = c.shoot_start_time ? String(c.shoot_start_time).slice(0,5) : '10:00';
+                    const et = c.shoot_end_time ? String(c.shoot_end_time).slice(0,5) : '12:00';
+                    html += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + escapeHTML(client.full_name || '-') + '</td><td dir="ltr">' + escapeHTML(client.phone_number || '-') + '</td><td>' + escapeHTML(propertyLabels[c.property_type] || c.property_type || '-') + '</td><td>' + escapeHTML(c.property_location || '-') + '</td><td>' + services + '</td><td>' + escapeHTML(c.contract_date || '-') + '</td><td><div class="table-actions"><button onclick="viewContract(\'' + c.id + '\')" title="عرض">&#128065;</button><button class="btn btn-gold btn-sm" onclick="confirmCoverage(\'' + c.id + '\',\'' + st + '\',\'' + et + '\',this)" title="تأكيد التغطية وحفظ الموعد 24 ساعة" style="width:auto;padding:6px 14px;font-size:0.75rem;">تأكيد التغطية</button><button class="btn btn-sm" onclick="editContract(\'' + c.id + '\')" title="تحويل لعقد" style="width:auto;padding:6px 14px;font-size:0.75rem;">تحويل لعقد</button></div></td></tr>';
                 });
 
                 html += '</tbody></table>';
@@ -2205,6 +2225,98 @@
             e.stopPropagation();
             document.querySelectorAll('.status-dropdown').forEach(d => { if (d.id !== 'sd_' + id) d.classList.remove('show'); });
             document.getElementById('sd_' + id).classList.toggle('show');
+        }
+
+        /* ===== واجهة الملاك — تأكيد التغطية واعتماد العربون (Edge Functions بـJWT الفريق) ===== */
+        async function getSessionToken() {
+            const { data } = await sb().auth.getSession();
+            return data?.session?.access_token || '';
+        }
+
+        async function fnCall(name, body) {
+            const token = await getSessionToken();
+            if (!token) throw new Error('not_logged_in');
+            const res = await fetch(SUPABASE_URL + '/functions/v1/' + name, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + token },
+                body: JSON.stringify(body)
+            });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(json.error || json.detail || ('http_' + res.status));
+            return json;
+        }
+
+        function fnErrHuman(msg) {
+            if (msg === 'forbidden_not_team_member') return 'حسابك غير مضاف إلى الفريق — أضف بريدك في جدول employees (is_active) من لوحة Supabase';
+            if (msg === 'outdated_state' || msg === 'changed_concurrently') return 'حالة الطلب تغيّرت للتو — حدّث الصفحة وأعد المحاولة';
+            if (msg === 'not_logged_in') return 'انتهت الجلسة — أعد تسجيل الدخول';
+            if (msg && msg.indexOf('conflict') !== -1) return 'تعارض موعد/معدات مع جلسة أخرى';
+            return msg || 'خطأ غير معروف';
+        }
+
+        async function confirmCoverage(id, startTime, endTime, btn) {
+            if (btn) { btn.disabled = true; btn.textContent = 'جارٍ التأكيد…'; }
+            try {
+                await fnCall('coverage-confirm', { contract_id: id, photographer_employee_id: null, start_time: startTime || '10:00', end_time: endTime || '12:00' });
+                if (btn) { btn.textContent = '✓ تم — موعد محفوظ 24 ساعة'; }
+                updateStats(); renderContracts(); renderNewRequests();
+            } catch (e) {
+                alert('تعذر تأكيد التغطية: ' + fnErrHuman(e.message));
+                if (btn) { btn.disabled = false; btn.textContent = 'تأكيد التغطية'; }
+            }
+        }
+
+        async function renderReceipts() {
+            try {
+                const { data, error } = await sb().from('contracts')
+                    .select('*, clients(*)')
+                    .eq('deposit_review_status', 'receipt_under_review')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                const rows = data || [];
+                const cnt = document.getElementById('receiptsCount');
+                if (cnt) cnt.textContent = rows.length;
+                const container = document.getElementById('receiptsContent');
+                if (!container) return;
+                if (rows.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9989;</div><h3>لا توجد إيصالات بانتظار المراجعة</h3><p>عند رفع العميل إيصال العربون سيظهر هنا لاعتماده</p></div>';
+                    return;
+                }
+                let html = '<table class="contracts-table"><thead><tr><th>رقم العقد</th><th>اسم العميل</th><th>العربون المطلوب</th><th>الإجمالي</th><th>إجراءات</th></tr></thead><tbody>';
+                rows.forEach(c => {
+                    const total = parseFloat(c.total_amount) || 0;
+                    const deposit = Math.round(total * 0.25);
+                    html += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + escapeHTML(c.clients?.full_name || '-') + '</td><td><strong>' + deposit.toLocaleString('ar-SA') + ' ر.س</strong></td><td>' + total.toLocaleString('ar-SA') + ' ر.س</td><td><div class="table-actions"><button onclick="viewReceipt(\'' + c.id + '\')" title="عرض الإيصال">&#128065; الإيصال</button><button class="btn btn-gold btn-sm" onclick="approveDeposit(\'' + c.id + '\', this)" style="width:auto;padding:6px 14px;font-size:0.75rem;">اعتماد العربون ✓</button></div></td></tr>';
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } catch (e) { console.error('renderReceipts error:', e); }
+        }
+
+        async function viewReceipt(id) {
+            try {
+                const { data } = await sb().from('contracts').select('receipt_image_url').eq('id', id).maybeSingle();
+                const path = data?.receipt_image_url;
+                if (!path) return alert('لا يوجد إيصال محفوظ لهذا الطلب');
+                const { data: signed, error } = await sb().storage.from('receipts').createSignedUrl(path, 600);
+                if (error) throw error;
+                window.open(signed.signedUrl, '_blank');
+            } catch (e) { alert('تعذر فتح الإيصال: ' + fnErrHuman(e.message)); }
+        }
+
+        async function approveDeposit(id, btn) {
+            if (!confirm('اعتماد إيصال العربون؟ سيتم تأكيد الحجز نهائيًا وإرسال بريد التأكيد للعميل.')) return;
+            btn.disabled = true; btn.textContent = 'جارٍ الاعتماد…';
+            try {
+                const { data } = await sb().from('contracts').select('total_amount').eq('id', id).maybeSingle();
+                const amount = Math.round((parseFloat(data?.total_amount) || 0) * 0.25);
+                const r = await fnCall('payment-approve', { contract_id: id, kind: 'deposit', amount: amount, payment_reference: 'ADM-' + Date.now() });
+                alert(r.status === 'deposit_paid' ? '✓ تم اعتماد العربون — الحجز مؤكد وأُرسل بريد التأكيد (C-08) للعميل' : 'سُجّلت الدفعة — الحالة: ' + (r.state || r.status || '—'));
+                updateStats(); renderReceipts(); renderContracts();
+            } catch (e) {
+                alert('تعذر الاعتماد: ' + fnErrHuman(e.message));
+                btn.disabled = false; btn.textContent = 'اعتماد العربون ✓';
+            }
         }
 
         async function changeStatus(id, newStatus, e) {
@@ -2227,6 +2339,7 @@
             updateStats();
             renderContracts();
             renderNewRequests();
+            renderReceipts();
         }
 
         function showDashboard() { goToDashboard(); }
