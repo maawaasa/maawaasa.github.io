@@ -2282,15 +2282,70 @@
                     container.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9989;</div><h3>لا توجد إيصالات بانتظار المراجعة</h3><p>عند رفع العميل إيصال العربون سيظهر هنا لاعتماده</p></div>';
                     return;
                 }
-                let html = '<table class="contracts-table"><thead><tr><th>رقم العقد</th><th>اسم العميل</th><th>العربون المطلوب</th><th>الإجمالي</th><th>إجراءات</th></tr></thead><tbody>';
+                const ids = rows.map(r => r.id);
+                const { data: pays } = await sb().from('payments').select('contract_id, amount').in('contract_id', ids);
+                const paidMap = {};
+                (pays || []).forEach(p => { paidMap[p.contract_id] = (paidMap[p.contract_id] || 0) + (parseFloat(p.amount) || 0); });
+                let html = '<table class="contracts-table"><thead><tr><th>رقم العقد</th><th>اسم العميل</th><th>الإجمالي</th><th>المدفوع سابقًا</th><th>المتبقي</th><th>المبلغ المعتمد (ر.س)</th><th>إجراءات</th></tr></thead><tbody>';
                 rows.forEach(c => {
                     const total = parseFloat(c.total_amount) || 0;
-                    const deposit = Math.round(total * 0.25);
-                    html += '<tr><td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span></td><td>' + escapeHTML(c.clients?.full_name || '-') + '</td><td><strong>' + deposit.toLocaleString('ar-SA') + ' ر.س</strong></td><td>' + total.toLocaleString('ar-SA') + ' ر.س</td><td><div class="table-actions"><button onclick="viewReceipt(\'' + c.id + '\')" title="عرض الإيصال">&#128065; الإيصال</button><button class="btn btn-gold btn-sm" onclick="approveDeposit(\'' + c.id + '\', this)" style="width:auto;padding:6px 14px;font-size:0.75rem;">اعتماد العربون ✓</button></div></td></tr>';
+                    const paid = paidMap[c.id] || 0;
+                    const remaining = Math.max(0, total - paid);
+                    const isBalance = ['deposit_paid', 'in_progress'].includes(c.status);
+                    const kindLabel = isBalance ? 'إيصال رصيد' : 'إيصال عربون';
+                    const prefill = isBalance ? remaining : Math.min(remaining, Math.round(total * 0.25));
+                    html += '<tr>'
+                        + '<td><span class="contract-number">' + escapeHTML(c.contract_number || '-') + '</span><br><span style="font-size:11px;color:#8A8A8A;">' + kindLabel + '</span></td>'
+                        + '<td>' + escapeHTML(c.clients?.full_name || '-') + '</td>'
+                        + '<td>' + total.toLocaleString('ar-SA') + '</td>'
+                        + '<td>' + paid.toLocaleString('ar-SA') + '</td>'
+                        + '<td>' + remaining.toLocaleString('ar-SA') + '</td>'
+                        + '<td><input type="number" id="amt_' + c.id + '" min="0.01" max="' + remaining + '" step="0.01" value="' + prefill + '" style="width:110px;padding:6px 8px;border:1px solid #DDD6CC;border-radius:8px;font-weight:700;" /></td>'
+                        + '<td><div class="table-actions"><button onclick="viewReceipt(\'' + c.id + '\')" title="عرض الإيصال">&#128065; الإيصال</button><button class="btn btn-gold btn-sm" onclick="approveReceipt(\'' + c.id + '\', this)" style="width:auto;padding:6px 14px;font-size:0.75rem;">اعتماد ✓</button></div></td></tr>';
                 });
                 html += '</tbody></table>';
                 container.innerHTML = html;
             } catch (e) { console.error('renderReceipts error:', e); }
+        }
+
+        async function refreshReceiptRow(id) {
+            const { data } = await sb().from('contracts').select('status,deposit_review_status,total_amount').eq('id', id).maybeSingle();
+            return data || null;
+        }
+
+        async function approveReceipt(id, btn) {
+            const input = document.getElementById('amt_' + id);
+            const amount = Math.round(parseFloat(input?.value) * 100) / 100;
+            try {
+                // الحقيقة من DB قبل أي قرار — لا حساب محلي أعمى
+                const { data: c } = await sb().from('contracts').select('total_amount,status,receipt_image_url').eq('id', id).maybeSingle();
+                if (!c) return alert('الطلب غير موجود');
+                const { data: pays } = await sb().from('payments').select('amount').eq('contract_id', id);
+                const paidBefore = (pays || []).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+                const total = parseFloat(c.total_amount) || 0;
+                const remaining = Math.max(0, total - paidBefore);
+                if (!Number.isFinite(amount) || amount <= 0) return alert('أدخل مبلغًا أكبر من صفر');
+                if (amount > remaining + 0.009) return alert('المبلغ المدخل (' + amount + ' ر.س) يتجاوز المتبقي الفعلي (' + remaining + ' ر.س) — لن يُسجَّل أي شيء');
+                const kind = ['deposit_paid', 'in_progress'].includes(c.status) ? 'balance' : 'deposit';
+                const ref = c.receipt_image_url ? ('RCP-' + String(c.receipt_image_url).replace(/[^A-Za-z0-9]/g, '').slice(-40)) : ('ADM-' + Date.now());
+                if (!confirm('اعتماد مبلغ ' + amount + ' ر.س كـ' + (kind === 'deposit' ? 'عربون' : 'رصيد') + '؟')) return;
+                btn.disabled = true; btn.textContent = 'جارٍ الاعتماد…';
+                const r = await fnCall('payment-approve', { contract_id: id, kind: kind, amount: amount, payment_reference: ref });
+                // Source of Truth: إعادة جلب الحالة الفعلية بعد الاعتماد — لا افتراض من المبلغ
+                const after = await refreshReceiptRow(id);
+                const st = after?.status || '';
+                const msg = st === 'fully_paid' ? '✓ اكتمل السداد — الحالة الفعلية: مدفوع كامل (fully_paid)'
+                    : st === 'deposit_paid' ? '✓ تم الاعتماد — الحجز مؤكد (deposit_paid) وأُرسل بريد التأكيد للعميل'
+                    : '✓ سُجّلت الدفعة — الحالة الفعلية: ' + (st || r.state || 'payment_recorded');
+                alert(msg);
+                renderReceipts(); updateStats(); renderContracts();
+            } catch (e) {
+                const m = String(e.message || '');
+                if (m.indexOf('overpayment') !== -1) alert('❌ المبلغ يتجاوز إجمالي الطلب — رُفض التسجيل ولم تتغير أي حالة (409)');
+                else if (m.indexOf('duplicate_reference') !== -1) alert('❌ هذا الإيصال معتمد مسبقًا (مرجع مكرر) — لم يُسجَّل شيء (409)');
+                else alert('تعذر الاعتماد: ' + fnErrHuman(m));
+                btn.disabled = false; btn.textContent = 'اعتماد ✓';
+            }
         }
 
         async function viewReceipt(id) {
@@ -2302,21 +2357,6 @@
                 if (error) throw error;
                 window.open(signed.signedUrl, '_blank');
             } catch (e) { alert('تعذر فتح الإيصال: ' + fnErrHuman(e.message)); }
-        }
-
-        async function approveDeposit(id, btn) {
-            if (!confirm('اعتماد إيصال العربون؟ سيتم تأكيد الحجز نهائيًا وإرسال بريد التأكيد للعميل.')) return;
-            btn.disabled = true; btn.textContent = 'جارٍ الاعتماد…';
-            try {
-                const { data } = await sb().from('contracts').select('total_amount').eq('id', id).maybeSingle();
-                const amount = Math.round((parseFloat(data?.total_amount) || 0) * 0.25);
-                const r = await fnCall('payment-approve', { contract_id: id, kind: 'deposit', amount: amount, payment_reference: 'ADM-' + Date.now() });
-                alert(r.status === 'deposit_paid' ? '✓ تم اعتماد العربون — الحجز مؤكد وأُرسل بريد التأكيد (C-08) للعميل' : 'سُجّلت الدفعة — الحالة: ' + (r.state || r.status || '—'));
-                updateStats(); renderReceipts(); renderContracts();
-            } catch (e) {
-                alert('تعذر الاعتماد: ' + fnErrHuman(e.message));
-                btn.disabled = false; btn.textContent = 'اعتماد العربون ✓';
-            }
         }
 
         async function changeStatus(id, newStatus, e) {
