@@ -125,7 +125,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .brochure-controls{display:none;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:10px 30px 0 0;border-top:1px dashed var(--border)}
 .brochure.on .brochure-controls{display:flex}
 .brochure-controls input{width:64px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);padding:7px;text-align:center;font-family:var(--f)}
-.brochure-total{margin-right:auto;color:var(--white);font-weight:700}.brochure-discount{width:100%;font-size:.73rem;color:var(--green);font-weight:700}
+.brochure-total{margin-right:auto;color:var(--white);font-weight:700}
 .summary{position:sticky;top:80px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
 .summary h3{font-size:1rem;font-weight:600;margin-bottom:3px}
 .s-hint{color:var(--gray);font-size:.8rem;margin-bottom:16px}
@@ -216,13 +216,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .call-fab.on{display:flex}
 .call-fab:hover{transform:scale(1.08)}
 .call-fab svg{width:24px;height:24px}
-/* علامة الخصم المُفعّل (مشجّعة) */
-.disc-active{display:none;align-items:center;gap:9px;background:linear-gradient(135deg,#A4243B,#C44A60);color:#fff;padding:11px 14px;border-radius:11px;font-size:.82rem;font-weight:600;margin-bottom:12px;box-shadow:0 8px 22px rgba(164,36,59,.32);animation:discPop .5s cubic-bezier(.2,1.5,.4,1)}
-.disc-active .ds-ic{font-size:1.1rem;animation:discSparkle 1.6s ease-in-out infinite}
-.disc-active .ds-amt{font-weight:800;margin-right:auto}
-.disc-active .ds-msg{font-size:.72rem;opacity:.92}
 @keyframes discPop{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
-@keyframes discSparkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.2) rotate(12deg)}}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:10px;font-family:var(--f);font-weight:600;font-size:.96rem;cursor:pointer;transition:.25s;border:none}
 .btn-red{background:var(--red);color:#fff}
 .btn-red:hover{background:#C44A60}
@@ -500,7 +494,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 
       <div class="card">
         <h2><span class="n">3</span> الخدمات المطلوبة</h2>
-        <div class="hint"><span data-t="svcHintFull">اختر خدمة واحدة أو أكثر. عند اختيار 3 خدمات تصوير أو أكثر يُطبَّق خصم الخدمات المجمّعة تلقائياً.</span></div>
+<div class="hint"><span data-t="svcHintFull">اختر خدمة واحدة أو أكثر. الأسعار المعروضة نهائية — لا تُطبَّق أي خصومات تلقائية.</span></div>
         <div class="svcs" id="svcs"></div>
         <div class="brochure" id="brochureOption" style="margin-top:10px">
           <input type="checkbox" id="d-brochure">
@@ -510,7 +504,6 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
             <label for="d-pages">عدد الصفحات</label>
             <input type="number" id="d-pages" min="1" max="200" value="1" disabled>
             <span class="brochure-total" id="d-pages-v">200 ر.س</span>
-            <span class="brochure-discount">خصم 20٪ يُطبّق تلقائيًا عند اختيار 11 صفحة فأكثر</span>
           </div>
         </div>
       </div>
@@ -750,7 +743,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
     <div class="totals-box">
       <div class="tb-break">
         <div class="offersbox" id="qOffers" style="display:none"></div>
-        <div class="trow sub"><span>الإجمالي قبل الخصم</span><span class="strike" id="qGross">0</span></div>
+        <div class="trow sub"><span>سعر القائمة</span><span class="strike" id="qGross">0</span></div>
         <div class="trow" id="qRushRow" style="display:none"><span>رسوم تسليم عاجل (+25%)</span><span id="qRush">0</span></div>
       </div>
       <div class="tb-final">
@@ -948,8 +941,7 @@ const SVGI = {
 /* ===== الحالة ===== */
 const state={ type:'apartment', rooms:2, units:1, sameLoc:true, extraUnits:[], sel:new Set(['photo']), pkg:'basic', rush:false, logo:false, sign:false, pages:0, name:'', phone:'', email:'', attn:'', qnote:'', isCustom:false };
 const brochureGross=()=>state.pages*200;
-const brochureDiscount=()=>state.pages>10?Math.round(brochureGross()*.20):0;
-const brochureNet=()=>brochureGross()-brochureDiscount();
+const brochureNet=()=>brochureGross();
 const QUOTE_TARGET={type:'person',personName:'',personTitle:'',companyName:'',attention:'',department:'',requestedBy:''};
 const $=id=>document.getElementById(id);
 const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
@@ -1144,7 +1136,7 @@ function recalc(){
   }
   if(state.logo) items.push([EN()?'Real estate logo design':'تصميم شعار عقاري',1200,'']);
   if(state.sign) items.push([EN()?'Outdoor signage design':'تصميم لوحة خارجية',700,'']);
-  if(state.pages>0) items.push([EN()?`PDF Brochure — ${state.pages} pages`:`بروشور PDF — ${state.pages} صفحة`,brochureNet(),state.pages>10?(EN()?'20% volume discount applied':'شامل خصم الصفحات 20٪'):'']);
+  if(state.pages>0) items.push([EN()?`PDF Brochure — ${state.pages} pages`:`بروشور PDF — ${state.pages} صفحة`,brochureNet(),'']);
 
   /* لا خصومات تلقائية (قرار معتمد) — الإجمالي = أسعار الخدمات الفعلية + الرسوم المعتمدة فقط */
   const baseSum=items.reduce((s,[,v])=>s+v,0);
@@ -1169,7 +1161,7 @@ function recalc(){
     campAmt=campDiffTotal(dis);
     campPct=Math.round(fullDisc(state.type)*CAMPAIGN.step);
     if(campAmt>0) linesEl.insertAdjacentHTML('beforeend',
-      `<div class="line disc"><span class="l">${EN()?CAMPAIGN.nameEn+' ('+campPct+'% off)':CAMPAIGN.name+' ('+campPct+'٪ خصم)'}</span><span class="v">−${fmt(campAmt)}</span></div>`);
+      `<div class="line disc"><span class="l">${EN()?CAMPAIGN.nameEn+' — below list price':CAMPAIGN.name+' تحت سعر القائمة'}</span><span class="v">−${fmt(campAmt)}</span></div>`);
   }
   animateTotal(total);
   lastTotal=total;
@@ -1187,8 +1179,8 @@ $('d-brochure').onchange=e=>{
 };
 $('d-pages').oninput=e=>{state.pages=Math.max(1,Math.min(200,+e.target.value||1)); updateBrochureUi(); recalc(); syncUrl();};
 function updateBrochureUi(){
-  const gross=brochureGross(), discount=brochureDiscount(), net=brochureNet();
-  $('d-pages-v').innerHTML=fmt(net)+(discount>0?(EN()?' after discount':' بعد الخصم'):'');
+  const net=brochureNet();
+  $('d-pages-v').innerHTML=fmt(net);
 }
 roomsEl.oninput=e=>{state.rooms=+e.target.value; roomsNum.value=state.rooms; recalc(); syncUrl();};
 roomsNum.oninput=e=>{let v=Math.max(+roomsNum.min||1,Math.min(+roomsNum.max||99,+e.target.value||1)); state.rooms=v; roomsEl.value=v; recalc(); syncUrl();};
@@ -1382,13 +1374,13 @@ const T = {
   ar: {
     eyebrow:'حاسبة أسعار فورية', heroSub:'اختر نوع العقار وعدد الغرف والخدمات، واحصل على عرض سعر فوري مع تفاصيل المُخرجات.',
     bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%', dateHint:'متاح يومياً عدا الجمعة', timeHint:'الفترات المتاحة: 4:00 صباحاً — 12:00 منتصف الليل',
-    quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً', priceTable:'عرض جدول الأسعار الكامل ←', locAll:'كل الوحدات في نفس الموقع (خصم أعلى)',
+    quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً', priceTable:'عرض جدول الأسعار الكامل ←', locAll:'كل الوحدات في نفس الموقع',
     ptBtn:'جدول الأسعار الكامل', ptTitle:'قائمة الأسعار الموحّدة 2026', ptSub:'الأسعار بالريال السعودي · التصوير داخل الرياض',
     ptSvc:'الخدمة', ptFrom:'من', ptPerRoom:'+ للغرفة الإضافية', ptFlat:'خدمات بثابت',
     ptDrone:'تصوير درون 4K (شامل التصاريح)', ptAd:'فيديو إعلاني تسويقي',
     ptExtras:'الإضافات والتصميم', ptNight:'تصوير ليلي / Blue-hour', ptSocial:'نسخ لمواقع التواصل', ptRush:'تسليم عاجل', ptRushV:'+25%',
-    ptLogo:'تصميم شعار عقاري', ptSign:'تصميم لوحة خارجية', ptBrochure:'بروشور PDF', ptBrochureV:'200 ر.س / صفحة · خصم 20٪ بعد 10 صفحات',
-    ptNote:'السعر النهائي يُحدَّد من الحاسبة حسب نوع العقار وعدد الغرف والخدمات المختارة. الخدمة القياسية داخل مدينة الرياض، ولا توجد خصومات تلقائية — والعروض الخاصة تُمنح ضمن عرض سعر معتمد من مأوى. (خصم البروشور 20٪ بعد 10 صفحات يُطبَّق تلقائيًا).',
+    ptLogo:'تصميم شعار عقاري', ptSign:'تصميم لوحة خارجية', ptBrochure:'بروشور PDF', ptBrochureV:'200 ر.س / صفحة',
+    ptNote:'السعر النهائي يُحدَّد من الحاسبة حسب نوع العقار وعدد الغرف والخدمات المختارة. الخدمة القياسية داخل مدينة الرياض، ولا توجد خصومات تلقائية — والعروض الخاصة تُمنح ضمن عرض سعر معتمد من مأوى..',
     luxTitle:'هذا المشروع يستحق تسعيراً مخصّصاً',
     luxSub:'المشاريع الفاخرة تختلف تفاصيلها من موقع لآخر — أرسل طلبك وسيتواصل معك فريقنا لمناقشة التفاصيل، ثم نصلك عرض سعر رسمي مخصّص خلال 24 ساعة.',
     luxReqT:'تفاصيل سريعة تساعدنا لخدمتك أفضل',
@@ -1396,7 +1388,7 @@ const T = {
     luxCity:'الموقع (الحي / المدينة)',
     send:'اطلب هذا العرض عبر واتساب', sendLux:'أرسل طلبك المخصّص — واتساب',
     typeTitle:'1 نوع العقار', typeHint:'Determines the base pricing for each service.',
-    roomsTitle:'عدد الغرف', unitsTitle:'وحدات متعددة (شقق/فلل)', unitsHint:'خصم تدريجي',
+    roomsTitle:'عدد الغرف', unitsTitle:'وحدات متعددة (شقق/فلل)', unitsHint:'وحدات إضافية',
     svcTitle:'الخدمات المطلوبة', svcHint:'اختر خدمة واحدة أو أكثر',
     addonsTitle:'+ إضافات التصوير (اختياري)',
     designTitle:'+ خدمات التصميم (اختياري)',
@@ -1436,7 +1428,7 @@ const T = {
     pkgBasic:'أساسية', pkgPro:'احترافية',
     addonNight:'تصوير ليلي فاخر', addonSocial:'نسخ لمواقع التواصل', addonRush:'تسليم عاجل خلال 3 أيام عمل',
     designLogo:'تصميم شعار عقاري', designSign:'تصميم لوحة خارجية', brochure:'بروشور PDF', pagesWord:'صفحة',
-    sameLoc:'كل الوحدات في نفس الموقع (خصم أعلى)',
+    sameLoc:'كل الوحدات في نفس الموقع',
     estimateNote:'* السعر تقديري وقد يختلف حسب تفاصيل العقار. العرض النهائي يُحدَّد عند التواصل.',
     customPrice:'حسب المشروع', customNote:'هذا النوع يُسعَّر بعد المعاينة — تواصل معنا لعرض مخصص',
     lux:'فاخر', unitsWord:'وحدة', sendFail:'أدخل الاسم والجوال أولاً', pickSvc:'اختر خدمة واحدة على الأقل',
@@ -1454,12 +1446,12 @@ const T = {
     addUnit:'+ إضافة وحدة أخرى في نفس الموقع',
     unitsCount:'عدد الوحدات', unitWord:'وحدة',
     svcHint:'اختر خدمة واحدة أو أكثر — الأسعار تظهر فوراً',
-    svcHintFull:'اختر خدمة واحدة أو أكثر. عند اختيار 3 خدمات تصوير أو أكثر يُطبَّق خصم الخدمات المجمّعة تلقائياً.',
+    svcHintFull:'اختر خدمة واحدة أو أكثر. الأسعار المعروضة نهائية — لا تُطبَّق أي خصومات تلقائية.',
     designHint:'أضف خدمات تصميم وهوية لعقارك.',
     pkgTitleFull:'4 الباقة والإضافات', pkgLabel:'الباقة (تؤثر على التصوير والفيديو)',
     pkgBasicDesc:'تصوير + معالجة ألوان + تسليم بدقة عالية', pkgProDesc:'+ درون 4K + تصوير ليلي + تصحيح متقدم + نسخ سوشيال', pkgPro2:'احترافية',
     pkgPro:'احترافية (+45%)', brochurePages:'صفحة',
-    approx:'≈', photosWord:'صورة HDR', bundleDisc:'خصم الخدمات المجمّعة (3 خدمات ‑10٪)',
+    approx:'≈', photosWord:'صورة HDR',
     footer:'© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.',
     quoteBar:'عرض سعر رسمي — مأوى للتصوير العقاري', dlPdf:'تحميل PDF', printBtn:'طباعة', closeQuote:'إغلاق',
     customMsg:'هذا النوع يُسعَّر بعد المعاينة', perReq:'حسب الطلب',
@@ -1469,13 +1461,13 @@ const T = {
     eyebrow:'Instant Price Calculator',
     heroSub:'Pick your property type, rooms and services — and get an instant price quote with output details.',
     bookNowSub:'Pick date & time now + 25% deposit', dateHint:'Available daily except Friday', timeHint:'Available slots: 4:00 AM — 12:00 Midnight',
-    quoteOnlySub:'We will contact you to schedule later', priceTable:'View full price list ←', locAll:'All units at the same location (higher discount)',
+    quoteOnlySub:'We will contact you to schedule later', priceTable:'View full price list ←', locAll:'All units at the same location',
     ptBtn:'Full Price Table', ptTitle:'Unified Price List 2026', ptSub:'Prices in SAR · Riyadh coverage',
     ptSvc:'Service', ptFrom:'from', ptPerRoom:'+ per extra room', ptFlat:'Fixed-rate services',
     ptDrone:'4K Drone (permits included)', ptAd:'Marketing promo video',
     ptExtras:'Add-ons & Design', ptNight:'Night / Blue-hour shoot', ptSocial:'Social media versions', ptRush:'Rush delivery', ptRushV:'+25%',
-    ptLogo:'Real estate logo design', ptSign:'Outdoor signage design', ptBrochure:'PDF brochure', ptBrochureV:'200 SAR / page · 20% off above 10 pages',
-    ptNote:'The final price is calculated by the calculator based on property type, rooms and selected services. Standard service covers Riyadh city only — no automatic discounts; special offers are granted via an approved MAWA quote. (Brochure 20% off above 10 pages applies automatically).',
+    ptLogo:'Real estate logo design', ptSign:'Outdoor signage design', ptBrochure:'PDF brochure', ptBrochureV:'200 SAR / page',
+    ptNote:'The final price is calculated by the calculator based on property type, rooms and selected services. Standard service covers Riyadh city only — no automatic discounts; special offers are granted via an approved MAWA quote..',
     luxTitle:'This project deserves a custom quote',
     luxSub:'Luxury projects vary by location and scope — send your request, our team will contact you to discuss details, then deliver a tailored official quote within 24 hours.',
     luxReqT:'A few quick details to serve you better',
@@ -1483,7 +1475,7 @@ const T = {
     luxCity:'Location (district / city)',
     send:'Request This Quote via WhatsApp', sendLux:'Send Your Custom Request — WhatsApp',
     typeTitle:'1 Property Type', typeHint:'Determines the base pricing for each service.',
-    roomsTitle:'Number of Rooms', unitsTitle:'Multiple Units (Apartments/Villas)', unitsHint:'Gradual discount',
+    roomsTitle:'Number of Rooms', unitsTitle:'Multiple Units (Apartments/Villas)', unitsHint:'Additional units',
     svcTitle:'Required Services', svcHint:'Choose one or more services',
     addonsTitle:'+ Photography Add-ons (Optional)',
     designTitle:'+ Design Services (Optional)',
@@ -1523,7 +1515,7 @@ const T = {
     pkgBasic:'Basic', pkgPro:'Professional',
     addonNight:'Premium night shoot', addonSocial:'Social media versions', addonRush:'Rush delivery within 3 business days',
     designLogo:'Real estate logo design', designSign:'Outdoor signage design', brochure:'PDF Brochure', pagesWord:'pages',
-    sameLoc:'All units at the same location (higher discount)',
+    sameLoc:'All units at the same location',
     estimateNote:'* Price is an estimate and may vary by property details. Final quote upon contact.',
     customPrice:'Per project', customNote:'This property type is priced after an on-site visit — contact us for a custom quote',
     lux:'Luxury', unitsWord:'units', sendFail:'Enter your name and phone first', pickSvc:'Select at least one service',
@@ -1541,12 +1533,12 @@ const T = {
     addUnit:'+ Add another unit in this location',
     unitsCount:'Number of units', unitWord:'unit',
     svcHint:'Choose one or more services — prices appear instantly',
-    svcHintFull:'Choose one or more services. Selecting 3+ photography services applies an automatic bundle discount.',
+    svcHintFull:'Choose one or more services. Displayed prices are final — no automatic discounts.',
     designHint:'Add design & branding services for your property.',
     pkgTitleFull:'4 Package & Add-ons', pkgLabel:'Package (affects photo & video)',
     pkgBasicDesc:'Shooting + color grading + high-res delivery', pkgProDesc:'+ 4K drone + night shoot + advanced grading + social copies', pkgPro2:'Professional',
     pkgPro:'Professional (+45%)', brochurePages:'pages',
-    approx:'≈', photosWord:'HDR photos', bundleDisc:'Bundle discount (3 services ‑10%)',
+    approx:'≈', photosWord:'HDR photos',
     footer:'© 2026 MAWA Real Estate Photography — Prices in Saudi Riyal. Riyadh only.',
     quoteBar:'Official Quote — MAWA Real Estate Photography', dlPdf:'Download PDF', printBtn:'Print', closeQuote:'Close',
     customMsg:'This type is priced after a site visit', perReq:'On request',
@@ -1760,15 +1752,14 @@ function buildQuoteData(){
   }
   if(state.logo) add('تصميم شعار عقاري','',1200);
   if(state.sign) add('تصميم لوحة خارجية','',700);
-  if(state.pages>0) add(`بروشور PDF — ${state.pages} صفحة`,state.pages>10?'خصم 20٪ مطبّق على البروشور':'200 ر.س لكل صفحة',brochureGross());
-  const offers=[]; const brochure=brochureDiscount();
+  if(state.pages>0) add(`بروشور PDF — ${state.pages} صفحة`,'200 ر.س لكل صفحة',brochureGross());
+  const offers=[];
   campaign=Math.round(campaign);
-  if(campaign>0) offers.push(`${CAMPAIGN.name} (${Math.round(fullDisc(state.type)*CAMPAIGN.step)}٪ خصم): −${fmtT(campaign)} ر.س`);
-  if(brochure>0) offers.push(`خصم صفحات البروشور (20٪): −${fmtT(brochure)} ر.س`);
+  if(campaign>0) offers.push(`${CAMPAIGN.name}: −${fmtT(campaign)} ر.س عن سعر القائمة`);
   /* لا خصومات تلقائية (قرار معتمد) — الإجمالي = أسعار الخدمات الفعلية + الرسوم المعتمدة فقط */
-  const afterDisc=gross-campaign-brochure;
+  const afterDisc=gross-campaign;
   const rush=state.rush?Math.round(afterDisc*0.25):0;
-  return {rows,gross,brochure,campaign,rush,net:afterDisc+rush,offers,totalDisc:campaign+brochure,isMulti,isCustom:false};
+  return {rows,gross,brochure:0,campaign,rush,net:afterDisc+rush,offers,totalDisc:campaign,isMulti,isCustom:false};
 }
 function openQuote(){
   const dis=DISABLED[state.type]||[]; const d=buildQuoteData();
@@ -2086,7 +2077,7 @@ async function saveLead(total){
         p_shoot_end_time: null
       });
       if (!error){
-        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (شامل خصم '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'', contractId);
+        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (بأسعار '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'', contractId);
         return contractId||true;
       }
       /* لا يوجد مسار إدخال مباشر عمدًا — الإنتاج يمر حصريًا عبر submit_lead المحصّنة
@@ -2159,7 +2150,7 @@ $('waBtn').onclick = async function(){
       const luxBlock=(det||city||ddate)?'\n\n✦ تفاصيل المشروع:'+(city?'\n• الموقع: '+city:'')+(ddate?'\n• التاريخ المفضل: '+dtxt:'')+(det?'\n• تفاصيل إضافية: '+det:''):'';
       msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر مخصّص من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات:\n• '+svcs+luxBlock+'\n\nهذا المشروع من الفئة الفاخرة ويحتاج معاينة وتسعيراً مخصّصاً من فريقكم. أرجو التواصل لاستكمال التفاصيل.';
     } else {
-      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+fmtT(lastTotal)+' ر.س'+(CAMPAIGN.active?` (شامل خصم ${CAMPAIGN.name})`:``)+bookInfo;
+      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+fmtT(lastTotal)+' ر.س'+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``)+bookInfo;
     }
     window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');
     toast('تم فتح واتساب للاستفسار');
