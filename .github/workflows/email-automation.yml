@@ -5,7 +5,7 @@ name: email-automation
 
 on:
   schedule:
-    - cron: '0 * * * *' # كل ساعة على رأس الساعة (UTC)
+    - cron: '20 * * * *' # كل ساعة عند الدقيقة 20 (UTC) — بعيدًا عن ازدحام رأس الساعة
   workflow_dispatch: {} # تشغيل يدوي للاختبار
 
 jobs:
