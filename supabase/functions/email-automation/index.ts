@@ -227,6 +227,117 @@ async function remindShoot(): Promise<{
   };
 }
 
+// =====================================================
+// C-14 Balance Request : طلب إيصال الرصيد (بعد اعتماد العربون)
+// deposit_paid/in_progress + متبقٍ > 0.01 (محسوب من payments فقط)
+// → token عبر action-token-create (balance_receipt · 72h · لا تكرار إن وُجد صالح)
+// → رابط مباشر receipt.html?t=<token>&p=balance_receipt (بلا Portal)
+// → C-14 عبر send-email — Idempotency: contract:<id>:C-14:v1 (مرة واحدة)
+//
+// ملاحظة مستقبلية موثقة (لا تُنفذ الآن): إعادة إصدار رابط منتهٍ تتطلب
+// event_version جديد (v2) لأن send-email يمنع تكرار المفتاح نفسه —
+// تصميم منفصل عند الحاجة الفعلية.
+// الفشل (token/send): لا تغيير لحالة العقد إطلاقًا + عدّاد failed صريح.
+// =====================================================
+type BalanceCandidate = {
+  id: string; contract_number: string | null; status: string;
+  total_amount: number; deposit_review_status: string | null;
+  clients: { email: string | null; full_name: string | null } | null;
+};
+
+async function requestBalanceEmails(): Promise<{
+  checked: number; sent: number; skipped_existing_token: number;
+  skipped_review_pending: number; failed: number;
+}> {
+  const out = { checked: 0, sent: 0, skipped_existing_token: 0, skipped_review_pending: 0, failed: 0 };
+  try {
+    const { data, error } = await db
+      .from('contracts')
+      .select('id, contract_number, status, total_amount, deposit_review_status, clients(email, full_name)')
+      .in('status', ['deposit_paid', 'in_progress']);
+    if (error) { console.error('balance: scan_failed:', error.message); out.failed++; return out; }
+
+    const rows = (data ?? []) as unknown as BalanceCandidate[];
+    if (rows.length === 0) return out;
+    const ids = rows.map(r => r.id);
+    const { data: pays, error: perr } = await db
+      .from('payments').select('contract_id, amount').in('contract_id', ids);
+    if (perr) { console.error('balance: payments_failed:', perr.message); out.failed++; return out; }
+
+    const paidMap: Record<string, number> = {};
+    for (const p of (pays ?? []) as Array<{ contract_id: string; amount: number }>) {
+      paidMap[p.contract_id] = (paidMap[p.contract_id] || 0) + Number(p.amount || 0);
+    }
+
+    for (const c of rows) {
+      out.checked++;
+      const review = c.deposit_review_status ?? '';
+      if (review === 'receipt_under_review' || review === 'correction_requested') {
+        out.skipped_review_pending++;
+        continue;
+      }
+      const total = Number(c.total_amount || 0);
+      const remaining = total - (paidMap[c.id] || 0);
+      if (!(remaining > 0.01)) continue; // مغطى بالكامل — لا طلب رصيد
+
+      const email = c.clients?.email ?? '';
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) continue;
+
+      // Idempotency: لا token جديد إن وُجد balance_receipt صالح غير مستخدم وغير منتهٍ
+      const nowIso = new Date().toISOString();
+      const { data: existing } = await db.from('action_tokens')
+        .select('id').eq('entity_id', c.id).eq('purpose', 'balance_receipt')
+        .is('used_at', null).gt('expires_at', nowIso).limit(1).maybeSingle();
+      if (existing) { out.skipped_existing_token++; continue; }
+
+      // إنشاء token عبر action-token-create (إعادة استخدام — لا نسخ hash هنا)
+      let rawToken = '';
+      try {
+        const tr = await fetch(`${SUPABASE_URL}/functions/v1/action-token-create`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ purpose: 'balance_receipt', entity_id: c.id, entity_type: 'contract', ttl_hours: 72 }),
+        });
+        const tj = await tr.json().catch(() => ({}) as { token?: string });
+        if (!tr.ok || !tj?.token) throw new Error(`token_http_${tr.status}`);
+        rawToken = String(tj.token);
+      } catch (te) {
+        console.error('balance: token_failed:', c.contract_number || c.id, String(te));
+        out.failed++;
+        continue; // لا حالة تتغير — يُعاد المحاولة في الدورة القادمة
+      }
+
+      const link = `${SITE}/receipt.html?t=${rawToken}&p=balance_receipt`;
+
+      // C-14 عبر send-email — التقاط status لتمييز الفشل عن التكرار
+      let sendOk = false; let dupOrSent = false;
+      try {
+        const sr = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${SERVICE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_type: 'C-14', entity_type: 'contract', entity_id: c.id,
+            to: email, to_name: c.clients?.full_name ?? '',
+            data: { contract_number: c.contract_number, remaining: remaining, balance_upload_url: link },
+          }),
+        });
+        const body = await sr.json().catch(() => ({}) as { result?: string });
+        const result = String((body as { result?: string }).result ?? '');
+        if (sr.ok && ['sent', 'skipped_duplicate'].includes(result)) { sendOk = true; dupOrSent = true; }
+        else console.error('balance: send_failed:', c.contract_number || c.id, sr.status, result);
+      } catch (se) {
+        console.error('balance: send_exception:', c.contract_number || c.id, String(se));
+      }
+      if (sendOk && dupOrSent) out.sent++;
+      else { out.failed++; continue; }
+    }
+  } catch (e) {
+    console.error('balance: unexpected:', String(e));
+    out.failed++;
+  }
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: { 'Access-Control-Allow-Origin': '*' } });
 
@@ -249,6 +360,7 @@ Deno.serve(async (req) => {
   const quotesExpired = await expireQuotes();
   const holdsExpired = await expireHolds();
   const shoot = await remindShoot();
+  const balance = await requestBalanceEmails();
 
   return new Response(
     JSON.stringify({
@@ -258,6 +370,11 @@ Deno.serve(async (req) => {
       shoot_c11_sent: shoot.c11,
       shoot_o07_sent: shoot.o07,
       assignments_error: shoot.assignments_error,
+      balance_requests_checked: balance.checked,
+      balance_c14_sent: balance.sent,
+      balance_c14_skipped_existing_token: balance.skipped_existing_token,
+      balance_c14_skipped_review_pending: balance.skipped_review_pending,
+      balance_c14_failed: balance.failed,
     }),
     { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
   );

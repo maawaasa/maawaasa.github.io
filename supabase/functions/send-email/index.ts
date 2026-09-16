@@ -63,7 +63,7 @@ const CONTRACT_EVENT_STATUS: Record<string, string[]> = {
   'C-10': ['deposit_paid', 'in_progress', 'awaiting_payment'],
   'C-11': ['deposit_paid', 'in_progress'],
   'C-13': ['in_progress'],
-  'C-14': ['in_progress', 'fully_paid'],
+  'C-14': ['deposit_paid', 'in_progress', 'fully_paid'],
   'C-15': ['in_progress', 'fully_paid'],
   'C-16': ['in_progress', 'fully_paid'],
   'C-17': ['fully_paid'],
