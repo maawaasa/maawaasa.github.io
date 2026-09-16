@@ -1,0 +1,25 @@
+# MAAWAA — email-automation scheduler (كل ساعة)
+# يستدعي Edge Function email-automation بـAUTOMATION_SECRET
+# (Supabase Scheduler لم يُفعَّل من Dashboard — هذا هو الجدولة الرسمية)
+name: email-automation
+
+on:
+  schedule:
+    - cron: '0 * * * *' # كل ساعة على رأس الساعة (UTC)
+  workflow_dispatch: {} # تشغيل يدوي للاختبار
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke email-automation
+        env:
+          AUTOMATION_SECRET: ${{ secrets.AUTOMATION_SECRET }}
+        run: |
+          code=$(curl -s -o /tmp/ea.json -w "%{http_code}" -X POST \
+            "https://fivrwlowntwacfrsocge.supabase.co/functions/v1/email-automation" \
+            -H "Authorization: Bearer $AUTOMATION_SECRET" \
+            -H "Content-Type: application/json" -d '{}')
+          echo "HTTP $code"
+          cat /tmp/ea.json
+          [ "$code" = "200" ]
