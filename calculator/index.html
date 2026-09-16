@@ -2199,6 +2199,17 @@ async function saveQuote(total){
     if(error) throw error;
     const saved={number:data.quote_number, valid_until:data.valid_until, id:data.id||null};
     try{ sessionStorage.setItem('maawaa_quote', JSON.stringify(saved)); }catch(_){}
+    /* C-01 «عرض السعر جاهز» — fire-and-forget بعد نجاح الحفظ؛
+       فشل الإشعار لا يؤثر على نجاح حفظ العرض ولا يغيّر UX */
+    if(saved.id){
+      try{
+        fetch(SUPABASE_URL+'/functions/v1/quote-notify',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({quote_id:saved.id})
+        }).then(r=>{ if(!r.ok) console.warn('quote-notify:',r.status); }).catch(e=>console.warn('quote-notify:',e));
+      }catch(_){}
+    }
     return saved;
   }catch(e){ console.warn('حفظ عرض السعر فشل:', e); return false; }
 }

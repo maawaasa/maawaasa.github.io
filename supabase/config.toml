@@ -26,3 +26,7 @@ verify_jwt = false
 # اعتماد الدفعات — ملاك (authenticated) أو service_role
 [functions.payment-approve]
 verify_jwt = false
+
+# إشعار العميل بعد حفظ العرض — عام عبر anon (SoT داخلي + Idempotency من send-email)
+[functions.quote-notify]
+verify_jwt = false
