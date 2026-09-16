@@ -34,37 +34,70 @@ const esc = (s: unknown): string =>
 
 const C = BRAND.colors;
 
-// ===== نظام حالة الرسائل المعتمد (Email Design System) =====
-// REVIEW          = Burgundy  #7A1F2B — استلام / تحت المراجعة
-// ACTION_REQUIRED = Amber     #B08A2E — مطلوب إجراء من العميل / دفع معلق
-// CONFIRMED       = Green     #3E7A52 — مؤكد / مدفوع
-// COMPLETED       = Green     #3E7A52 — مكتمل / جاهز للتسليم
-// ERROR           = Dark red  #8F2A22 — مشكلة / تصحيح (عند الحاجة فقط)
-// الهوية: Black #0B0B0B · Off-white #F7F5F2 · Burgundy #7A1F2B · Gray #6B6B6B
-export type StatusTone = 'info' | 'success' | 'warning' | 'danger';
-export type Status = { label: string; tone?: StatusTone; detail?: string };
+// ===== Email Design System V2 — SaaS Premium =====
+// accent مخصص لكل حدث (Light + Dark variants) · الهوية: Burgundy #7A1F2B / Black #0B0B0B / Off-white #F7F5F2
+// القاعدة: اللون في chip + حد البطاقة + فاصل العنوان فقط — body محايد دائمًا
+export type AccentKey =
+  | 'burgundy'|'slate'|'indigo'|'amber'|'blue'|'red'|'darkred'|'green'
+  | 'purple'|'teal'|'cyan'|'blue2'|'orange'|'azure'|'emerald'|'deepgreen'
+  | 'gold'|'violet'|'forest';
 
-const TONE: Record<StatusTone, { bg: string; edge: string; fg: string; mark: string }> = {
-  info:    { bg: '#F6F1F0', edge: '#7A1F2B', fg: '#5C1620', mark: '◆' },
-  success: { bg: '#EEF4EC', edge: '#3E7A52', fg: '#275938', mark: '✓' },
-  warning: { bg: '#FBF4E4', edge: '#B08A2E', fg: '#6E5314', mark: '!' },
-  danger:  { bg: '#F9ECEA', edge: '#8F2A22', fg: '#6E211B', mark: '!' },
+export type Status = { label: string; accent: AccentKey; icon?: string; detail?: string };
+export type StatusTone = AccentKey;
+
+type AccentTheme = {
+  l: string;  d: string;    // accent: فاتح / داكن (أفتح وأكثر إشباعًا)
+  lbg: string; dbg: string; // خلفية الشارة
+  lfg: string; dfg: string; // نص الشارة
+  lbd: string; dbd: string; // حد الشارة
 };
 
-function statusHtml(s: Status): string {
-  const t = TONE[s.tone ?? 'info'];
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;">
-<tr><td style="background:${t.bg};border-right:4px solid ${t.edge};border-radius:8px;padding:12px 16px;direction:rtl;text-align:right;">
-  <span style="font-size:13.5px;font-weight:700;color:${t.fg};"><span dir="ltr">${t.mark}</span>&nbsp;&nbsp;${esc(s.label)}</span>
-  ${s.detail ? `<div style="font-size:12px;color:${t.fg};margin-top:3px;opacity:.9;">${esc(s.detail)}</div>` : ''}
-</td></tr></table>`;
+const ACC: Record<AccentKey, AccentTheme> = {
+  burgundy:  { l:'#7A1F2B', d:'#D06A78', lbg:'#F6F1F0', dbg:'#2A1B1E', lfg:'#5C1620', dfg:'#F2C4CC', lbd:'#E8D5D8', dbd:'#4A2F35' },
+  slate:     { l:'#667085', d:'#98A2B3', lbg:'#F4F6F8', dbg:'#1B1F27', lfg:'#404855', dfg:'#C9CFDA', lbd:'#E3E7ED', dbd:'#333A45' },
+  indigo:    { l:'#4F46E5', d:'#8B85F0', lbg:'#F0F0FD', dbg:'#1B1A33', lfg:'#3730A3', dfg:'#C7C4F5', lbd:'#DDDBFA', dbd:'#2E2B55' },
+  amber:     { l:'#C58B22', d:'#E8B84A', lbg:'#FBF3E0', dbg:'#2B2313', lfg:'#7A5510', dfg:'#F3DCA8', lbd:'#F0DFB6', dbd:'#4A3C1E' },
+  blue:      { l:'#2563EB', d:'#6EA8FE', lbg:'#EBF1FE', dbg:'#141C30', lfg:'#1D4ED8', dfg:'#BBD0FC', lbd:'#D3E0FC', dbd:'#22304F' },
+  red:       { l:'#B42318', d:'#F97066', lbg:'#FCEEEC', dbg:'#331512', lfg:'#8F1B12', dfg:'#F6C6C2', lbd:'#F6D5D2', dbd:'#4C1D18' },
+  darkred:   { l:'#8F2A22', d:'#F97066', lbg:'#F9ECEA', dbg:'#2E1512', lfg:'#6E211B', dfg:'#F6C6C2', lbd:'#EFD5D2', dbd:'#40201B' },
+  green:     { l:'#2E7D4F', d:'#58C27D', lbg:'#EAF4EE', dbg:'#12241B', lfg:'#1F5C3A', dfg:'#BFE8CD', lbd:'#D4E8DC', dbd:'#1E3A2C' },
+  purple:    { l:'#7C3AED', d:'#B49AF8', lbg:'#F3EEFE', dbg:'#1F1733', lfg:'#5B21B6', dfg:'#D6C8FB', lbd:'#E2D6FB', dbd:'#2F2450' },
+  teal:      { l:'#0F766E', d:'#4FD1C5', lbg:'#EAF5F4', dbg:'#0F2020', lfg:'#0B544E', dfg:'#B8E5E0', lbd:'#CFE9E6', dbd:'#1A3A38' },
+  cyan:      { l:'#0E7490', d:'#67C3DE', lbg:'#E9F5F8', dbg:'#0E1F26', lfg:'#0A586E', dfg:'#B8E2EE', lbd:'#CDE7EF', dbd:'#17323F' },
+  blue2:     { l:'#3157A4', d:'#7FA4EC', lbg:'#EEF3FB', dbg:'#151D31', lfg:'#254581', dfg:'#C3D5F6', lbd:'#D8E2F6', dbd:'#243252' },
+  orange:    { l:'#C26A15', d:'#F0A44C', lbg:'#FBF1E6', dbg:'#2A1F10', lfg:'#8A4A0C', dfg:'#F6DCBC', lbd:'#F2DFC7', dbd:'#4A3419' },
+  azure:     { l:'#1677B8', d:'#5EB2E8', lbg:'#E9F4FB', dbg:'#0F1F2C', lfg:'#0F5E90', dfg:'#BEE0F6', lbd:'#CFE7F5', dbd:'#1A3448' },
+  emerald:   { l:'#178F62', d:'#4CC58F', lbg:'#EAF6F0', dbg:'#0F231B', lfg:'#0F6B47', dfg:'#BEE8D2', lbd:'#CDEADF', dbd:'#16352A' },
+  deepgreen: { l:'#236B45', d:'#5FBE8B', lbg:'#EAF4EE', dbg:'#0F2118', lfg:'#174D33', dfg:'#BCE5CF', lbd:'#CFE8DA', dbd:'#173425' },
+  gold:      { l:'#A97917', d:'#E5C15C', lbg:'#FAF3E2', dbg:'#28200E', lfg:'#73550C', dfg:'#F0DFAC', lbd:'#EFE3BE', dbd:'#423715' },
+  violet:    { l:'#6D5BD0', d:'#A99BF0', lbg:'#F1EFFC', dbg:'#1A1730', lfg:'#4C3FA8', dfg:'#D5CEFA', lbd:'#DEDAF8', dbd:'#282247' },
+  forest:    { l:'#285943', d:'#57B183', lbg:'#ECF3EF', dbg:'#101F18', lfg:'#1C4232', dfg:'#C2E4D2', lbd:'#D5E6DD', dbd:'#1B3328' },
+};
+
+// Dark-mode overrides لكل accent — تُحقن في <style> القالب
+const CHIP_DARK_CSS = Object.entries(ACC)
+  .map(([k, a]) => `.ma-chip.ac-${k}{background:${a.dbg}!important;color:${a.dfg}!important;border-color:${a.dbd}!important}`)
+  .join('\n  ');
+const DIV_DARK_CSS = Object.entries(ACC)
+  .map(([k, a]) => `.ma-div.ac-${k}{background:${a.d}!important}`)
+  .join('\n  ');
+
+// شارة الحالة — chip صغير (ليس banner)
+function chipHtml(s: Status): string {
+  const icon = s.icon ? `<span dir="ltr" style="opacity:.8;">${s.icon}</span>&nbsp; ` : '';
+  return `<span class="ma-chip ac-${s.accent}" style="display:inline-block;padding:6px 14px;border-radius:999px;background:${ACC[s.accent].lbg};border:1px solid ${ACC[s.accent].lbd};color:${ACC[s.accent].lfg};font-size:12.5px;font-weight:700;line-height:1.5;">${icon}${esc(s.label)}</span>`;
 }
 
-// زر مضمون لـOutlook (جدول + خلية ملونة) — أساسي أو ثانوي
-function btnHtml(url: string, label: string, kind: 'primary' | 'secondary'): string {
-  const primary = kind === 'primary';
-  return `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;"><tr><td align="center" bgcolor="${primary ? C.wine : C.white}" style="border-radius:12px;${primary ? `background:${C.wine};` : `border:2px solid ${C.wine};background:${C.white};`}">
-<a class="ma-btn" href="${esc(url)}" target="_blank" style="display:inline-block;padding:14px 36px;font-family:inherit;font-size:15px;font-weight:700;color:${primary ? C.white : C.wine};text-decoration:none;border-radius:12px;text-align:center;">${esc(label)}</a>
+// أزرار SaaS — أساسي Burgundy · تصحيح Red · ثانوي outline
+function btnHtml(url: string, label: string, kind: 'primary' | 'danger' | 'secondary'): string {
+  if (kind === 'secondary') {
+    return `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;"><tr><td align="center" class="ma-btn2td" style="border-radius:12px;border:1px solid #D0D5DD;background:#FFFFFF;">
+<a class="ma-btn ma-btn2" href="${esc(url)}" target="_blank" style="display:inline-block;padding:14px 30px;font-family:inherit;font-size:14.5px;font-weight:700;color:#344054;text-decoration:none;border-radius:12px;text-align:center;">${esc(label)}</a>
+</td></tr></table>`;
+  }
+  const danger = kind === 'danger';
+  return `<table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;"><tr><td align="center" class="${danger ? 'ma-btnd-td' : 'ma-btnp-td'}" bgcolor="${danger ? '#B42318' : '#7A1F2B'}" style="border-radius:12px;background:${danger ? '#B42318' : '#7A1F2B'};">
+<a class="ma-btn ${danger ? 'ma-btnd' : 'ma-btnp'}" href="${esc(url)}" target="_blank" style="display:inline-block;padding:15px 36px;font-family:inherit;font-size:14.5px;font-weight:700;text-decoration:none;border-radius:12px;text-align:center;"><span class="ma-btn-t" style="color:#FFFFFF;">${esc(label)}</span></a>
 </td></tr></table>`;
 }
 
@@ -79,75 +112,106 @@ function layout(
   preheader?: string
 ): string {
   const pre = esc(preheader || title);
-  const banner = status ? statusHtml(status) : '';
-  const refHtml = ref
-    ? `<div style="margin:0 0 16px;"><span dir="ltr" style="display:inline-block;padding:6px 16px;border:1.5px solid #E5DED6;border-radius:999px;font-size:13px;font-weight:700;color:${C.black};background:${C.offWhite};">${esc(ref)}</span></div>`
+  const accent = status?.accent ?? 'burgundy';
+  const A = ACC[accent];
+  const banner = status
+    ? `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="padding:0 0 16px;">${chipHtml(status)}${status.detail ? `<div style="font-size:12px;color:#6B6B6B;margin-top:6px;">${esc(status.detail)}</div>` : ''}</td></tr></table>`
     : '';
+  const refHtml = ref
+    ? `<div style="margin:0 0 16px;"><span dir="ltr" class="ma-ref" style="display:inline-block;padding:6px 16px;border:1.5px solid #E5DED6;border-radius:999px;font-size:13px;font-weight:700;color:#0B0B0B;background:#F7F5F2;">${esc(ref)}</span></div>`
+    : '';
+  const ctaKind = status && (status.accent === 'red' || status.accent === 'darkred') ? 'danger' : 'primary';
   const ctaHtml = cta
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;"><tr><td align="center">
-        ${btnHtml(cta.url, cta.label, 'primary')}
-        ${secondary ? `<div style="height:12px;line-height:12px;font-size:0;">&nbsp;</div>${btnHtml(secondary.url, secondary.label, 'secondary')}` : ''}
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;"><tr><td align="center">
+        ${btnHtml(cta.url, cta.label, ctaKind)}
+        ${secondary ? `<div style="height:11px;line-height:11px;font-size:0;">&nbsp;</div>${btnHtml(secondary.url, secondary.label, 'secondary')}` : ''}
       </td></tr></table>`
     : '';
   const noteHtml = note
-    ? `<p style="margin:18px 0 0;font-size:12px;color:${C.gray};line-height:1.9;">${esc(note)}</p>`
+    ? `<p class="ma-note" style="margin:18px 0 0;font-size:12.5px;color:#6B6B6B;line-height:1.9;">${esc(note)}</p>`
     : '';
-  const signatureHtml = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;">
+  const signatureHtml = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;">
 <tr><td style="padding-top:18px;border-top:1px solid #F0EDE8;">
-  <p style="margin:0;font-size:13.5px;color:#3A3A3A;line-height:1.9;">مع تحيات فريق <span style="font-weight:700;color:${C.black};">مأوى</span> للتصوير العقاري</p>
-  <p style="margin:2px 0 0;font-size:12px;color:${C.gray};">نشكر ثقتكم — نحن على واتساب دائمًا في خدمتكم</p>
+  <p class="ma-sig" style="margin:0;font-size:13.5px;color:#344054;line-height:1.9;">مع تحيات فريق <span class="ma-sig-b" style="font-weight:700;color:#0B0B0B;">مأوى</span> للتصوير العقاري</p>
+  <p class="ma-note" style="margin:2px 0 0;font-size:12px;color:#6B6B6B;">نشكر ثقتكم — نحن على واتساب دائمًا في خدمتكم</p>
 </td></tr></table>`;
   return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light">
-<meta name="supported-color-schemes" content="light">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
 <title>${esc(title)}</title>
 <style>
+  body{margin:0;padding:0;width:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
   @media only screen and (max-width:600px){
     .ma-card{width:100%!important;border-radius:0!important}
-    .ma-head{padding:18px 16px!important}
-    .ma-body{padding:24px 16px 10px!important}
-    .ma-h1{font-size:17px!important}
-    .ma-foot{padding:16px 18px 24px!important}
-    .ma-btn{display:block!important;padding:15px 16px!important}
-    .ma-kv-body{padding:6px 14px!important}
+    .ma-head{padding:24px 18px 6px!important}
+    .ma-body{padding:26px 18px 12px!important}
+    .ma-h1{font-size:20px!important}
+    .ma-foot{padding:18px 18px 26px!important}
+    .ma-btn,.ma-btn2{display:block!important;padding:15px 14px!important;min-height:48px!important}
+    .ma-kv-body{padding:8px 14px!important}
     .ma-kv-l,.ma-kv-v{display:block!important;width:100%!important;white-space:normal!important;text-align:right!important}
     .ma-kv-l{padding-bottom:2px!important;font-size:11.5px!important;border-bottom:none!important}
-    .ma-kv-v{padding-bottom:9px!important}
+    .ma-kv-v{padding-bottom:10px!important}
+  }
+  @media (prefers-color-scheme:dark){
+    .ma-page{background:#0B0D10!important}
+    .ma-card{background:#15171B!important;border-color:#262A31!important}
+    .ma-wordmark{color:#F5F7FA!important}
+    .ma-wordmark-dot{color:#D06A78!important}
+    .ma-tagline{color:#9299A5!important}
+    .ma-title{color:#F5F7FA!important}
+    .ma-body-p{color:#D7DCE3!important}
+    .ma-note{color:#AEB4BE!important}
+    .ma-sig{color:#D7DCE3!important}
+    .ma-sig-b{color:#F5F7FA!important}
+    .ma-ref{color:#F5F7FA!important;background:#181B20!important;border-color:#262A31!important}
+    .ma-kvc{background:#181B20!important;border-color:#262A31!important}
+    .ma-kv-l{color:#9299A5!important;border-bottom-color:#262A31!important}
+    .ma-kv-v{color:#F5F7FA!important}
+    .ma-foot{background:#111318!important;border-top-color:#262A31!important}
+    .ma-foot,.ma-foot a{color:#AEB4BE!important}
+    .ma-btn2td{background:#15171B!important;border-color:#3A4048!important}
+    .ma-btn2{color:#D7DCE3!important}
+    ${CHIP_DARK_CSS}
+    ${DIV_DARK_CSS}
+    .ma-btnd-td{background:#F97066!important}
+    .ma-btnd{background:#F97066!important}
+    .ma-btnd .ma-btn-t{color:#2A0E0B!important}
   }
 </style>
 </head>
-<body style="margin:0;padding:0;width:100%;background:${C.offWhite};font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<body class="ma-page" style="margin:0;padding:0;width:100%;background:#F3F4F6;font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 <div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:transparent;mso-hide:all;">${pre}&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.offWhite};">
-<tr><td align="center" style="padding:32px 12px;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-card" style="max-width:560px;background:${C.white};border-radius:18px;overflow:hidden;border:1px solid #ECE8E0;direction:rtl;">
-    <tr><td style="height:5px;background:${C.wine};font-size:0;line-height:0;">&nbsp;</td></tr>
-    <tr><td class="ma-head" align="center" style="background:${C.black};padding:24px 28px;direction:rtl;">
-      <div style="color:${C.white};font-size:22px;font-weight:700;">مأوى<span style="color:#C9506A;">.</span></div>
-      <div style="color:#A19B97;font-size:11px;margin-top:5px;">للتصوير العقاري</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-page" style="background:#F3F4F6;">
+<tr><td align="center" style="padding:30px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-card" style="max-width:600px;background:#FFFFFF;border-radius:18px;border:1px solid #EAECF0;direction:rtl;">
+    <tr><td class="ma-head" align="center" style="padding:28px 20px 8px;direction:rtl;">
+      <div class="ma-wordmark" style="font-size:23px;font-weight:700;color:#0B0B0B;">مأوى<span class="ma-wordmark-dot" style="color:#7A1F2B;">.</span></div>
+      <div class="ma-tagline" style="font-size:11px;color:#98A2B3;margin-top:4px;">للتصوير العقاري</div>
     </td></tr>
-    <tr><td class="ma-body" style="padding:36px 34px 14px;direction:rtl;text-align:right;">
+    <tr><td class="ma-body" style="padding:26px 32px 14px;direction:rtl;text-align:right;">
       ${banner}
       ${refHtml}
-      <h1 class="ma-h1" style="margin:0 0 10px;font-size:20px;color:${C.black};line-height:1.7;text-align:right;">${esc(title)}</h1>
-      <div style="width:44px;height:3px;background:${C.wine};border-radius:2px;margin:0 0 20px;"></div>
+      <h1 class="ma-h1" style="margin:0 0 8px;font-size:23px;color:#0B0B0B;line-height:1.6;text-align:right;">${esc(title)}</h1>
+      <div class="ma-div ac-${accent}" style="width:44px;height:3px;background:${A.l};border-radius:2px;margin:0 0 20px;"></div>
       ${bodyHtml}
       ${ctaHtml}
       ${noteHtml}
       ${signatureHtml}
     </td></tr>
-    <tr><td class="ma-foot" style="padding:20px 30px 28px;border-top:1px solid #ECE8E0;" align="center">
-      <div style="font-size:12px;color:${C.gray};line-height:2;direction:rtl;">
-        ${esc(BRAND.name)} · <a href="${BRAND.site}" style="color:${C.wine};text-decoration:none;">maawaa.sa</a>
-        · <a href="mailto:${BRAND.customerEmail}" style="color:${C.wine};text-decoration:none;">${BRAND.customerEmail}</a>
-        · <a href="${BRAND.instagram}" style="color:${C.wine};text-decoration:none;">إنستغرام</a>
-        <br><span dir="ltr">${esc(BRAND.whatsapp)}</span>
-        <br><span style="font-size:11px;color:#A19B97;">رسالة آلية من مأوى — لالتواصل مع الفريق: ${esc(BRAND.customerEmail)}</span>
+    <tr><td class="ma-foot" style="padding:20px 30px 26px;border-top:1px solid #EAECF0;background:#FAFAFA;" align="center">
+      <div style="font-size:13px;font-weight:700;color:#0B0B0B;margin-bottom:6px;">مأوى<span style="color:#7A1F2B;">.</span></div>
+      <div style="font-size:12px;line-height:2;direction:rtl;">
+        <a href="${BRAND.site}" style="color:#344054;text-decoration:none;">maawaa.sa</a>
+        &nbsp;·&nbsp; <a href="mailto:${BRAND.customerEmail}" style="color:#344054;text-decoration:none;">info@maawaa.sa</a>
+        &nbsp;·&nbsp; <span dir="ltr"><a href="https://wa.me/${BRAND.whatsapp.replace(/[^0-9]/g,'')}" style="color:#344054;text-decoration:none;">WhatsApp</a></span>
+        &nbsp;·&nbsp; <a href="${BRAND.instagram}" style="color:#344054;text-decoration:none;">Instagram</a>
       </div>
+      <div style="font-size:11px;color:#98A2B3;margin-top:8px;">هذه رسالة آلية من مأوى للتصوير العقاري — لالدعم: ${esc(BRAND.customerEmail)}</div>
     </td></tr>
   </table>
 </td></tr></table>
@@ -161,14 +225,13 @@ function kv(rows: Array<[string, unknown]>): string {
     .map(([k, v]) => {
       const dir = hasAr(v) ? 'rtl' : 'ltr';
       return `<tr>` +
-        `<td class="ma-kv-l" style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:12.5px;color:${C.gray};white-space:nowrap;">${esc(k)}</td>` +
-        `<td class="ma-kv-v" style="padding:9px 0;border-bottom:1px solid #F0EDE8;font-size:13.5px;font-weight:700;color:${C.black};text-align:left;word-break:break-word;"><span dir="${dir}">${esc(v)}</span></td>` +
+        `<td class="ma-kv-l" style="padding:10px 0;border-bottom:1px solid #EAECF0;font-size:12.5px;color:#6B6B6B;white-space:nowrap;">${esc(k)}</td>` +
+        `<td class="ma-kv-v" style="padding:10px 0;border-bottom:1px solid #EAECF0;font-size:13.5px;font-weight:700;color:#0B0B0B;text-align:left;word-break:break-word;"><span dir="${dir}">${esc(v)}</span></td>` +
         `</tr>`;
     })
     .join('');
   if (!inner) return '';
-  // بطاقة التفاصيل الموحدة — Key details card
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:10px 0 6px;background:#FAF8F6;border:1px solid #EFEAE3;border-radius:12px;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="ma-kvc" style="margin:12px 0 8px;background:#F8F9FB;border:1px solid #EAECF0;border-radius:14px;">
 <tr><td class="ma-kv-body" style="padding:6px 16px;direction:rtl;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${inner}</table>
 </td></tr></table>`;
@@ -225,7 +288,7 @@ export function C01_quoteReady(q: QuoteCtx): EmailRender {
         ]),
       q.quote_url ? { url: q.quote_url, label: 'عرض تفاصيل عرض السعر' } : undefined,
       'العرض سارٍ 14 يومًا من تاريخه. لا يتم إنشاء أي حجز تلقائيًا.',
-      { label: 'عرض سعر جديد — بانتظار ردك', tone: 'info' },
+      { label: 'عرض سعر جديد — بانتظار ردك', accent: 'burgundy', icon: '◆' },
       undefined,
       q.quote_number
     ),
@@ -242,7 +305,7 @@ export function C02_quoteExpired(q: QuoteCtx): EmailRender {
         p('يمكنك طلب تحديث العرض بأحدث الأسعار في أي وقت — يسرّنا خدمتك.'),
       q.quote_url ? { url: q.quote_url, label: 'طلب تحديث عرض السعر' } : undefined,
       undefined,
-      { label: 'انتهت صلاحية العرض', tone: 'danger' },
+      { label: 'انتهت صلاحية العرض', accent: 'slate', icon: '×' },
       undefined,
       q.quote_number
     ),
@@ -264,7 +327,7 @@ export function C03_bookingReceived(c: ContractCtx): EmailRender {
         ]),
       undefined,
       'سنراسلك عند الحاجة للخطوة التالية — تأكيد التغطية وتوفر الموعد ثم بيانات العربون.',
-      { label: 'تم الاستلام — قيد المراجعة', tone: 'info', detail: 'لا يلزمك أي إجراء الآن' },
+      { label: 'تم الاستلام — قيد المراجعة', accent: 'indigo', icon: '◆', detail: 'لا يلزمك أي إجراء الآن' },
       undefined,
       c.contract_number
     ),
@@ -286,7 +349,7 @@ export function C04_depositHold(c: ContractCtx): EmailRender {
         p('حوّل العربون وارفع الإيصال خلال المهلة لتثبيت الموعد نهائيًا.'),
       c.deposit_upload_url ? { url: c.deposit_upload_url, label: 'رفع إيصال العربون' } : undefined,
       'بعد رفع الإيصال يبقى موعدك محفوظًا أثناء مراجعة مأوى — لن تخسر الموعد بسبب مدة المراجعة.',
-      { label: 'بانتظار العربون — مهلة 24 ساعة', tone: 'warning', detail: 'موعدك محفوظ مؤقتًا ولا يثبت إلا برفع الإيصال' },
+      { label: 'بانتظار العربون — مهلة 24 ساعة', accent: 'amber', icon: '!', detail: 'موعدك محفوظ مؤقتًا ولا يثبت إلا برفع الإيصال' },
       WA_BTN,
       c.contract_number,
       'خطوة واحدة متبقية: تحويل العربون ورفع الإيصال خلال 24 ساعة'
@@ -304,7 +367,7 @@ export function C05_receiptReceived(c: ContractCtx): EmailRender {
         kv([['الموعد', c.shoot_date]]),
       undefined,
       'موعدك يبقى محفوظًا أثناء المراجعة — سنؤكد لك الحجز فور اعتماد الدفعة.',
-      { label: 'الإيصال تحت المراجعة', tone: 'info', detail: 'موعدك محفوظ — لا يلزمك أي إجراء' },
+      { label: 'الإيصال تحت المراجعة', accent: 'blue', icon: '◆', detail: 'موعدك محفوظ — لا يلزمك أي إجراء' },
       undefined,
       c.contract_number
     ),
@@ -320,7 +383,7 @@ export function C06_receiptCorrection(c: ContractCtx): EmailRender {
       p('الإيصال المرفوع غير واضح أو غير مطابق للمبلغ المطلوب. نرجو إعادة رفع إيصال واضح خلال ساعات، فموعدك يبقى محفوظًا مؤقتًا.'),
       c.deposit_upload_url ? { url: c.deposit_upload_url, label: 'إعادة رفع الإيصال' } : undefined,
       undefined,
-      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', tone: 'danger', detail: 'موعدك يبقى محفوظًا مؤقتًا' },
+      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', accent: 'red', icon: '!', detail: 'موعدك يبقى محفوظًا مؤقتًا' },
       undefined,
       c.contract_number
     ),
@@ -337,7 +400,7 @@ export function C07_holdExpired(c: ContractCtx): EmailRender {
         p('إن كنت ما زلت مهتمًا، يمكنك طلب موعد جديد وسنحاول توفيره.'),
       c.calendar_url ? { url: c.calendar_url, label: 'طلب موعد جديد' } : undefined,
       undefined,
-      { label: 'انتهت المهلة — تم تحرير الحجز المؤقت', tone: 'danger' },
+      { label: 'انتهت المهلة — تم تحرير الحجز المؤقت', accent: 'darkred', icon: '!' },
       undefined,
       c.contract_number
     ),
@@ -362,7 +425,7 @@ export function C08_bookingConfirmed(c: ContractCtx): EmailRender {
         p('ستجد العقد مرفقًا/متاحًا عبر الزر، ويمكنك إضافة الموعد لتقويمك.'),
       c.contract_url ? { url: c.contract_url, label: 'عرض العقد وتفاصيل الجلسة' } : undefined,
       'التسليم القياسي خلال 7–10 أيام عمل من اليوم التالي لاكتمال الجلسة.',
-      { label: 'الحجز مؤكد — العربون معتمد', tone: 'success', detail: 'لا يلزمك أي إجراء دفع الآن — نراك يوم الجلسة' },
+      { label: 'الحجز مؤكد — العربون معتمد', accent: 'green', icon: '✓', detail: 'لا يلزمك أي إجراء دفع الآن — نراك يوم الجلسة' },
       undefined,
       c.contract_number,
       `تم تأكيد حجزك ${c.contract_number || ''} — نراك يوم الجلسة`
@@ -380,7 +443,7 @@ export function C14_readyBalance(c: ContractCtx): EmailRender {
         kv([['المتبقي المطلوب', fmt(c.remaining)]]),
       c.balance_upload_url ? { url: c.balance_upload_url, label: 'رفع إيصال السداد النهائي' } : undefined,
       'التسليم النهائي يتم بعد اكتمال السداد مباشرة.',
-      { label: 'بانتظار السداد النهائي', tone: 'warning', detail: 'المخرجات جاهزة والتسليم ينتظر اكتمال السداد' },
+      { label: 'بانتظار السداد النهائي', accent: 'orange', icon: '!', detail: 'المخرجات جاهزة والتسليم ينتظر اكتمال السداد' },
       undefined,
       c.contract_number
     ),
@@ -396,7 +459,7 @@ export function C15_finalReceiptReceived(c: ContractCtx): EmailRender {
       p('إثبات السداد النهائي تحت التحقق الآن. بمجرد الاعتماد يصلك رابط التسليم النهائي مباشرة.'),
       undefined,
       'لا يلزمك أي إجراء الآن.',
-      { label: 'الإيصال تحت التحقق', tone: 'info' }
+      { label: 'الإيصال تحت التحقق', accent: 'azure', icon: '◆' }
     ),
     text: `استلمنا إيصال السداد النهائي للطلب ${c.contract_number} وهو تحت التحقق.`,
   };
@@ -410,7 +473,7 @@ export function C16_finalReceiptCorrection(c: ContractCtx): EmailRender {
       p('إثبات السداد النهائي غير واضح أو غير مطابق للمبلغ. نرجو إعادة رفع إيصال واضح لتسليم مخرجاتك سريعًا.'),
       c.balance_upload_url ? { url: c.balance_upload_url, label: 'إعادة رفع الإيصال' } : undefined,
       undefined,
-      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', tone: 'danger' }
+      { label: 'يحتاج إجراء منك — إعادة رفع الإيصال', accent: 'red', icon: '!' }
     ),
     text: `يرجى إعادة رفع إيصال السداد النهائي: ${c.balance_upload_url || ''}`,
   };
@@ -426,7 +489,7 @@ export function C17_delivery(c: ContractCtx): EmailRender {
         kv([['التسليم', 'مخرجات معالجة فقط — RAW غير مشمول']]),
       c.delivery_url ? { url: c.delivery_url, label: 'فتح وتحميل المخرجات' } : undefined,
       'الملفات تُحفظ 30 يومًا من التسليم. لك جولة تعديلات طفيفة واحدة خلال 7 أيام من اليوم.',
-      { label: 'جاهز للتحميل', tone: 'success', detail: 'المخرجات مكتملة — الحفظ 30 يومًا من الآن' },
+      { label: 'جاهز للتحميل', accent: 'deepgreen', icon: '✓', detail: 'المخرجات مكتملة — الحفظ 30 يومًا من الآن' },
       WA_BTN,
       c.contract_number,
       `مخرجات طلبك ${c.contract_number || ''} جاهزة للتحميل`
@@ -564,7 +627,7 @@ export function C09_contractReady(c: ContractCtx): EmailRender {
         kv([['الموعد', c.shoot_date]]),
       c.contract_url ? { url: c.contract_url, label: 'عرض العقد' } : undefined,
       undefined,
-      { label: 'العقد جاهز للاطلاع والاعتماد', tone: 'info' },
+      { label: 'العقد جاهز للاطلاع والاعتماد', accent: 'purple', icon: '◆' },
       undefined,
       c.contract_number
     ),
@@ -584,7 +647,7 @@ export function C10_appointmentUpdated(c: ContractCtx): EmailRender {
         ]),
       c.calendar_url ? { url: c.calendar_url, label: 'تحديث الموعد في تقويمي' } : undefined,
       undefined,
-      { label: 'تم تحديث الموعد', tone: 'info' },
+      { label: 'تم تحديث الموعد', accent: 'teal', icon: '◆' },
       undefined,
       c.contract_number
     ),
@@ -605,7 +668,7 @@ export function C11_shootReminder(c: ContractCtx): EmailRender {
         p('العقار نظيف ومرتب، جميع الإضاءات تعمل، وإخلاء مدخل الواجهة من السيارات إن أمكن.'),
       c.maps_url ? { url: c.maps_url, label: 'فتح الموقع على الخرائط' } : undefined,
       undefined,
-      { label: 'غدًا جلسة التصوير', tone: 'info' },
+      { label: 'غدًا جلسة التصوير', accent: 'cyan', icon: '◆' },
       undefined,
       c.contract_number
     ),
@@ -646,14 +709,15 @@ export function C12_operationalUpdate(c: ContractCtx, variant: C12Variant): Emai
     },
   };
   const v = m[variant];
-  const tone: StatusTone = variant === 'reschedule' ? 'info'
-    : variant === 'force_majeure' || variant === 'visit_fee' ? 'warning' : 'danger';
+  const accent: AccentKey = variant === 'reschedule' ? 'slate'
+    : variant === 'force_majeure' || variant === 'visit_fee' ? 'amber' : 'red';
+  const c12icon = accent === 'slate' ? '\u25c6' : '!';
   return {
     subject: `${v.t} — ${c.contract_number || ''} — مأوى`,
     html: layout(v.t, v.b,
       variant === 'reschedule' && c.calendar_url ? { url: c.calendar_url, label: 'تحديث التقويم' } : undefined,
       undefined,
-      { label: v.t, tone },
+      { label: v.t, accent, icon: c12icon },
       undefined,
       c.contract_number),
     text: `${v.t} — الطلب ${c.contract_number}. التفاصيل وفق العقد.`,
@@ -671,7 +735,7 @@ export function C13_processingStarted(c: ContractCtx): EmailRender {
         ]),
       undefined,
       'لا يلزمك أي إجراء الآن — سنخبرك عند الجاهزية.',
-      { label: 'قيد المعالجة', tone: 'info', detail: 'التسليم خلال 7–10 أيام عمل' },
+      { label: 'قيد المعالجة', accent: 'blue2', icon: '▸', detail: 'التسليم خلال 7–10 أيام عمل' },
       undefined,
       c.contract_number
     ),
@@ -687,7 +751,7 @@ export function C18_retentionReminder(c: ContractCtx): EmailRender {
       p('نذكّرك بأن ملفات جلستك تُحفظ على سحابة مأوى 30 يومًا من تاريخ التسليم ثم تُحذف تلقائيًا.'),
       c.delivery_url ? { url: c.delivery_url, label: 'تحميل نسختك الآن' } : undefined,
       undefined,
-      { label: 'تنتهي مدة الحفظ قريبًا', tone: 'warning' },
+      { label: 'تنتهي مدة الحفظ قريبًا', accent: 'gold', icon: '!' },
       undefined,
       c.contract_number
     ),
@@ -704,7 +768,7 @@ export function C19_v360Expiry(c: ContractCtx & { tour_url?: string }): EmailRen
         p('للتجديد تواصل مع مأوى وفق الأسعار السارية، وإلا يتوقف الرابط بعد انتهاء المدة.'),
       c.tour_url ? { url: c.tour_url, label: 'فتح الجولة الحالية' } : undefined,
       undefined,
-      { label: 'استضافة الجولة تقترب من الانتهاء', tone: 'warning' },
+      { label: 'استضافة الجولة تقترب من الانتهاء', accent: 'violet', icon: '◆' },
       undefined,
       c.contract_number
     ),
@@ -720,7 +784,7 @@ export function C20_rating(c: ContractCtx & { rating_url?: string }): EmailRende
       p(`عزيزنا ${c.client_name || 'العميل الكريم'}، اكتملت خدمتك معنا. نرجو تخصيص دقيقة لتقييم التجربة — ملاحظاتك تنعكس مباشرة على جودة خدمتنا.`),
       c.rating_url ? { url: c.rating_url, label: 'تقييم التجربة' } : undefined,
       undefined,
-      { label: 'خدمتك اكتملت — رأيك يهمنا', tone: 'info' },
+      { label: 'خدمتك اكتملت — رأيك يهمنا', accent: 'forest', icon: '◆' },
       undefined,
       c.contract_number
     ),

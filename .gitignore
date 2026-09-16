@@ -5,3 +5,4 @@ output/pdf/
 # معاينات البريد المولّدة محليًا — قابلة لإعادة الإنشاء بـ scripts/preview-emails.ts
 preview/screenshots/
 preview/*.html
+preview/review-board.png

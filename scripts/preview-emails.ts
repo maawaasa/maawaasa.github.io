@@ -62,10 +62,15 @@ try {
 
 const index: string[] = [];
 for (const [name, email] of samples) {
-  const file = `${OUT}/${name}.html`;
-  await Deno.writeTextFile(file, email.html);
-  index.push(`<li><a href="${name}.html">${email.subject}</a></li>`);
-  console.log('✓', file);
+  await Deno.writeTextFile(`${OUT}/${name}.html`, email.html);
+  // نسخة داكنة مفروضة (للمعاينة): تحويل media query الداكن إلى دائمة
+  const dark = email.html.replace(
+    '@media (prefers-color-scheme:dark){',
+    '@media all{ /* forced-dark preview */',
+  );
+  await Deno.writeTextFile(`${OUT}/${name}-dark.html`, dark);
+  index.push(`<li><a href="${name}.html">${email.subject}</a> — <a href="${name}-dark.html">Dark</a></li>`);
+  console.log('✓', `${OUT}/${name}.html + ${name}-dark.html`);
 }
 
 await Deno.writeTextFile(
