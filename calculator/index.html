@@ -943,6 +943,9 @@ const state={ type:'apartment', rooms:2, units:1, sameLoc:true, extraUnits:[], s
 const brochureGross=()=>state.pages*200;
 const brochureNet=()=>brochureGross();
 const QUOTE_TARGET={type:'person',personName:'',personTitle:'',companyName:'',attention:'',department:'',requestedBy:''};
+/* حالة الحجز — تُعرَّف قبل أول رسم: الفئات الفاخرة تستدعي setBookMode أثناء التهيئة،
+   وتعريفها بعد التهيئة كان يوقف الصفحة كاملة عند فتح رابط مثل /calculator/palace */
+const BOOK = { mode:'quote', date:null, time:null, facade:null };
 const $=id=>document.getElementById(id);
 const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
       roomsUnit=$('roomsUnit'), roomsNA=$('roomsNA'), roomsTitle=$('roomsTitle'),
@@ -1004,7 +1007,9 @@ function applyLuxury(){
   const btn=$('waBtn');
   const span=btn.querySelector('[data-t]');
   if(span){ span.dataset.t = lux ? 'sendLux' : 'send'; span.textContent = T[UI.lang][span.dataset.t]; }
-  if(lux){ setBookMode('quote'); const cBtn=$('confirmOrderBtn'); if(cBtn) cBtn.textContent='إرسال طلب العرض المخصّص'; }
+  /* الفاخر يعود لمسار العرض المخصّص؛ والعودة منه لنوع عادي تعيد تسمية الزر حسب المسار الحالي */
+  if(lux) setBookMode('quote');
+  else { const cBtn=$('confirmOrderBtn'); if(cBtn && !cBtn.disabled) cBtn.textContent=confirmLabel(); }
 }
 
 /* ===== حساب سعر خدمة (معمّم لكل وحدة) ===== */
@@ -1845,8 +1850,7 @@ $('d-logo').checked=state.logo; $('d-sign').checked=state.sign;
 $('d-brochure').checked=state.pages>0; $('d-pages').value=state.pages||1; $('d-pages').disabled=state.pages===0; $('brochureOption').classList.toggle('on',state.pages>0); updateBrochureUi();
 renderUnits();
 
-/* ===== نظام الحجز — نمط حكومي ===== */
-const BOOK = { mode:'quote', date:null, time:null, facade:null };
+/* ===== نظام الحجز — نمط حكومي (الحالة BOOK معرّفة أعلى السكربت) ===== */
 const MC_MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 const DAYS_AR = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
@@ -1860,6 +1864,12 @@ function fmtTime(t){
   if (h === 0)  return '12:00 منتصف الليل';
   if (h === 12) return '12:00 ظهراً';
   return h < 12 ? t + ' صباحاً' : (h - 12) + ':00 مساءً';
+}
+
+/* تسمية زر الإرسال الرئيسي حسب نوع العقار ومسار الطلب */
+function confirmLabel(){
+  if((TYPES[state.type]||{}).luxury) return EN()?'Send custom quote request':'إرسال طلب العرض المخصّص';
+  return BOOK.mode==='book' ? (EN()?'Send booking request':'إرسال طلب الحجز') : (EN()?'Save quote':'حفظ عرض السعر');
 }
 
 function setBookMode(m){
@@ -1876,7 +1886,7 @@ function setBookMode(m){
   $('requestDescription').textContent=m==='book'
     ? 'اختر الموعد المناسب لك، وسيراجع فريق مأوى توفره وتفاصيل الطلب قبل إرسال التأكيد النهائي.'
     : 'يُحفظ عرض السعر برقم رسمي وصلاحية 14 يومًا. لا يُنشئ هذا الخيار طلب حجز ولا يتطلب موعدًا أو عربونًا الآن.';
-  $('confirmOrderBtn').textContent=m==='book'?'إرسال طلب الحجز':'حفظ عرض السعر';
+  $('confirmOrderBtn').textContent=confirmLabel();
   $('confirmOrderBtn').disabled=false;
   $('submitSuccess').classList.remove('on'); $('submitSuccess').innerHTML='';
 }
