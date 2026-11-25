@@ -285,37 +285,63 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
   .scene-m img{width:100%;height:100%;object-fit:cover}
 }
 
-/* ================= III · الأعمال (شريط سينمائي أفقي) ================= */
-.reel{position:relative;background:var(--paper)}
-.reel-pin{position:relative;padding:var(--sec) 0}
-.reel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:clamp(30px,5vh,56px)}
-.reel-meta{display:flex;align-items:center;gap:22px;color:var(--mut)}
-.reel-count{font-family:var(--serif);font-size:15px;direction:ltr;color:var(--mut)}
-.reel-count b{font-weight:400;font-size:28px;color:var(--ink)}
-.reel-bar{position:relative;width:min(200px,20vw);height:1px;background:var(--line)}
-.reel-bar i{position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:right}
-.reel-track{display:flex;align-items:flex-end;gap:clamp(18px,2.4vw,40px);padding-inline:var(--gut);overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:6px}
-.reel-track::-webkit-scrollbar{display:none}
-.frame{position:relative;flex:0 0 auto;display:block;scroll-snap-align:start;text-align:right;color:inherit}
-.frame-media{position:relative;display:block;overflow:hidden;background:var(--paper-3)}
-.frame.l .frame-media{width:clamp(280px,46vw,760px);aspect-ratio:3/2}
-.frame.p .frame-media{width:clamp(220px,27vw,440px);aspect-ratio:4/5}
-.frame.p{align-self:flex-start}
-.frame img{position:absolute;top:0;left:-8%;width:116%;max-width:none;height:100%;object-fit:cover;transition:filter .8s}
-.frame-media::after{content:'';position:absolute;inset:0;background:rgba(11,10,9,.0);transition:background .7s}
-.frame:hover .frame-media::after{background:rgba(11,10,9,.12)}
-.frame-cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:16px}
-.frame-cap .t{display:block;font-size:15.5px}
-.frame-cap .kicker{display:block;margin-top:2px}
-.frame-cap .n{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--mut)}
-.frame-end{flex:0 0 auto;align-self:stretch;width:clamp(220px,22vw,340px);display:flex;flex-direction:column;justify-content:center;gap:18px;padding:30px;border:1px solid var(--line);text-align:right}
-.frame-end b{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,5vw,4.6rem);line-height:1;direction:ltr;text-align:right}
-.frame-end span{font-size:14.5px;color:var(--mut);line-height:1.9}
-.cine .reel-pin{height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(104px,12vh,124px) 0 clamp(30px,5vh,56px)}
-.cine .reel-track{overflow:visible;width:max-content;scroll-snap-type:none;will-change:transform}
-.cine .frame.l .frame-media{width:min(42vw,700px,84vh)}
-.cine .frame.p .frame-media{width:min(25vw,400px,44vh)}
-@media(max-width:899px){.reel-head{flex-direction:column;align-items:stretch;gap:0}.reel-meta{display:none}.frame.l .frame-media,.frame.p .frame-media{width:78vw}.frame.p .frame-media{aspect-ratio:4/4.6}}
+/* ================= III · الأعمال: غرفة العرض ================= */
+.works{position:relative;background:var(--paper);padding:var(--sec) 0}
+.works-projects{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+.wp{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;padding:11px 20px;border:1px solid var(--line);text-align:right;transition:border-color .4s,background .4s,color .4s}
+.wp:hover{border-color:var(--ink)}
+.wp.is-on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.wp-t{font-size:15px;font-weight:600;line-height:1.5}
+.wp-n{font-size:12.5px;line-height:1.5;color:var(--mut);transition:color .4s}
+.wp.is-on .wp-n{color:rgba(251,250,246,.7)}
+.viewer{display:grid;grid-template-columns:minmax(0,1fr) clamp(250px,22vw,320px);gap:clamp(14px,1.6vw,22px)}
+.viewer-main{position:relative;min-width:0}
+.viewer-stage{position:relative;display:block;width:100%;aspect-ratio:16/10;max-height:76vh;overflow:hidden;background:var(--noir);cursor:zoom-in}
+.vs-img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;opacity:0;transform:scale(1.05);transition:opacity 1s var(--out),transform 2.4s var(--out)}
+.vs-img.is-on{opacity:1;transform:scale(1)}
+.vs-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(8,7,6,.66) 0%,rgba(8,7,6,0) 36%)}
+.viewer-stage .hc{z-index:2}
+.vs-cap{position:absolute;right:clamp(22px,2.6vw,40px);bottom:clamp(22px,2.6vw,36px);z-index:2;color:var(--bone);pointer-events:none}
+.vs-cap .kicker{color:rgba(244,240,235,.75)}
+.vs-title{margin-top:4px;font-size:clamp(1.15rem,1.6vw,1.5rem);line-height:1.4}
+.vs-sub{font-size:13.5px;color:rgba(244,240,235,.78)}
+.vs-count{position:absolute;left:clamp(22px,2.6vw,40px);bottom:clamp(18px,2.4vw,30px);z-index:2;font-family:var(--serif);font-size:16px;color:rgba(244,240,235,.8);direction:ltr;pointer-events:none}
+.vs-count b{font-weight:400;font-size:34px;color:#fff}
+.vs-progress{position:absolute;left:0;right:0;bottom:0;z-index:3;height:2px;background:rgba(244,240,235,.16);pointer-events:none}
+.vs-progress i{position:absolute;inset:0;background:var(--bone);transform:scaleX(0);transform-origin:right}
+.viewer.auto .vs-progress i{animation:vsTick 6s linear forwards}
+.viewer.paused .vs-progress i{animation-play-state:paused}
+@keyframes vsTick{to{transform:scaleX(1)}}
+.vs-nav{position:absolute;top:50%;z-index:4;width:52px;height:52px;margin-top:-26px;border-radius:50%;display:grid;place-items:center;color:var(--bone);background:rgba(11,10,9,.3);border:1px solid rgba(244,240,235,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .4s,color .4s,border-color .4s}
+.vs-nav:hover{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.vs-nav svg{width:18px;height:18px}
+.vs-prev{right:18px}.vs-next{left:18px}
+.viewer-bin{position:relative;min-width:0;min-height:0}
+.vb-head{display:flex;justify-content:space-between;align-items:baseline;height:44px;border-bottom:1px solid var(--line)}
+.vb-head .t{font-size:13.5px;font-weight:600}
+.vb-count{font-family:var(--serif);font-size:16px;color:var(--mut);direction:ltr}
+.viewer-strip{position:absolute;top:56px;bottom:0;left:0;right:0;display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:10px;overflow-y:auto;overscroll-behavior:contain;padding-inline-end:4px;scrollbar-width:thin;scrollbar-color:rgba(29,24,21,.25) transparent}
+.vt{position:relative;display:block;aspect-ratio:3/2;overflow:hidden;background:var(--paper-3)}
+.vt img{width:100%;height:100%;object-fit:cover;opacity:.5;filter:saturate(.7);transition:opacity .5s,filter .5s,transform .9s var(--out)}
+.vt:hover img{opacity:.92;filter:none;transform:scale(1.05)}
+.vt.is-on img{opacity:1;filter:none}
+.vt.is-on::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 2px var(--red)}
+@media(max-width:1099px){
+  .viewer{grid-template-columns:minmax(0,1fr);gap:12px}
+  .viewer-stage{aspect-ratio:3/2}
+  .vb-head{display:none}
+  .viewer-strip{position:static;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;padding:0 0 6px}
+  .vt{flex:0 0 clamp(96px,20vw,150px);scroll-snap-align:start}
+}
+@media(max-width:899px){.works-projects{justify-content:flex-start}}
+@media(max-width:560px){
+  .viewer-stage{aspect-ratio:4/3.3}
+  .vs-nav{width:44px;height:44px;margin-top:-22px}
+  .vs-prev{right:10px}.vs-next{left:10px}
+  .vs-count b{font-size:26px}
+  .vs-sub{display:none}
+  .wp{flex:1 1 0;padding:10px 14px}
+}
 
 /* ================= IV · الشوريل ================= */
 .screen{position:relative;background:var(--noir);color:var(--bone);padding:var(--sec) 0}
@@ -670,24 +696,37 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
 </section>
 
 <!-- ============ III · الأعمال ============ -->
-<section class="reel" id="work" data-theme="light">
+<section class="works" id="work" data-theme="light">
   <span id="gallery" aria-hidden="true"></span>
-  <div class="reel-pin">
-    <div class="wrap reel-head">
+  <div class="wrap">
+    <header class="sec-head">
       <div>
         <div class="ch" data-fade><span class="ch-n">III</span><span class="ch-rule"></span><span class="ch-l">أعمال مختارة</span><span class="kicker">Selected Work</span></div>
         <h2 class="display" data-split>مشاهد من <em>أعمالنا.</em></h2>
       </div>
-      <div class="reel-meta" data-fade><span class="reel-count"><b>01</b> / 06</span><span class="reel-bar"><i></i></span></div>
-    </div>
-    <div class="reel-track">
-      <button type="button" class="frame l" data-lb="villas" data-lbi="3" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/villas/3.jpg" alt="صالة ومجلس فيلا فاخرة في الرياض — تصوير HDR" loading="lazy"></span><span class="frame-cap"><span><span class="t">فيلا فاخرة — الرياض</span><span class="kicker">Villa · Living &amp; Dining</span></span><span class="n">01</span></span></button>
-      <button type="button" class="frame p" data-lb="villas" data-lbi="6" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/villas/6.jpg" alt="جناح نوم رئيسي بتشطيب خشبي — تصوير داخلي HDR" loading="lazy"></span><span class="frame-cap"><span><span class="t">الجناح الرئيسي</span><span class="kicker">Villa · Master Suite</span></span><span class="n">02</span></span></button>
-      <button type="button" class="frame l" data-lb="qurtubah" data-lbi="2" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/qurtubah/2.jpg" alt="واجهة مبنى سكني في حي قرطبة بالرياض" loading="lazy"></span><span class="frame-cap"><span><span class="t">شقة قرطبة — الرياض</span><span class="kicker">Residence · Exterior</span></span><span class="n">03</span></span></button>
-      <button type="button" class="frame p" data-lb="villas" data-lbi="10" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/villas/10.jpg" alt="صالة معيشة مفتوحة في فيلا بالرياض" loading="lazy"></span><span class="frame-cap"><span><span class="t">صالة المعيشة</span><span class="kicker">Villa · Lounge</span></span><span class="n">04</span></span></button>
-      <button type="button" class="frame l" data-lb="villas" data-lbi="13" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/villas/13.jpg" alt="غرفة نوم بخزائن خشبية داكنة — تصوير HDR" loading="lazy"></span><span class="frame-cap"><span><span class="t">غرفة الضيوف</span><span class="kicker">Villa · Bedroom</span></span><span class="n">05</span></span></button>
-      <button type="button" class="frame p" data-lb="qurtubah" data-lbi="1" data-cursor="شاهد"><span class="frame-media"><img src="assets/gallery/qurtubah/1.jpg" alt="صالة شقة في حي قرطبة بتشطيب رخامي" loading="lazy"></span><span class="frame-cap"><span><span class="t">صالة قرطبة</span><span class="kicker">Residence · Living</span></span><span class="n">06</span></span></button>
-      <button type="button" class="frame-end" data-lb="villas" data-lbi="1" data-cursor="افتح"><b>+20</b><span>لقطة حقيقية من مشاريعنا — تصفّح المعرض كاملاً بالتكبير.</span><span class="link-u">افتح المعرض</span></button>
+      <div class="works-projects" role="group" aria-label="اختر المشروع" data-fade>
+        <button type="button" class="wp is-on" data-project="villas" aria-pressed="true"><span class="wp-t">فيلا فاخرة — الرياض</span><span class="wp-n">15 لقطة · داخلي وخارجي</span></button>
+        <button type="button" class="wp" data-project="qurtubah" aria-pressed="false"><span class="wp-t">شقة قرطبة — الرياض</span><span class="wp-n">5 لقطات · داخلي</span></button>
+      </div>
+    </header>
+    <div class="viewer" aria-roledescription="عارض صور">
+      <div class="viewer-main">
+        <div class="viewer-stage" id="viewerStage" role="button" tabindex="0" aria-label="عرض الصورة بملء الشاشة" data-cursor="تكبير">
+          <img class="vs-img is-on" src="assets/gallery/villas/1.jpg" alt="فيلا فاخرة — الرياض، الصورة 1 من 15" width="1920" height="1280" decoding="async">
+          <img class="vs-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" aria-hidden="true" decoding="async">
+          <div class="vs-shade"></div>
+          <i class="hc tl"></i><i class="hc tr"></i><i class="hc bl"></i><i class="hc br"></i>
+          <div class="vs-cap"><span class="kicker">Villa · Riyadh</span><p class="vs-title">فيلا فاخرة — الرياض</p><p class="vs-sub">تصوير داخلي وخارجي HDR · باقة احترافية</p></div>
+          <div class="vs-count" aria-live="polite"><b>01</b> / 15</div>
+          <div class="vs-progress" aria-hidden="true"><i></i></div>
+        </div>
+        <button class="vs-nav vs-prev" type="button" aria-label="الصورة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="vs-nav vs-next" type="button" aria-label="الصورة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      </div>
+      <div class="viewer-bin">
+        <div class="vb-head"><span class="t">لقطات المشروع</span><span class="vb-count">15</span></div>
+        <div class="viewer-strip" aria-label="لقطات المشروع" data-lenis-prevent><a class="vt is-on" href="assets/gallery/villas/1.jpg" data-i="1" aria-current="true" aria-label="فيلا فاخرة — الرياض، الصورة 1 من 15"><img src="assets/gallery/villas/t1.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/2.jpg" data-i="2" aria-label="فيلا فاخرة — الرياض، الصورة 2 من 15"><img src="assets/gallery/villas/t2.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/3.jpg" data-i="3" aria-label="فيلا فاخرة — الرياض، الصورة 3 من 15"><img src="assets/gallery/villas/t3.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/4.jpg" data-i="4" aria-label="فيلا فاخرة — الرياض، الصورة 4 من 15"><img src="assets/gallery/villas/t4.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/5.jpg" data-i="5" aria-label="فيلا فاخرة — الرياض، الصورة 5 من 15"><img src="assets/gallery/villas/t5.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/6.jpg" data-i="6" aria-label="فيلا فاخرة — الرياض، الصورة 6 من 15"><img src="assets/gallery/villas/t6.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/7.jpg" data-i="7" aria-label="فيلا فاخرة — الرياض، الصورة 7 من 15"><img src="assets/gallery/villas/t7.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/8.jpg" data-i="8" aria-label="فيلا فاخرة — الرياض، الصورة 8 من 15"><img src="assets/gallery/villas/t8.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/9.jpg" data-i="9" aria-label="فيلا فاخرة — الرياض، الصورة 9 من 15"><img src="assets/gallery/villas/t9.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/10.jpg" data-i="10" aria-label="فيلا فاخرة — الرياض، الصورة 10 من 15"><img src="assets/gallery/villas/t10.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/11.jpg" data-i="11" aria-label="فيلا فاخرة — الرياض، الصورة 11 من 15"><img src="assets/gallery/villas/t11.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/12.jpg" data-i="12" aria-label="فيلا فاخرة — الرياض، الصورة 12 من 15"><img src="assets/gallery/villas/t12.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/13.jpg" data-i="13" aria-label="فيلا فاخرة — الرياض، الصورة 13 من 15"><img src="assets/gallery/villas/t13.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/14.jpg" data-i="14" aria-label="فيلا فاخرة — الرياض، الصورة 14 من 15"><img src="assets/gallery/villas/t14.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a><a class="vt" href="assets/gallery/villas/15.jpg" data-i="15" aria-label="فيلا فاخرة — الرياض، الصورة 15 من 15"><img src="assets/gallery/villas/t15.jpg" alt="" loading="lazy" decoding="async" width="640" height="426"></a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1000,7 +1039,7 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
   var G = window.gsap, ST = window.ScrollTrigger;
   var HAS = !!(G && ST);
   var WA = '966531646152';
-  var lenis = null, menuOpen = false;
+  var lenis = null, menuOpen = false, viewerApi = null;
   var nav = $('#nav');
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
@@ -1172,26 +1211,9 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
       return function () { html.classList.remove('js-scenes'); };
     });
 
-    /* الأعمال: شريط أفقي مثبّت + الشوريل: الشاشة تكبر حتى تملأ المشهد */
+    /* الشوريل: الشاشة تكبر حتى تملأ المشهد */
     mm.add('(min-width: 900px)', function () {
       html.classList.add('cine');
-      var track = $('.reel-track'), bar = $('.reel-bar i'), cnt = $('.reel-count b'), frames = $$('.frame', track);
-      var dist = function () { return Math.max(0, track.scrollWidth - innerWidth); };
-      var par = function () {
-        var mid = innerWidth / 2, best = 0, bestD = 1e9;
-        frames.forEach(function (f, i) {
-          var r = f.getBoundingClientRect(), c = r.left + r.width / 2;
-          if (r.right > -200 && r.left < innerWidth + 200) $('img', f).style.transform = 'translateX(' + ((c - mid) / innerWidth * -9).toFixed(2) + '%)';
-          var dd = Math.abs(c - mid); if (dd < bestD) { bestD = dd; best = i; }
-        });
-        if (cnt) cnt.textContent = pad(best + 1);
-      };
-      G.to(track, {
-        x: function () { return dist(); }, ease: 'none',
-        scrollTrigger: { trigger: '.reel-pin', start: 'top top', end: function () { return '+=' + Math.round(dist() * 0.62); }, pin: true, scrub: 0.8, invalidateOnRefresh: true,
-          onUpdate: function (self) { if (bar) bar.style.transform = 'scaleX(' + self.progress.toFixed(4) + ')'; par(); } }
-      });
-      par();
       var stl = G.timeline({ scrollTrigger: { trigger: '.screen', start: 'top top', end: '+=60%', pin: true, scrub: 0.7 } });
       stl.fromTo('.screen-frame', { clipPath: 'inset(20% 15% 10% 15% round 4px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none' }, 0)
         .fromTo('.screen-frame > img', { scale: 1.22 }, { scale: 1, ease: 'none' }, 0)
@@ -1199,8 +1221,6 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
         .fromTo('.screen-cap', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, ease: 'none', duration: 0.35 }, 0.62);
       return function () {
         html.classList.remove('cine');
-        G.set(track, { clearProps: 'transform' });
-        frames.forEach(function (f) { $('img', f).style.transform = ''; });
         G.set(['.screen-frame', '.screen-frame > img', '.screen-chapter', '.screen-cap'], { clearProps: 'all' });
       };
     });
@@ -1220,7 +1240,7 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
       G.set(kids, { autoAlpha: 0, y: 44 });
       ST.create({ trigger: el, start: 'top 88%', once: true, onEnter: function () { G.to(kids, { autoAlpha: 1, y: 0, duration: 1.25, ease: 'expo.out', stagger: 0.1, clearProps: 'transform' }); } });
     });
-    $$('.frame-media, .scene-m').forEach(function (el) {
+    $$('.scene-m, .viewer-main').forEach(function (el) {
       var img = $('img', el);
       G.set(el, { clipPath: 'inset(100% 0% 0% 0%)' });
       ST.create({ trigger: el, start: 'top 92%', once: true, onEnter: function () {
@@ -1374,6 +1394,7 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
   function lbClose() {
     lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); lb.setAttribute('inert', '');
     html.classList.remove('lb-open'); if (lenis && !menuOpen) lenis.start();
+    if (viewerApi && lbG) viewerApi.show(lbG, lbI, true);
     if (lbPrevFocus) lbPrevFocus.focus({ preventScroll: true });
   }
   if (lb) {
@@ -1399,6 +1420,124 @@ p,.scene p,.faq-a p,.invite-body>p,.fact span{text-wrap:pretty}
       if (Math.abs(dx) > 50) lbShow(dx > 0 ? lbI + 1 : lbI - 1);
     });
   }
+
+  /* ================== غرفة العرض: الأعمال ==================
+     منصة كبيرة تتلاشى بين اللقطات + خانة كل لقطات المشروع.
+     التشغيل التلقائي يعمل فقط والقسم ظاهر، ويتوقف مؤقتاً عند المرور أو التركيز،
+     ويتوقف نهائياً حين يتحكم الزائر بنفسه. */
+  (function () {
+    var viewer = $('.viewer'), stage = $('#viewerStage');
+    if (!viewer || !stage) return;
+    var imgs = $$('.vs-img', stage), strip = $('.viewer-strip', viewer), bar = $('.vs-progress i', stage);
+    var capK = $('.vs-cap .kicker', stage), capT = $('.vs-title', stage), capS = $('.vs-sub', stage);
+    var cnt = $('.vs-count', stage), binCount = $('.vb-count', viewer), projBtns = $$('.wp');
+    var META = {
+      villas:   { kicker: 'Villa · Riyadh',     sub: 'تصوير داخلي وخارجي HDR · باقة احترافية', thumb: function (i) { return 'assets/gallery/villas/t' + i + '.jpg'; } },
+      qurtubah: { kicker: 'Residence · Riyadh', sub: 'تصوير داخلي HDR · باقة احترافية',        thumb: function (i) { return 'assets/gallery/qurtubah/t' + i + '.jpg'; } }
+    };
+    var ORDER = ['villas', 'qurtubah'];
+    var proj = 'villas', idx = 1, front = 0, auto = !RM, inView = false, hover = false, token = 0;
+
+    function buildStrip() {
+      var g = GALLERY[proj], out = '';
+      for (var i = 1; i <= g.count; i++) {
+        out += '<a class="vt" href="' + g.src(i) + '" data-i="' + i + '" aria-label="' + g.title + '، الصورة ' + i + ' من ' + g.count + '">' +
+               '<img src="' + META[proj].thumb(i) + '" alt="" loading="lazy" decoding="async" width="640" height="426"></a>';
+      }
+      strip.innerHTML = out;
+      strip.scrollTop = 0; strip.scrollLeft = 0;
+    }
+    function mark() {
+      var active = null;
+      $$('.vt', strip).forEach(function (t) {
+        var on = +t.getAttribute('data-i') === idx;
+        t.classList.toggle('is-on', on);
+        if (on) { t.setAttribute('aria-current', 'true'); active = t; } else t.removeAttribute('aria-current');
+      });
+      if (!active) return;
+      /* يُبقي اللقطة النشطة في منتصف الخانة دون تحريك الصفحة نفسها */
+      var sr = strip.getBoundingClientRect(), tr = active.getBoundingClientRect(), beh = RM ? 'auto' : 'smooth';
+      if (strip.scrollWidth > strip.clientWidth + 2) strip.scrollBy({ left: (tr.left + tr.width / 2) - (sr.left + sr.width / 2), behavior: beh });
+      else if (strip.scrollHeight > strip.clientHeight + 2) strip.scrollBy({ top: (tr.top + tr.height / 2) - (sr.top + sr.height / 2), behavior: beh });
+    }
+    function restartTick() {
+      if (!auto) return;
+      bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+    }
+    function stopAuto() {
+      if (!auto) return;
+      auto = false; viewer.classList.remove('auto', 'paused');
+    }
+    function syncPause() {
+      if (!auto) return;
+      viewer.classList.toggle('paused', !inView || hover || d.hidden || viewer.contains(d.activeElement));
+    }
+    function show(p, i, user) {
+      if (user) stopAuto();
+      var g = GALLERY[p]; if (!g) return;
+      i = ((i - 1 + g.count) % g.count) + 1;
+      if (p !== proj) {
+        proj = p; idx = 0; buildStrip();
+        projBtns.forEach(function (b) { var on = b.getAttribute('data-project') === p; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)); });
+        capK.textContent = META[p].kicker; capT.textContent = g.title; capS.textContent = META[p].sub;
+        if (binCount) binCount.textContent = g.count;
+      }
+      if (i === idx) { mark(); return; }
+      idx = i;
+      cnt.innerHTML = '<b>' + pad(i) + '</b> / ' + pad(g.count);
+      mark();
+      var my = ++token, src = g.src(i), probe = new Image();
+      probe.src = src;
+      (probe.decode ? probe.decode() : Promise.resolve()).catch(function () {}).then(function () {
+        if (my !== token) return;
+        var nx = imgs[1 - front], cur = imgs[front];
+        nx.src = src; nx.alt = g.title + '، الصورة ' + i + ' من ' + g.count; nx.removeAttribute('aria-hidden');
+        nx.classList.add('is-on'); cur.classList.remove('is-on'); cur.alt = ''; cur.setAttribute('aria-hidden', 'true');
+        front = 1 - front;
+        restartTick();
+        var pre = new Image(); pre.src = g.src((i % g.count) + 1);
+      });
+    }
+    function step(dir, user) {
+      var g = GALLERY[proj], n = idx + dir;
+      if (!user && n > g.count) { show(ORDER[(ORDER.indexOf(proj) + 1) % ORDER.length], 1); return; }
+      show(proj, n, user);
+    }
+    viewerApi = { show: show };
+
+    $('.vs-next', viewer).addEventListener('click', function () { step(1, true); });
+    $('.vs-prev', viewer).addEventListener('click', function () { step(-1, true); });
+    projBtns.forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-project'), 1, true); }); });
+    strip.addEventListener('click', function (e) {
+      var t = e.target.closest('.vt'); if (!t) return;
+      e.preventDefault(); show(proj, +t.getAttribute('data-i'), true);
+    });
+    /* سحب أفقي على المنصة (اتجاه عربي: السحب يميناً يعرض التالية) */
+    var swiped = false, x0 = null;
+    stage.addEventListener('pointerdown', function (e) { x0 = e.clientX; swiped = false; });
+    stage.addEventListener('pointerup', function (e) {
+      if (x0 === null) return; var dx = e.clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) { swiped = true; step(dx > 0 ? 1 : -1, true); }
+    });
+    stage.addEventListener('click', function () { if (swiped) { swiped = false; return; } stopAuto(); lbOpen(proj, idx); });
+    stage.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); step(1, true); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); step(-1, true); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stopAuto(); lbOpen(proj, idx); }
+    });
+
+    if (auto) {
+      viewer.classList.add('auto', 'paused');
+      bar.addEventListener('animationend', function () { if (auto) step(1, false); });
+      viewer.addEventListener('pointerenter', function () { hover = true; syncPause(); });
+      viewer.addEventListener('pointerleave', function () { hover = false; syncPause(); });
+      viewer.addEventListener('focusin', syncPause);
+      viewer.addEventListener('focusout', function () { setTimeout(syncPause, 0); });
+      d.addEventListener('visibilitychange', syncPause);
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { inView = en[0].isIntersecting; syncPause(); }, { threshold: 0.45 }).observe(stage);
+      else { inView = true; syncPause(); }
+    }
+  })();
 
   /* ================== الأسئلة ================== */
   $$('.faq-item').forEach(function (it, i) {
