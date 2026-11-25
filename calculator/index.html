@@ -109,6 +109,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .svc.on .chk{background:var(--red);border-color:var(--red)}
 .svc.on .chk::after{content:'✓';color:#fff;font-size:.75rem;font-weight:700}
 .svc[data-dis="1"]{opacity:.45;cursor:not-allowed}
+.svc:focus-visible,.book-opt:focus-visible,.type-btn:focus-visible,.fchip:focus-visible,.lc-btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .seg{display:flex;gap:8px;background:var(--sec);border:1px solid var(--border);border-radius:12px;padding:5px}
 .seg button{flex:1;background:transparent;border:none;color:var(--gray);font-family:var(--f);font-weight:500;padding:10px;border-radius:8px;cursor:pointer;transition:.2s;font-size:.9rem}
 .seg button.active{background:var(--red);color:#fff}
@@ -126,7 +127,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .brochure.on .brochure-controls{display:flex}
 .brochure-controls input{width:64px;background:var(--black);border:1px solid var(--border);border-radius:6px;color:var(--white);padding:7px;text-align:center;font-family:var(--f)}
 .brochure-total{margin-right:auto;color:var(--white);font-weight:700}
-.summary{position:sticky;top:80px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.summary{scroll-margin-top:84px;position:sticky;top:80px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
 .summary h3{font-size:1rem;font-weight:600;margin-bottom:3px}
 .s-hint{color:var(--gray);font-size:.8rem;margin-bottom:16px}
 .lines{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;min-height:40px}
@@ -312,7 +313,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 @media print{
    @page{size:A4;margin:12mm}
    body{background:#fff}
-   .topbar,.head,.calc,.disclaimer,#toast{display:none!important}
+   .topbar,.head,.calc,.disclaimer,#toast,#mbar{display:none!important}
    .qoverlay{position:static;background:#fff;display:block!important;padding:0;overflow:visible}
    .qbar{display:none!important}
    .qdoc{box-shadow:none;margin:0 auto;max-width:190mm;min-height:271mm;border-radius:0;padding:32px 36px}
@@ -331,12 +332,37 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .unit-row .ur-acts{display:flex;gap:6px}
 .ur-btn{background:transparent;border:1px solid var(--border);color:var(--gray);border-radius:8px;padding:5px 10px;font-family:var(--f);font-size:.74rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:4px}
 .ur-btn:hover{border-color:var(--red);color:var(--red)}
+.ur-btn{min-height:36px}
+/* شريط الإجمالي الثابت (جوال/لوحي): الإجمالي كان أسفل الصفحة بعد كل الخطوات */
+.mbar{display:none}
+@media(max-width:900px){
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:150;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(2,0,1,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--border);transition:transform .25s ease}
+  .mbar.off{transform:translateY(110%)}
+  .mbar .mb-l{display:block;font-size:.72rem;color:var(--gray)}
+  .mbar .mb-v{font-size:1.2rem;color:var(--white);font-weight:700}
+  .mbar .mb-go{min-height:44px;padding:0 18px;border-radius:10px;border:none;background:var(--red);color:#fff;font-family:var(--f);font-weight:700;font-size:.9rem;cursor:pointer;flex-shrink:0}
+  body{padding-bottom:78px}
+  .toast{bottom:90px}
+  .call-fab{bottom:90px}
+}
+/* أهداف لمس 44px على الجوال */
+@media(max-width:640px){
+  .ur-btn{min-height:44px;padding:8px 14px}
+  .addon{min-height:44px}
+  .addon input[type=checkbox],.brochure>input[type=checkbox]{width:22px;height:22px}
+  .back{display:inline-block;padding:10px 0}
+  .ur-qtyrow{flex-wrap:wrap}
+  .ur-qtyrow>span:first-child{flex-basis:100%}
+  .unit-row select,.unit-row input[type=number]{min-height:44px}
+  .topbar .logo{display:inline-flex;align-items:center;min-height:44px}
+}
 .unit-row .ur-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .unit-row select,.unit-row input[type=number]{width:100%;background:var(--black);border:1px solid var(--border);border-radius:9px;color:var(--white);padding:9px 10px;font-family:var(--f);font-size:.9rem;font-weight:600;outline:none;transition:border-color .2s}
 .unit-row select:focus,.unit-row input:focus{border-color:var(--red)}
 .ur-field{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:var(--gray)}
 .ur-qtyrow{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:.78rem;color:var(--gray)}
 .ur-qtyrow input{width:64px;text-align:center}
+.unit-row .ur-qtyrow input[type=number]{width:auto;flex:1 1 0;min-width:64px}
 .ur-sub{margin-top:9px;padding-top:8px;border-top:1px dashed var(--border);display:flex;justify-content:space-between;font-size:.78rem;color:var(--gray)}
 .ur-sub b{color:var(--white)}
 .add-unit-btn{margin-top:2px}
@@ -422,10 +448,10 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 .lang-cur-bar{max-width:1200px;margin:0 auto;padding:0 24px 14px;display:flex;gap:10px;justify-content:center;align-items:center;direction:ltr}
 .fancy{display:inline-flex;border:1px solid rgba(164,36,59,.22);border-radius:30px;padding:3px;gap:3px;background:rgba(164,36,59,.04)}
 .lc-btn{display:inline-flex;align-items:center;gap:6px;border:none;background:transparent;font-family:inherit;font-size:.78rem;font-weight:700;color:var(--gray);padding:8px 18px;border-radius:30px;cursor:pointer;transition:all .25s}
-.lc-btn:hover{color:var(--text)}
+.lc-btn:hover{color:var(--white)}
 .lc-btn.on{background:linear-gradient(135deg,#A4243B,#C44A60);color:#fff;box-shadow:0 4px 16px rgba(164,36,59,.32)}
 .lc-btn .riyal{font-size:1rem;margin-left:1px;transform:translateY(1px)}
-@media(max-width:640px){.lang-cur-bar{padding:0 14px 10px;gap:6px}.lc-btn{padding:10px 13px;font-size:.74rem;min-height:42px}}
+@media(max-width:640px){.lang-cur-bar{padding:0 14px 10px;gap:6px}.lc-btn{padding:10px 13px;font-size:.74rem;min-height:44px}}
 
 /* نجمة الفاخرة */
 .lux-ic{width:.62em;height:.62em;color:#C9CED4;margin-right:3px;display:inline-flex;vertical-align:baseline}
@@ -450,12 +476,12 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 
   <div class="lang-cur-bar">
   <div class="fancy" role="group" aria-label="اللغة">
-    <button class="lc-btn on" id="langAR" onclick="setLang('ar')">عربي</button>
-    <button class="lc-btn" id="langEN" onclick="setLang('en')">EN</button>
+    <button type="button" class="lc-btn on" id="langAR" aria-pressed="true" onclick="setLang('ar')">عربي</button>
+    <button type="button" class="lc-btn" id="langEN" aria-pressed="false" lang="en" onclick="setLang('en')">EN</button>
   </div>
   <div class="fancy" role="group" aria-label="العملة">
-    <button class="lc-btn on" id="curSAR" onclick="setCur('SAR')"><span class="riyal">&#xEA;</span></button>
-    <button class="lc-btn" id="curUSD" onclick="setCur('USD')">$ USD</button>
+    <button type="button" class="lc-btn on" id="curSAR" aria-pressed="true" aria-label="ريال سعودي" onclick="setCur('SAR')"><span class="riyal" aria-hidden="true">&#xEA;</span></button>
+    <button type="button" class="lc-btn" id="curUSD" aria-pressed="false" aria-label="US dollar" onclick="setCur('USD')">$ USD</button>
   </div>
 </div>
 <div class="calc">
@@ -553,13 +579,13 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <p class="email-note field full" id="emailHint">مهم: بعد مراجعة الطلب وتأكيده، سنرسل العقد وجميع تفاصيل الطلب إلى هذا البريد الإلكتروني.</p>
       </div>
 
-      <div class="request-head"><b>ماذا تريد أن تفعل؟</b></div>
-      <div class="book-choice">
-        <div class="book-opt on" id="optQuote" onclick="setBookMode('quote')">
+      <div class="request-head"><b id="reqHead">ماذا تريد أن تفعل؟</b></div>
+      <div class="book-choice" role="radiogroup" aria-labelledby="reqHead">
+        <div class="book-opt on" id="optQuote" role="radio" aria-checked="true" tabindex="0" onclick="setBookMode('quote')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();setBookMode('quote')}">
           <div class="bo-t" data-t="quoteOnly">طلب عرض سعر</div>
           <div class="bo-s" data-t="quoteOnlySub">لا يتطلب موعدًا أو عربونًا الآن</div>
         </div>
-        <div class="book-opt" id="optBook" onclick="setBookMode('book')">
+        <div class="book-opt" id="optBook" role="radio" aria-checked="false" tabindex="0" onclick="setBookMode('book')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();setBookMode('book')}">
           <div class="bo-t" data-t="bookNow">طلب حجز موعد</div>
           <div class="bo-s" data-t="bookNowSub">اختر موعدًا مقترحًا لمراجعته</div>
         </div>
@@ -609,7 +635,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
             <a class="map-open" href="https://maps.google.com" target="_blank" rel="noopener">فتح الخرائط</a>
           </div>
           <div class="map-help"><b>الطريقة:</b> افتح موقع العقار في خرائط Google ← اضغط «مشاركة» ← «نسخ الرابط» ← الصق الرابط هنا.</div>
-          <input type="text" class="loc-addr" id="locAddr" placeholder="اسم الحي لحساب التنقل (اختياري)">
+          <input type="text" class="loc-addr" id="locAddr" placeholder="اسم الحي (اختياري)" aria-label="اسم الحي (اختياري)" maxlength="80" autocomplete="off">
           <div class="loc-result" id="locResult"></div>
           <div class="gs-hint">الخدمة القياسية داخل مدينة الرياض والتنقل مشمول — خارج الرياض يتطلب تسعيرًا يدويًا مسبقًا</div>
         </div>
@@ -630,10 +656,10 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       </div>
       <div class="lux-req" id="luxReq">
         <div class="lr-t" data-t="luxReqT">تفاصيل سريعة تساعدنا لخدمتك أفضل</div>
-        <textarea id="luxDetails" data-t-ph="luxPh" maxlength="1200" placeholder="مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع..."></textarea>
+        <textarea id="luxDetails" data-t-ph="luxPh" aria-label="تفاصيل المشروع" maxlength="1200" placeholder="مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع..."></textarea>
         <div class="lr-row">
-          <input type="text" id="luxCity" data-t-ph="luxCity" maxlength="120" placeholder="الموقع (الحي / المدينة)">
-          <input type="date" id="luxDate" title="التاريخ المفضل" style="direction:ltr">
+          <input type="text" id="luxCity" data-t-ph="luxCity" aria-label="الموقع (الحي / المدينة)" maxlength="120" placeholder="الموقع (الحي / المدينة)">
+          <input type="date" id="luxDate" title="التاريخ المفضل" aria-label="التاريخ المفضل" style="direction:ltr">
         </div>
       </div>
 
@@ -691,7 +717,11 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
   <p class="disclaimer">© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.</p>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="mbar off" id="mbar">
+  <div class="mb-t"><span class="mb-l" data-t="total">الإجمالي التقديري</span><b class="mb-v" id="mbarTotal">0</b></div>
+  <button type="button" class="mb-go" id="mbarGo" data-t="mbarGo">متابعة الطلب ↓</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- مستند عرض السعر الرسمي -->
 <div class="qoverlay" id="quoteOverlay">
@@ -960,7 +990,7 @@ const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('room
 /* ===== رسم ===== */
 function renderTypes(){
   typesEl.innerHTML=Object.entries(TYPES).map(([k,t])=>
-    `<button class="type-btn ${k===state.type?'active':''} ${t.luxury?'lux':''}" data-k="${k}"><span class="em">${ICONS.type[k]||''}</span>${(typeof UI!=='undefined'&&UI.lang==='en'&&t.en)?t.en:t.label}${t.luxury?' '+SVGI.lux:''}</button>`).join('');
+    `<button type="button" class="type-btn ${k===state.type?'active':''} ${t.luxury?'lux':''}" data-k="${k}" aria-pressed="${k===state.type}"><span class="em">${ICONS.type[k]||''}</span>${(typeof UI!=='undefined'&&UI.lang==='en'&&t.en)?t.en:t.label}${t.luxury?' '+SVGI.lux:''}</button>`).join('');
   typesEl.querySelectorAll('.type-btn').forEach(b=>b.onclick=()=>{state.type=b.dataset.k; onTypeChange(); recalc(); syncUrl();});
   typesEl.querySelectorAll('[data-svg]').forEach(el=>{ const k=el.dataset.svg; if(SVGI[k]) el.innerHTML=SVGI[k]; });
 }
@@ -968,23 +998,26 @@ function renderServices(){
   const dis=DISABLED[state.type]||[];
   svcsEl.innerHTML=Object.entries(SERVICES).map(([k,s])=>{
     const d=dis.includes(k);
-    return `<div class="svc ${state.sel.has(k)?'on':''}" data-k="${k}" ${d?'data-dis="1"':''}>
+    return `<div class="svc ${state.sel.has(k)?'on':''}" data-k="${k}" role="checkbox" aria-checked="${state.sel.has(k)}" tabindex="${d?-1:0}" ${d?'data-dis="1" aria-disabled="true"':''}>
       <span class="ic">${ICONS.svc[k]||''}</span>
       <span class="nm">${(typeof UI!=='undefined'&&UI.lang==='en'&&s.en)?s.en:s.label}<small>${d?(typeof UI!=='undefined'&&UI.lang==='en'?'Not applicable for this type':((typeof UI!=='undefined'&&UI.lang==='en'&&s.subEn)?s.subEn:s.sub)):((typeof UI!=='undefined'&&UI.lang==='en'&&s.subEn)?s.subEn:s.sub)}</small></span>
       <span class="px" data-px="${k}">—</span><span class="chk"></span></div>`;
   }).join('');
   svcsEl.querySelectorAll('.svc').forEach(el=>{
     if(el.dataset.dis) return;
-    el.onclick=()=>{const k=el.dataset.k; state.sel.has(k)?state.sel.delete(k):state.sel.add(k); el.classList.toggle('on'); recalc(); syncUrl();};
+    el.onclick=()=>{const k=el.dataset.k; state.sel.has(k)?state.sel.delete(k):state.sel.add(k); el.classList.toggle('on'); el.setAttribute('aria-checked',state.sel.has(k)); recalc(); syncUrl();};
+    /* بطاقات الخدمات كانت لا تُختار بلوحة المفاتيح */
+    el.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); el.click(); } };
   });
 }
 function onTypeChange(keepRooms){
   /* الوحدات المتعددة للشقق والفلل فقط — بقاياها بعد التحويل لنوع آخر كانت تفسد الرابط وملخص الطلب */
   if(!UNIT_TYPES.includes(state.type)) state.extraUnits=[];
-  typesEl.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b.dataset.k===state.type));
+  typesEl.querySelectorAll('.type-btn').forEach(b=>{ const on=b.dataset.k===state.type; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
   const t=TYPES[state.type]; const [min,max,def]=t.rooms; const no=max===0;
   roomsNA.style.display=no?'inline':'none'; roomsNum.parentElement.style.display=no?'none':'flex'; roomsEl.style.display=no?'none':'block';
   roomsTitle.textContent= state.type==='project' ? (EN()?'Number of Units':'عدد الوحدات') : (EN()?'Number of Rooms':'عدد الغرف');
+  roomsNum.setAttribute('aria-label',roomsTitle.textContent); roomsEl.setAttribute('aria-label',roomsTitle.textContent);
   if(!no){
     roomsEl.min=min; roomsEl.max=max; roomsNum.min=min; roomsNum.max=max;
     /* الحفاظ على غرف الرابط المشترك عند التحميل الأول — والافتراضي عند تبديل النوع يدويًا */
@@ -1062,7 +1095,7 @@ function deliverableOfEn(svc){
 }
 const EN = () => typeof UI!=='undefined' && UI.lang==='en';
 const tx = (ar, en) => EN() ? en : ar;
-const RIYAL = '<span class="riyal">\u00EA</span>';
+const RIYAL = '<span class="riyal" role="img" aria-label="ريال">\u00EA</span>';
 function fmtParts(n){
   const usd = (typeof UI!=='undefined' && UI.cur==='USD');
   const en  = (typeof UI!=='undefined' && UI.lang==='en');
@@ -1235,7 +1268,7 @@ function renderUnits(){
           <input type="number" class="ur-rooms" min="${TYPES[u.type].rooms[0]}" max="${TYPES[u.type].rooms[1]}" value="${u.rooms}">
         </label>
       </div>
-      <div class="ur-qtyrow"><span>${en?'Qty of identical units':'عدد الوحدات المطابقة'}</span><input type="number" class="ur-qty" min="1" max="${UNITS_CAP}" value="${u.qty||1}"><span>${en?'unit(s)':'وحدة'}</span></div>
+      <div class="ur-qtyrow"><span>${en?'Qty of identical units':'عدد الوحدات المطابقة'}</span><input type="number" class="ur-qty" min="1" max="${UNITS_CAP}" value="${u.qty||1}" aria-label="${en?'Qty of identical units':'عدد الوحدات المطابقة'}"><span>${en?'unit(s)':'وحدة'}</span></div>
       <div class="ur-sub"><span>${en?'Unit subtotal':'مجموع الوحدة'}</span><b class="ur-subv">—</b></div>
     </div>`).join('');
   wrap.querySelectorAll('.unit-row').forEach(row=>{
@@ -1502,7 +1535,7 @@ const T = {
     footer:'© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.',
     quoteBar:'عرض سعر رسمي — مأوى للتصوير العقاري', dlPdf:'تحميل PDF', printBtn:'طباعة', closeQuote:'إغلاق',
     customMsg:'هذا النوع يُسعَّر بعد المعاينة', perReq:'حسب الطلب',
-    sar:'ر.س', usd:'دولار'
+    sar:'ر.س', usd:'دولار', mbarGo:'متابعة الطلب ↓'
   },
   en: {
     eyebrow:'Instant Price Calculator',
@@ -1589,7 +1622,7 @@ const T = {
     footer:'© 2026 MAWA Real Estate Photography — Prices in Saudi Riyal. Riyadh only.',
     quoteBar:'Official Quote — MAWA Real Estate Photography', dlPdf:'Download PDF', printBtn:'Print', closeQuote:'Close',
     customMsg:'This type is priced after a site visit', perReq:'On request',
-    sar:'SAR', usd:'USD'
+    sar:'SAR', usd:'USD', mbarGo:'Continue ↓'
   }
 };
 
@@ -1605,8 +1638,8 @@ function setLang(l){
   UI.lang = l;
   document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
   document.documentElement.lang = l;
-  $('langAR').classList.toggle('on', l==='ar');
-  $('langEN').classList.toggle('on', l==='en');
+  $('langAR').classList.toggle('on', l==='ar'); $('langAR').setAttribute('aria-pressed', l==='ar');
+  $('langEN').classList.toggle('on', l==='en'); $('langEN').setAttribute('aria-pressed', l==='en');
   renderTypes(); onTypeChange(true);
   applyLang();
   fillTimes(BOOK.date || '');
@@ -1617,8 +1650,8 @@ function setLang(l){
 
 function setCur(c){
   UI.cur = c;
-  $('curSAR').classList.toggle('on', c==='SAR');
-  $('curUSD').classList.toggle('on', c==='USD');
+  $('curSAR').classList.toggle('on', c==='SAR'); $('curSAR').setAttribute('aria-pressed', c==='SAR');
+  $('curUSD').classList.toggle('on', c==='USD'); $('curUSD').setAttribute('aria-pressed', c==='USD');
   recalc();
 }
 
@@ -1932,11 +1965,11 @@ function confirmLabel(){
 
 function setBookMode(m){
   BOOK.mode = m; BOOK.date = null; BOOK.time = null; BOOK.facade = null;
-  document.querySelectorAll('#facadeChips .fchip').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('#facadeChips .fchip').forEach(x=>{ x.classList.remove('on'); x.setAttribute('aria-pressed','false'); });
   $('sunAdvice').style.display = 'none';
   var dn=document.getElementById('depositNote'); if(dn) dn.style.display = (m==='book'?'flex':'none');
-  $('optQuote').classList.toggle('on', m==='quote');
-  $('optBook').classList.toggle('on', m==='book');
+  $('optQuote').classList.toggle('on', m==='quote'); $('optQuote').setAttribute('aria-checked', m==='quote');
+  $('optBook').classList.toggle('on', m==='book'); $('optBook').setAttribute('aria-checked', m==='book');
   $('bookPanel').classList.toggle('on', m==='book');
   $('govDate').value = ''; fillTimes('');
   $('locUrl').classList.remove('err');
@@ -2043,6 +2076,7 @@ document.querySelectorAll('#facadeChips .fchip').forEach(ch=>{
     document.querySelectorAll('#facadeChips .fchip').forEach(x=>x.classList.remove('on'));
     if (BOOK.facade === ch.dataset.f){ BOOK.facade = null; }
     else { BOOK.facade = ch.dataset.f; ch.classList.add('on'); }
+    document.querySelectorAll('#facadeChips .fchip').forEach(x=>x.setAttribute('aria-pressed',x.classList.contains('on')));
     updateSunAdvice();
   });
 });
@@ -2100,7 +2134,8 @@ function updateDeposit(){
   const gBox = document.querySelector('#bookPanel .gov-deposit'); if (gBox) gBox.style.display = (out || state.isCustom) ? 'none' : '';
   updateBookSummary();
 }
-recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); };
+function updateMbar(){ const v=$('mbarTotal'); if(v) v.innerHTML=state.isCustom?tx('حسب المشروع','Per project'):fmt(lastTotal); }
+recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); updateMbar(); };
 
 async function copyBankVal(box, kind){
   const el = box.querySelector('.bb-val');
@@ -2445,6 +2480,24 @@ function injectIcons(){
 }
 
 injectIcons();
+
+/* شريط الإجمالي الثابت على الجوال: يظهر أثناء الخطوات ويختفي حين يصل الزائر للملخص */
+(function(){
+  const bar=$('mbar'), sum=document.querySelector('.summary'); if(!bar||!sum) return;
+  $('mbarGo').onclick=()=>sum.scrollIntoView({behavior:'smooth',block:'start'});
+  if('IntersectionObserver' in window) new IntersectionObserver(en=>bar.classList.toggle('off',en[0].isIntersecting),{threshold:0}).observe(sum);
+  else bar.classList.remove('off');
+})();
+
+/* نسخ المبالغ: رمز الريال يُرسم بخط خاص فوق الحرف «ê»، فيُستبدل بـ«ر.س» في النص المنسوخ */
+document.addEventListener('copy',e=>{
+  const sel=window.getSelection(); if(!sel||sel.isCollapsed||!e.clipboardData) return;
+  const box=document.createElement('div');
+  for(let i=0;i<sel.rangeCount;i++) box.appendChild(sel.getRangeAt(i).cloneContents());
+  if(!box.querySelector('.riyal')) return;
+  box.querySelectorAll('.riyal').forEach(r=>r.replaceWith('ر.س'));
+  e.clipboardData.setData('text/plain',box.textContent.replace(/[ \t]+/g,' ').trim()); e.preventDefault();
+});
 
 /* ═══ محرك الموقع والبعد — الأساس RUQB2510 ═══
    قرار معتمد: داخل الرياض = الخدمة القياسية بدون رسوم تنقل تلقائية.
