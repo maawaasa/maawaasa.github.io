@@ -1423,11 +1423,11 @@ const T = {
     bookNowSub:'اختر التاريخ والوقت الآن + عربون 25%', dateHint:'متاح يومياً عدا الجمعة', timeHint:'الفترات المتاحة: 4:00 صباحاً — 12:00 منتصف الليل',
     quoteOnlySub:'نتواصل معك لتحديد الموعد لاحقاً', priceTable:'عرض جدول الأسعار الكامل ←', locAll:'كل الوحدات في نفس الموقع',
     ptBtn:'جدول الأسعار الكامل', ptTitle:'قائمة الأسعار الموحّدة 2026', ptSub:'الأسعار بالريال السعودي · التصوير داخل الرياض',
-    ptSvc:'الخدمة', ptFrom:'من', ptPerRoom:'+ للغرفة الإضافية', ptFlat:'خدمات بثابت',
+    ptSvc:'الخدمة', ptFrom:'من', ptPerRoom:'لكل غرفة إضافية', ptFlat:'خدمات بثابت',
     ptDrone:'تصوير درون 4K (شامل التصاريح)', ptAd:'فيديو إعلاني تسويقي',
     ptExtras:'الإضافات والتصميم', ptNight:'تصوير ليلي / Blue-hour', ptSocial:'نسخ لمواقع التواصل', ptRush:'تسليم عاجل', ptRushV:'+25%',
     ptLogo:'تصميم شعار عقاري', ptSign:'تصميم لوحة خارجية', ptBrochure:'بروشور PDF', ptBrochureV:'200 ر.س / صفحة',
-    ptNote:'السعر النهائي يُحدَّد من الحاسبة حسب نوع العقار وعدد الغرف والخدمات المختارة. الخدمة القياسية داخل مدينة الرياض، ولا توجد خصومات تلقائية — والعروض الخاصة تُمنح ضمن عرض سعر معتمد من مأوى..',
+    ptNote:'السعر النهائي يُحدَّد من الحاسبة حسب نوع العقار وعدد الغرف والخدمات المختارة. الخدمة القياسية داخل مدينة الرياض، ولا توجد خصومات تلقائية — والعروض الخاصة تُمنح ضمن عرض سعر معتمد من مأوى.',
     luxTitle:'هذا المشروع يستحق تسعيراً مخصّصاً',
     luxSub:'المشاريع الفاخرة تختلف تفاصيلها من موقع لآخر — أرسل طلبك وسيتواصل معك فريقنا لمناقشة التفاصيل، ثم نصلك عرض سعر رسمي مخصّص خلال 24 ساعة.',
     luxReqT:'تفاصيل سريعة تساعدنا لخدمتك أفضل',
@@ -1510,11 +1510,11 @@ const T = {
     bookNowSub:'Pick date & time now + 25% deposit', dateHint:'Available daily except Friday', timeHint:'Available slots: 4:00 AM — 12:00 Midnight',
     quoteOnlySub:'We will contact you to schedule later', priceTable:'View full price list ←', locAll:'All units at the same location',
     ptBtn:'Full Price Table', ptTitle:'Unified Price List 2026', ptSub:'Prices in SAR · Riyadh coverage',
-    ptSvc:'Service', ptFrom:'from', ptPerRoom:'+ per extra room', ptFlat:'Fixed-rate services',
+    ptSvc:'Service', ptFrom:'from', ptPerRoom:'per extra room', ptFlat:'Fixed-rate services',
     ptDrone:'4K Drone (permits included)', ptAd:'Marketing promo video',
     ptExtras:'Add-ons & Design', ptNight:'Night / Blue-hour shoot', ptSocial:'Social media versions', ptRush:'Rush delivery', ptRushV:'+25%',
     ptLogo:'Real estate logo design', ptSign:'Outdoor signage design', ptBrochure:'PDF brochure', ptBrochureV:'200 SAR / page',
-    ptNote:'The final price is calculated by the calculator based on property type, rooms and selected services. Standard service covers Riyadh city only — no automatic discounts; special offers are granted via an approved MAWA quote..',
+    ptNote:'The final price is calculated by the calculator based on property type, rooms and selected services. Standard service covers Riyadh city only — no automatic discounts; special offers are granted via an approved MAWA quote.',
     luxTitle:'This project deserves a custom quote',
     luxSub:'Luxury projects vary by location and scope — send your request, our team will contact you to discuss details, then deliver a tailored official quote within 24 hours.',
     luxReqT:'A few quick details to serve you better',
@@ -2403,27 +2403,34 @@ function buildPriceTable(){
   const cols=types.map(k=>({k, n:ar?TYPES[k].label:TYPES[k].en}));
   const svcs=['photo','video','vr360'];
   let h='<div class="pt-hint">⇠ '+(ar?'اسحب الجدول جانبياً لعرض كل الأعمدة':'Swipe the table sideways to see all columns')+' ⇢</div><div class="pt-scroll"><table><thead><tr><th>'+t.ptSvc+'</th>'+cols.map(c=>'<th>'+c.n+'</th>').join('')+'</tr></thead><tbody>';
+  /* «من» = سعر أقل عدد غرف فعلي للنوع، والزيادة = فرق الغرفة التالية — من نفس دالة الحاسبة.
+     كان الجدول يعرض ثابت المعادلة (شقة 725 وفيلا 1,370) بينما أقل سعر فعلي 850 و1,685 */
   svcs.forEach(sk=>{
     const p=PRICING[sk];
     h+='<tr><td>'+(ar?SERVICES[sk].label:SERVICES[sk].en)+'</td>';
     cols.forEach(c=>{
       const cell=p[c.k];
       if(!cell||cell.b===0){ h+='<td>—</td>'; return; }
-      const rTxt=cell.r.toLocaleString('en-US')+(ar?' ر.س':'');
-      h+='<td>'+t.ptFrom+' '+fmtT(campNet(cell.b, c.k))+(cell.r?('<small>+'+fmtT(campNet(cell.r, c.k))+' '+t.ptPerRoom+'</small>'):'')+'</td>';
+      const R=TYPES[c.k].rooms, r0=R[1]===0?0:R[0];
+      const from=priceOfFor(sk,c.k,r0), step=(cell.r&&R[1]>r0)?priceOfFor(sk,c.k,r0+1)-from:0;
+      h+='<td>'+t.ptFrom+' '+fmtT(from)+(step?('<small>+'+fmtT(step)+' '+t.ptPerRoom+'</small>'):'')+'</td>';
     });
     h+='</tr>';
   });
+  /* مبالغ الصفوف بعملة العرض الحالية دون إلحاق «ر.س» بعد «SAR» أو «$» */
+  const ptMoney=n=>fmtT(n)+(ar&&UI.cur==='SAR'?' ر.س':'');
   h+='</tbody></table></div>';
   h+='<div class="pt-sec">'+t.ptFlat+'</div>';
-  h+='<div class="pt-row"><span>'+t.ptDrone+'</span><span>'+fmtT(PRICING.drone.flat)+' ر.س</span></div>';
-  h+='<div class="pt-row"><span>'+t.ptAd+'</span><span>'+fmtT(PRICING.ad.flat)+' ر.س</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptDrone+'</span><span>'+ptMoney(PRICING.drone.flat)+'</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptAd+'</span><span>'+ptMoney(PRICING.ad.flat)+'</span></div>';
   h+='<div class="pt-sec">'+t.ptExtras+'</div>';
-  h+='<div class="pt-row"><span>'+t.ptLogo+'</span><span>1,200 ر.س</span></div>';
-  h+='<div class="pt-row"><span>'+t.ptSign+'</span><span>700 ر.س</span></div>';
-  h+='<div class="pt-row"><span>'+t.ptBrochure+'</span><span>'+t.ptBrochureV+'</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptLogo+'</span><span>'+ptMoney(1200)+'</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptSign+'</span><span>'+ptMoney(700)+'</span></div>';
+  h+='<div class="pt-row"><span>'+t.ptBrochure+'</span><span>'+ptMoney(200)+(ar?' / صفحة':' / page')+'</span></div>';
   h+='<div class="pt-row"><span>'+t.ptRush+'</span><span>'+t.ptRushV+'</span></div>';
-  h+='<div class="pt-note">'+t.ptNote+(CAMPAIGN.active?`<br>جميع الأسعار شاملة <b>${CAMPAIGN.name}</b>.`:'')+'</div>';
+  const sub=document.querySelector('#ptOverlay .pt-sub');
+  if(sub) sub.textContent=UI.cur==='USD' ? (ar?'الأسعار بالدولار الأمريكي (1$ = 3.75 ر.س) · التصوير داخل الرياض':'Prices in USD (1$ = 3.75 SAR) · Riyadh coverage') : t.ptSub;
+  h+='<div class="pt-note">'+t.ptNote+(CAMPAIGN.active?(ar?`<br>جميع الأسعار شاملة <b>${CAMPAIGN.name}</b>.`:`<br>All prices include the <b>${CAMPAIGN.nameEn}</b>.`):'')+'</div>';
   $('ptBody').innerHTML=h;
 }
 $('ptBtn').onclick=()=>{ buildPriceTable(); $('ptOverlay').classList.add('open'); document.body.style.overflow='hidden'; };
