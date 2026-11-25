@@ -832,7 +832,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <li><b>الستائر والإطلالات:</b> فتح الستائر وإزالة العوائق عن النوافذ ذات الإطلالة إن رغب بإبرازها.</li>
         <li><b>المركبات:</b> إخلاء مدخل العقار ومنطقة الواجهة من السيارات قبل جلسة التصوير الخارجي إن أمكن.</li>
         <li><b>الأعمال الجارية:</b> في حال وجود صيانة أو عمال بالعقار وقت الجلسة، تُنسق إيقافها مؤقتًا أو إعادة جدولة الجلسة مسبقًا.</li>
-        <li><b>التصاريح الداخلية:</b> لمجمعات السكنية والبوابات الأمنية — ترتيب دخول الفريق مع الأمن قبل الموعد بساعة على الأقل.</li>
+        <li><b>التصاريح الداخلية:</b> للمجمعات السكنية والبوابات الأمنية — ترتيب دخول الفريق مع الأمن قبل الموعد بساعة على الأقل.</li>
       </ul>
       <p style="font-size:.72rem;color:#8a857f;margin-top:10px">يُعد سداد العربون وقبول الطلب عبر الموقع أو واتساب موافقةً كاملةً على هذا العقد وجميع شروطه وأحكامه.</p>
     </div>
@@ -2032,12 +2032,19 @@ function setBookMode(m){
   $('submitSuccess').classList.remove('on'); $('submitSuccess').innerHTML='';
 }
 
+/* اليوم والساعة بتوقيت الرياض لا بساعة جهاز الزائر: زائر خارج المملكة كان يرى أوقاتاً مضت متاحة أو يفقد أوقاتاً قادمة */
+function riyadhNow(){
+  try{
+    const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Riyadh',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const g=t=>(p.find(x=>x.type===t)||{}).value;
+    return {date:g('year')+'-'+g('month')+'-'+g('day'), hour:+g('hour')};
+  }catch(_){ const n=new Date(), z=x=>String(x).padStart(2,'0'); return {date:n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate()), hour:n.getHours()}; }
+}
 function fillTimes(dateStr){
   const sel = $('govTime');
-  const now = new Date();
   const pad = n => String(n).padStart(2,'0');
-  const todayStr = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
-  const cutoff = dateStr === todayStr ? now.getHours() : -1;
+  const rn = riyadhNow();
+  const cutoff = dateStr === rn.date ? rn.hour : -1;
   const lg = L();
   let html = '<option value="">'+lg.chooseTime+'</option>';
   for (let h = 4; h <= 23; h++){
@@ -2134,10 +2141,9 @@ document.querySelectorAll('#facadeChips .fchip').forEach(ch=>{
 function setupDateInput(){
   const inp = $('govDate');
   const pad = n => String(n).padStart(2,'0');
-  const now = new Date();
-  inp.min = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
-  const max = new Date(now); max.setFullYear(max.getFullYear()+1);
-  inp.max = max.getFullYear()+'-'+pad(max.getMonth()+1)+'-'+pad(max.getDate());
+  const today = riyadhNow().date, md = today.slice(4)==='-02-29' ? '-02-28' : today.slice(4);
+  inp.min = today;
+  inp.max = (+today.slice(0,4)+1) + md;
   inp.addEventListener('change', () => {
     const v = inp.value;
     if (!v){ BOOK.date = null; $('bookSummary').classList.remove('on'); return; }
@@ -2365,7 +2371,7 @@ $('waBtn').onclick = async function(){
       const luxBlock=(det||city||ddate)?'\n\n✦ تفاصيل المشروع:'+(city?'\n• الموقع: '+city:'')+(ddate?'\n• التاريخ المفضل: '+dtxt:'')+(det?'\n• تفاصيل إضافية: '+det:''):'';
       msg=hello+'\nأرغب بطلب عرض سعر مخصّص من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات:\n• '+svcs+luxBlock+'\n\nهذا المشروع من الفئة الفاخرة ويحتاج معاينة وتسعيراً مخصّصاً من فريقكم. أرجو التواصل لاستكمال التفاصيل.';
     } else {
-      msg=hello+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+sar(lastTotal)+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``)+bookInfo;
+      msg=hello+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+(lines.length?'\n\n📸 الخدمات المختارة:\n'+lines.join('\n'):'')+(lastTotal>0?'\n\n💰 الإجمالي التقديري: '+sar(lastTotal)+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``):'')+bookInfo;
     }
     window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');
     toast(tx('تم فتح واتساب للاستفسار','WhatsApp opened'));
