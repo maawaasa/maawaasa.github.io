@@ -547,9 +547,9 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <span>نستخدمها للتواصل وإرسال مستندات الطلب.</span>
       </div>
       <div class="fields">
-        <div class="field full"><label class="field-label" for="custName">الاسم <span class="req">*</span></label><input type="text" id="custName" placeholder="الاسم الكامل" autocomplete="name" required></div>
-        <div class="field"><label class="field-label" for="custPhone">الجوال <span class="req">*</span></label><input type="tel" id="custPhone" placeholder="05xxxxxxxx" autocomplete="tel" required style="direction:ltr;text-align:right"></div>
-        <div class="field"><label class="field-label" for="custEmail">البريد الإلكتروني <span class="req">*</span></label><input type="email" id="custEmail" placeholder="name@example.com" autocomplete="email" required aria-describedby="emailHint" style="direction:ltr;text-align:right"></div>
+        <div class="field full"><label class="field-label" for="custName">الاسم <span class="req">*</span></label><input type="text" id="custName" placeholder="الاسم الكامل" autocomplete="name" maxlength="120" required></div>
+        <div class="field"><label class="field-label" for="custPhone">الجوال <span class="req">*</span></label><input type="tel" id="custPhone" placeholder="05xxxxxxxx" autocomplete="tel" inputmode="tel" maxlength="20" required style="direction:ltr;text-align:right"></div>
+        <div class="field"><label class="field-label" for="custEmail">البريد الإلكتروني <span class="req">*</span></label><input type="email" id="custEmail" placeholder="name@example.com" autocomplete="email" maxlength="254" required aria-describedby="emailHint" style="direction:ltr;text-align:right"></div>
         <p class="email-note field full" id="emailHint">مهم: بعد مراجعة الطلب وتأكيده، سنرسل العقد وجميع تفاصيل الطلب إلى هذا البريد الإلكتروني.</p>
       </div>
 
@@ -630,9 +630,9 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       </div>
       <div class="lux-req" id="luxReq">
         <div class="lr-t" data-t="luxReqT">تفاصيل سريعة تساعدنا لخدمتك أفضل</div>
-        <textarea id="luxDetails" data-t-ph="luxPh" placeholder="مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع..."></textarea>
+        <textarea id="luxDetails" data-t-ph="luxPh" maxlength="1200" placeholder="مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع..."></textarea>
         <div class="lr-row">
-          <input type="text" id="luxCity" data-t-ph="luxCity" placeholder="الموقع (الحي / المدينة)">
+          <input type="text" id="luxCity" data-t-ph="luxCity" maxlength="120" placeholder="الموقع (الحي / المدينة)">
           <input type="date" id="luxDate" title="التاريخ المفضل" style="direction:ltr">
         </div>
       </div>
@@ -1061,6 +1061,7 @@ function deliverableOfEn(svc){
   return '';
 }
 const EN = () => typeof UI!=='undefined' && UI.lang==='en';
+const tx = (ar, en) => EN() ? en : ar;
 const RIYAL = '<span class="riyal">\u00EA</span>';
 function fmtParts(n){
   const usd = (typeof UI!=='undefined' && UI.cur==='USD');
@@ -1271,7 +1272,10 @@ $('addUnitBtn').onclick=()=>{
   refreshUnits();
   if($('unitsCard').scrollIntoView) $('unitsCard').scrollIntoView({behavior:'smooth',block:'nearest'});
 };
-['custName','custPhone','custEmail'].forEach(id=>$(id).addEventListener('input',e=>{state[id.replace('cust','').toLowerCase()]=e.target.value;}));
+/* أرقام عربية-هندية (٠٥٥…) أو فارسية → إنجليزية: الخادم لا يقرأ إلا 0-9 فكان يرفض الرقم */
+const normDigits=s=>String(s||'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776);
+['custName','custPhone','custEmail'].forEach(id=>$(id).addEventListener('input',e=>{state[id.replace('cust','').toLowerCase()]=id==='custPhone'?normDigits(e.target.value):e.target.value;}));
+$('custPhone').addEventListener('change',e=>{ e.target.value=state.phone; });
 
 
 /* ===== نظام الرابط النظيف — المسار بدل query =====
@@ -1726,7 +1730,7 @@ function applyLang(){
 }
 
 /* ===== toast ===== */
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),Math.max(2200,String(msg).length*70)); }
 
 
 
@@ -2140,8 +2144,8 @@ async function saveLead(total){
     // 1) الدالة الآمنة submit_lead (إن وُجدت)
     try{
       const { data: contractId, error } = await sb.rpc('submit_lead', {
-        p_full_name: state.name||'عميل من الحاسبة',
-        p_phone: state.phone||'',
+        p_full_name: state.name.trim()||'عميل من الحاسبة',
+        p_phone: normDigits(state.phone).replace(/[^0-9+]/g,''),
         p_email: state.email||null,
         p_identity: null,
         p_service_type: svcStr,
@@ -2150,7 +2154,7 @@ async function saveLead(total){
         p_property_location: bookingLocationUrl||null,
         p_rooms: TYPES[state.type].rooms[1]===0?null:String(state.rooms),
         p_shoot_date: shootDate,
-        p_notes: notes,
+        p_notes: notes.slice(0,2000), // حد الخادم 2000 حرف — تفاصيل المشروع الطويلة كانت ترفض الطلب كاملاً
         p_services: svcRows.length?svcRows:null,
         p_units: unitsPayload(),
         p_quote_number: savedQ?savedQ.number:null,
@@ -2165,43 +2169,83 @@ async function saveLead(total){
          (تحقق + حدود + حد معدل + ترقيم MAW-XXXX خادميًا + ربط Quote).
          فشل الـRPC يعيد false ويظهر للعميل رسالة خطأ مناسبة. */
       console.warn('submit_lead رُفضت:', error);
+      lastSubmitError=error;
       return false;
     }catch(e){
       console.warn('submit_lead فشل:', e);
+      lastSubmitError=e;
       return false;
     }
   }catch(e){ console.warn('حفظ الحاسبة فشل:', e); return false; }
 }
 
 /* التحقق المشترك قبل أي إرسال: واتساب أو الطلب المباشر */
+/* الخادم يقبل رابط موقع حتى 300 حرف؛ روابط خرائط Google من شريط العنوان أطول،
+   فتُختصر إلى إحداثيات الدبوس إن وُجدت، وإلا يُطلب رابط «مشاركة» القصير */
+function compactMapUrl(raw){
+  if(raw.length<=300) return raw;
+  const pin=raw.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/)||raw.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/)||raw.match(/[?&](?:q|query)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+  return pin ? 'https://maps.google.com/?q='+pin[1]+','+pin[2] : null;
+}
+/* التحقق المشترك قبل أي إرسال — بنفس قواعد submit_lead/submit_quote حتى لا يرفض الخادم ما قبلته الصفحة */
 function validateOrder(){
   const dis=DISABLED[state.type]||[];
-  if(![...state.sel].some(k=>!dis.includes(k))){ toast('اختر خدمة واحدة على الأقل'); return false; }
-  if(!state.name.trim() || !state.phone.trim()){
-    toast('أدخل الاسم والجوال أولاً');
-    (!state.name.trim() ? $('custName') : $('custPhone')).focus();
-    return false;
+  if(![...state.sel].some(k=>!dis.includes(k))){ toast(tx('اختر خدمة واحدة على الأقل','Select at least one service')); return false; }
+  const name=state.name.trim();
+  if(name.length<2 || name.length>120){
+    toast(tx('أدخل اسمك الكامل (حرفان على الأقل)','Enter your full name (at least 2 characters)'));
+    $('custName').focus(); return false;
   }
-  const email=$('custEmail');
-  if(!state.email.trim() || !email.checkValidity()){
-    toast('أدخل بريداً إلكترونياً صحيحاً لإرسال العقد وتفاصيل الطلب');
+  const phone=normDigits(state.phone).replace(/[^0-9+]/g,'');
+  if(!/^\+?[0-9]{8,15}$/.test(phone)){
+    toast(tx('أدخل رقم جوال صحيحاً، مثل 05xxxxxxxx','Enter a valid phone number, e.g. 05xxxxxxxx'));
+    $('custPhone').focus(); return false;
+  }
+  const email=$('custEmail'), em=state.email.trim();
+  if(!em || em.length>254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em) || !email.checkValidity()){
+    toast(tx('أدخل بريداً إلكترونياً صحيحاً لإرسال العقد وتفاصيل الطلب','Enter a valid email to receive the contract and request details'));
     email.focus(); email.reportValidity();
     return false;
   }
   if(BOOK.mode==='book'){
-    if(!BOOK.date){ toast('اختر تاريخ جلسة التصوير أولاً'); $('govDate').focus(); $('govDate').classList.add('err'); return false; }
-    if(!BOOK.time){ toast('اختر وقت بداية الجلسة'); $('govTime').focus(); return false; }
+    if(!BOOK.date){ toast(tx('اختر تاريخ جلسة التصوير أولاً','Select the session date first')); $('govDate').focus(); $('govDate').classList.add('err'); return false; }
+    if(!BOOK.time){ toast(tx('اختر وقت بداية الجلسة','Select the session start time')); $('govTime').focus(); return false; }
     const locUrl=$('locUrl'), raw=locUrl.value.trim();
     let validLocation=false;
     try{ const parsed=new URL(raw); validLocation=parsed.protocol==='https:'||parsed.protocol==='http:'; }catch(_){ }
     if(!validLocation){
-      toast('ألصق رابط موقع التصوير من خرائط Google');
+      toast(tx('ألصق رابط موقع التصوير من خرائط Google','Paste the shoot location link from Google Maps'));
       locUrl.classList.add('err'); locUrl.focus(); locUrl.reportValidity();
       return false;
     }
+    const compact=compactMapUrl(raw);
+    if(!compact){
+      toast(tx('رابط الموقع طويل جداً — من خرائط Google اضغط «مشاركة» ثم «نسخ الرابط» والصقه هنا','The location link is too long — in Google Maps tap Share, then Copy link, and paste it here'));
+      locUrl.classList.add('err'); locUrl.focus();
+      return false;
+    }
+    if(compact!==raw) locUrl.value=compact;
     locUrl.classList.remove('err');
   }
   return true;
+}
+/* رسالة واضحة لكل رفض من الخادم بدل «حاول مرة أخرى» للجميع */
+let lastSubmitError=null;
+const SUBMIT_ERR={
+  invalid_full_name:['أدخل اسمك الكامل (حرفان على الأقل)','Enter your full name (at least 2 characters)'],
+  invalid_phone:['رقم الجوال غير صحيح — اكتبه مثل 05xxxxxxxx','Invalid phone number — e.g. 05xxxxxxxx'],
+  invalid_email:['البريد الإلكتروني غير صحيح','Invalid email address'],
+  too_many_requests:['أُرسلت طلبات كثيرة بهذا الرقم خلال وقت قصير — حاول بعد 15 دقيقة أو راسلنا عبر واتساب','Too many requests from this number — try again in 15 minutes or message us on WhatsApp'],
+  input_too_long:['بعض البيانات أطول من المسموح — اختصر التفاصيل أو رابط الموقع','Some details are too long — shorten the notes or the location link'],
+  payload_too_large:['بيانات العرض أكبر من المسموح — قلّل عدد الوحدات أو التفاصيل','The quote is too large — reduce the units or details'],
+  invalid_unit:['تعذّرت قراءة الوحدات — راجع عدد الغرف والكميات','Could not read the units — check rooms and quantities']
+};
+function submitErrorMsg(isQuote){
+  const m=String((lastSubmitError&&(lastSubmitError.message||lastSubmitError.details||lastSubmitError.hint))||'');
+  const k=Object.keys(SUBMIT_ERR).find(x=>m.includes(x));
+  if(k) return SUBMIT_ERR[k][EN()?1:0];
+  return isQuote ? tx('تعذر حفظ عرض السعر حالياً، يرجى المحاولة مرة أخرى.','Could not save the quote right now — please try again.')
+                 : tx('تعذر إرسال الطلب حالياً، يرجى المحاولة مرة أخرى.','Could not send the request right now — please try again.');
 }
 
 /* تعديل زر واتساب: تحقق + بيانات الحجز */
@@ -2282,8 +2326,8 @@ async function saveQuote(total){
       units_summary:unitsShortSummary()
     };
     const { data, error } = await sb.rpc('submit_quote', {
-      p_full_name: state.name||'عميل من الحاسبة',
-      p_phone: state.phone||'',
+      p_full_name: state.name.trim()||'عميل من الحاسبة',
+      p_phone: normDigits(state.phone).replace(/[^0-9+]/g,''),
       p_email: state.email||null,
       p_property_type: t.formKey,
       p_service_type: svcStr,
@@ -2306,18 +2350,19 @@ async function saveQuote(total){
       }catch(_){}
     }
     return saved;
-  }catch(e){ console.warn('حفظ عرض السعر فشل:', e); return false; }
+  }catch(e){ console.warn('حفظ عرض السعر فشل:', e); lastSubmitError=e; return false; }
 }
 
 /* تأكيد الطلب: حفظ العرض (Quote) لا ينشئ Order — طلب الحجز يمشي في مسار saveLead المعتمد. */
 $('confirmOrderBtn').onclick = async function(){
   if(!validateOrder()) return;
+  lastSubmitError=null;
   const btn=this, label=btn.textContent;
   const isQuoteSave = !state.isCustom && BOOK.mode!=='book';
   btn.textContent=isQuoteSave?'جارٍ حفظ العرض...':'جارٍ إرسال الطلب...'; btn.disabled=true;
   if(isQuoteSave){
     const saved=await saveQuote(lastTotal);
-    if(!saved){btn.textContent=label;btn.disabled=false;toast('تعذر حفظ عرض السعر حالياً، يرجى المحاولة مرة أخرى.');return;}
+    if(!saved){btn.textContent=label;btn.disabled=false;toast(submitErrorMsg(true));return;}
     const success=$('submitSuccess');
     success.innerHTML=EN()
       ? '<h4>✓ Quote saved</h4><p>Quote no. <b>'+(saved.number||'—')+'</b> — valid until <b>'+dmy(saved.valid_until)+'</b> (14 days).</p><p>No booking has been created. To book, send a booking request or contact MAWA quoting this number.</p>'
@@ -2330,7 +2375,7 @@ $('confirmOrderBtn').onclick = async function(){
     return;
   }
   const saved=await saveLead(lastTotal);
-  if(!saved){btn.textContent=label;btn.disabled=false;toast('تعذر إرسال الطلب حالياً، يرجى المحاولة مرة أخرى.');return;}
+  if(!saved){btn.textContent=label;btn.disabled=false;toast(submitErrorMsg(false));return;}
   const success=$('submitSuccess');
   const ref=typeof saved==='string'?'<div class="request-ref">رقم الطلب: '+saved+'</div>':'';
   if(BOOK.mode==='book' && outsideBooking()){
