@@ -29,6 +29,7 @@ Guidance for AI agents working on the مأوى (MAWA) website.
 | 2026-09-09 | opencode | الحاسبة: Multi-Unit (1 Site + N Units) بلا خصومات تلقائية + فصل Save Quote (Q-XXXX/14 يوم) عن Booking + إلغاء رسوم التنقل وخارج الرياض تسعير يدوي + `sql/013_quotes_mvp.sql` | منتهية — بانتظار مراجعة المالك قبل الـcommit |
 | 2026-09-09 | opencode | جلسة ليلية: 013b إغلاق anon-INSERT ديناميكيًا + 014/015 (email_log + Hold + action_tokens) + 7 دوال جديدة (send-email/email-automation/action-token-create/receipt-submit/coverage-confirm/payment-approve + C-03 في notify-lead) + 43 قالب إيميل P0+P1 + receipt.html + جناح انحدار الحاسبة 18 فحصًا | منتهية — بانتظار تشغيل 013b و014/015 ونشر الدوال (NEEDS_OWNER_ACTION.md) |
 | 2026-09-09 | opencode | روابط الحاسبة النظيفة: `calculator/index.html` هو التطبيق الفعلي على `/calculator`، الحالة في مسار URL (`/calculator/<type>/<rooms>/<units>/<services>/<extras>`) بدل query، `calculator.html` جسر توافق للروابط القديمة، `404.html` جديد لدعم الروابط العميقة، وتحديث الروابط في index/blog/sitemap/llms.txt | منتهية — بانتظار مراجعة المالك |
+| 2026-11-25 | Claude Code | إعادة تصميم `index.html` بنسخة سينمائية فاخرة: فصول داكنة (الهيدر، الشوريل، المجموعة الخاصة، الفوتر) وفاتحة للبقية، الهيدر الأصلي مع درون يطير بفيزياء واقعية (فُصل عن الصورة: `assets/cinema/hero-plate.jpg` + `drone.png`)، خطوط Instrument Serif + Jost للنص الإنجليزي، تقليص المحتوى من 15 قسماً إلى 8 فصول، وتدقيق UI/UX — فرع `claude/mawa-landing-page-design-095d51` | منتهية — commit على الفرع، بانتظار موافقة المالك قبل الدمج في main |
 
 ## Repository scope
 
