@@ -23,7 +23,7 @@ a.ghost{background:transparent;border:1px solid #3a3733;color:#FBFAF6}
   var rest=location.pathname.replace(/^\/calculator\/?/i,'');
   if(!/^[\w+.\-\/]*$/.test(rest)) rest='';
   try{ sessionStorage.setItem('mawaCalcDeep',rest); }catch(e){}
-  location.replace('/calculator/');
+  location.replace('/calculator/'+location.search+location.hash);
 })();
 </script>
 </head>
