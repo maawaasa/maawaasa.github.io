@@ -1294,47 +1294,79 @@ function calcSegsFromState(){
   if(ex.length) segs.push(ex.join('+'));
   return segs;
 }
+/* أدوات التحقق: own يمنع أسماء النموذج الأولي (constructor/__proto__ كانت توقف الصفحة)،
+   وclampInt يقرّب لعدد صحيح داخل النطاق (2.5 غرفة أو 1.5 وحدة كانت تُقبل) */
+const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+const clampInt=(v,lo,hi)=>Math.max(lo,Math.min(hi,Math.round(+v)||lo));
+const UNIT_TYPES=['apartment','villa'];
+const EXTRA_TOKEN=/^(rush|logo|sign|p\d+|u(apartment|villa)\.\d+\.\d+)$/;
 function applyCalcSegs(rest){
   const segs=rest.split('/').filter(Boolean);
-  let i=0;
-  if(!segs[i]||!TYPES[segs[i]]) return false;
-  state.type=segs[i]; i++;
-  const dis=DISABLED[state.type]||[];
-  if(TYPES[state.type].rooms[1]>0&&segs[i]&&/^\d+$/.test(segs[i])){
-    const r=Math.max(TYPES[state.type].rooms[0],Math.min(TYPES[state.type].rooms[1],+segs[i]));
-    if(r){ state.rooms=r; urlLoadedRooms=true; }
-    i++;
-    if(segs[i]&&/^\d+$/.test(segs[i])){
-      const u=Math.max(1,Math.min(UNITS_CAP,+segs[i]));
-      if(u>1) state.extraUnits=[{uid:newUid(),type:state.type,rooms:state.rooms,qty:Math.min(UNITS_CAP-1,u-1)}];
-      i++;
+  if(!segs.length||!own(TYPES,segs[0])) return false;
+  state.type=segs[0];
+  const ty=TYPES[state.type], dis=DISABLED[state.type]||[];
+  let i=1, nums=0;
+  /* حتى رقمين بعد النوع: الغرف ثم عدد الوحدات — ويُتجاهلان للأنواع التي لا تنطبق عليها */
+  while(i<segs.length && nums<2 && /^\d+$/.test(segs[i])){
+    if(nums===0 && ty.rooms[1]>0){ state.rooms=clampInt(segs[i],ty.rooms[0],ty.rooms[1]); urlLoadedRooms=true; }
+    else if(nums===1 && UNIT_TYPES.includes(state.type)){
+      const u=clampInt(segs[i],1,UNITS_CAP);
+      if(u>1) state.extraUnits=[{uid:newUid(),type:state.type,rooms:state.rooms,qty:u-1}];
     }
+    nums++; i++;
   }
-  if(segs[i]!==undefined){
-    if(segs[i]==='-') state.sel=new Set();
-    else{
-      const sv=segs[i].split('+').filter(k=>SERVICES[k]&&!dis.includes(k));
+  /* بقية المقاطع تُصنَّف بمحتواها: الخدمات تُحذف من الرابط حين تكون الافتراضية (تصوير فقط)،
+     فكان مقطع الإضافات يُقرأ مكانها ويضيع: /calculator/apartment/rush كانت تعود 975 بدل 1,219 */
+  for(; i<segs.length; i++){
+    const seg=segs[i];
+    if(seg==='-'){ state.sel=new Set(); continue; }
+    const toks=seg.split('+').filter(Boolean);
+    if(toks.some(k=>own(SERVICES,k)) && !toks.some(x=>EXTRA_TOKEN.test(x))){
+      const sv=toks.filter(k=>own(SERVICES,k)&&!dis.includes(k));
       if(sv.length) state.sel=new Set(sv);
+      continue;
     }
-    i++;
-  }
-  if(segs[i]!==undefined){
     let sawUnits=false;
-    segs[i].split('+').forEach(x=>{
-      if(x==='rush')state.rush=true;
-      else if(x==='logo')state.logo=true;
-      else if(x==='sign')state.sign=true;
-      else if(/^p\d+$/.test(x))state.pages=Math.max(1,Math.min(200,+x.slice(1)||1));
+    toks.forEach(x=>{
+      if(x==='rush') state.rush=true;
+      else if(x==='logo') state.logo=true;
+      else if(x==='sign') state.sign=true;
+      else if(/^p\d+$/.test(x)) state.pages=clampInt(x.slice(1),1,200);
       else{
         const m=x.match(/^u(apartment|villa)\.(\d+)\.(\d+)$/);
-        if(m){
-          if(!sawUnits){state.extraUnits=[];sawUnits=true;}
-          state.extraUnits.push({uid:newUid(),type:m[1],rooms:Math.max(1,+m[2]||1),qty:Math.max(1,Math.min(UNITS_CAP-1,+m[3]||1))});
+        if(m && UNIT_TYPES.includes(state.type)){
+          if(!sawUnits){ state.extraUnits=[]; sawUnits=true; }
+          const R=TYPES[m[1]].rooms, left=UNITS_CAP-totalUnits();
+          const q=Math.min(left, clampInt(m[3],1,UNITS_CAP-1));
+          if(q>0) state.extraUnits.push({uid:newUid(),type:m[1],rooms:clampInt(m[2],R[0],R[1]),qty:q});
         }
       }
     });
   }
   return true;
+}
+/* الروابط القديمة (?t=&r=&u=&eu=&s=&a=&d=) تُحوَّل لمسار ثم تمر بالمحلل نفسه — نفس منطق calculator.html */
+function legacySegs(q){
+  const t=q.get('t'); if(!t||!own(TYPES,t)) return '';
+  const ty=TYPES[t], segs=[t], ex=[];
+  const r=Math.round(+q.get('r'))||0;
+  let tot=1;
+  const eu=q.get('eu')||'';
+  if(eu){
+    eu.split(',').forEach(x=>{ const m=x.match(/^(apartment|villa):(\d+):(\d+)$/); if(m){ const n=Math.max(1,Math.round(+m[3])||1); tot+=n; ex.push('u'+m[1]+'.'+(+m[2]||1)+'.'+n); } });
+  } else tot=Math.max(1,Math.round(+q.get('u'))||1);
+  if(!UNIT_TYPES.includes(t)){ tot=1; ex.length=0; }
+  if(ty.rooms[1]>0 && (r>0 || tot>1)) segs.push(String(r>0?r:ty.rooms[2]));
+  if(tot>1) segs.push(String(Math.min(tot,UNITS_CAP)));
+  const sv=(q.get('s')||'').split(',').filter(k=>own(SERVICES,k));
+  if(sv.length) segs.push(sv.join('+'));
+  if((q.get('a')||'').split(',').includes('r')) ex.push('rush');
+  const d=(q.get('d')||'').split(',');
+  if(d.includes('l')) ex.push('logo');
+  if(d.includes('g')) ex.push('sign');
+  d.forEach(x=>{ if(/^p\d+$/.test(x)) ex.push(x); });
+  if(ex.length) segs.push(ex.join('+'));
+  return segs.join('/');
 }
 function syncUrl(){
   let qs='';
@@ -1352,30 +1384,11 @@ function loadUrl(){
   rest=rest.replace(/^\/+/,'').replace(/\/+$/,'');
   if(rest) applyCalcSegs(rest); /* المسار غير المعروف → القيم الافتراضية */
   else{
-    /* توافق الروابط القديمة (?t=&r=&u=&s=&a=&d=) — تُطبَّق ثم ينظّفها syncUrl إلى مسار */
-    const q=new URLSearchParams(location.search);
-    if(q.get('t')){
-      if(TYPES[q.get('t')]) state.type=q.get('t');
-      const r=+q.get('r');
-      if(r) state.rooms=Math.max(TYPES[state.type].rooms[0],Math.min(TYPES[state.type].rooms[1]||r,r)), urlLoadedRooms=true;
-      const eu=q.get('eu');
-      if(eu){
-        state.extraUnits=eu.split(',').map(s=>{
-          const [ty,rm,q2]=s.split(':');
-          const tDef=TYPES[ty];
-          const tyK=(tDef && !tDef.luxury && (ty==='apartment'||ty==='villa'))?ty:'apartment';
-          return {uid:newUid(), type:tyK, rooms:Math.max(1,+rm||2), qty:Math.max(1,Math.min(UNITS_CAP-1,+q2||1))};
-        }).slice(0,UNITS_CAP-1);
-      } else {
-        const u=Math.max(1,+q.get('u')||1);
-        if(u>1) state.extraUnits=[{uid:newUid(), type:state.type, rooms:state.rooms, qty:Math.min(UNITS_CAP-1,u-1)}];
-      }
-      if(q.get('s')){ state.sel=new Set(q.get('s').split(',').filter(k=>SERVICES[k]&&!(DISABLED[state.type]||[]).includes(k))); }
-      state.pkg='basic';
-      const a=(q.get('a')||'').split(','); state.rush=a.includes('r');
-      const d=(q.get('d')||'').split(','); state.logo=d.includes('l'); state.sign=d.includes('g');
-      const pg=d.find(x=>x.startsWith('p')); state.pages=pg?+pg.slice(1)||0:0;
-    }
+    /* توافق الروابط القديمة (?t=&r=&u=&s=&a=&d=) — تُحوَّل لمسار ثم ينظّفها syncUrl.
+       كان الفرع القديم يُنشئ الوحدات بغرف الشقة الافتراضية قبل تطبيق نوع الفيلا (9,925 بدل 11,500)
+       ولا يحصر عدد الصفحات (?d=p100000 = 20 مليون ريال) */
+    const seg=legacySegs(new URLSearchParams(location.search));
+    if(seg) applyCalcSegs(seg);
   }
 }
 

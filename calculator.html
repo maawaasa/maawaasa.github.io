@@ -18,9 +18,11 @@
   var p;
   try{ p=new URLSearchParams(location.search); }catch(e){ p=null; }
   var segs=[], ex=[];
+  /* hasOwnProperty: ?t=constructor كان يمر ويوقف الحاسبة */
+  var own=function(o,k){ return Object.prototype.hasOwnProperty.call(o,k); };
   var t=p&&p.get('t');
-  if(t&&TYPES[t]) segs.push(t);
-  var rooms=p&&+p.get('r');
+  if(t&&own(TYPES,t)) segs.push(t); else t=null;
+  var rooms=p?(Math.round(+p.get('r'))||0):0;
   if(t&&!ROOMLESS[t]&&rooms>0) segs.push(String(rooms));
   /* eu يلغي u (كما في الحاسبة سابقًا): العدد الكلي = 1 + مجموع كميات eu */
   var eu=(p&&p.get('eu'))||'';
@@ -32,11 +34,13 @@
       if(m){ tot+=(+m[3]||1); ex.push('u'+m[1]+'.'+(+m[2]||1)+'.'+(+m[3]||1)); }
     });
   }
+  /* الوحدات المتعددة للشقق والفلل فقط — ?t=land&u=3 كان يكتب /land/3 فيضيع ما بعده */
+  if(t!=='apartment'&&t!=='villa'){ tot=1; ex=[]; }
   if(tot>1) segs.push(String(tot));
   /* عند تعدّد الوحدات بغياب r يلزم ذكر الغرف صراحة حتى لا يختلط الموضعان */
   if(tot>1&&t&&!ROOMLESS[t]&&!(rooms>0)&&ROOMS_DEF[t]) segs.splice(1,0,String(ROOMS_DEF[t]));
   var s=(p&&p.get('s'))||'';
-  var sv=s.split(',').filter(function(k){return SVCS[k];});
+  var sv=s.split(',').filter(function(k){return own(SVCS,k);});
   if(sv.length&&!(sv.length===1&&sv[0]==='photo')) segs.push(sv.join('+'));
   var a=(p&&p.get('a'))||'';
   if(a.split(',').indexOf('r')>=0) ex.push('rush');
