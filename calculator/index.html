@@ -1837,7 +1837,7 @@ $('closeQuote').onclick=()=>{$('quoteOverlay').classList.remove('open'); documen
 $('printBtn').onclick=()=>window.print();
 $('pdfBtn').onclick=()=>{
   toast('جاري تجهيز ملف PDF...');
-  const opt={margin:[10,10,10,10],filename:'عرض-سعر-مأوى-'+$('qNum').textContent+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['avoid-all','css','legacy']}};
+  const opt={margin:[10,10,10,10],filename:'عرض-سعر-مأوى-'+((getSavedQuote()||{}).number||'مبدئي')+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['avoid-all','css','legacy']}};
   html2pdf().set(opt).from($('quoteDoc')).save().then(()=>toast('✓ تم تجهيز ملف PDF')).catch(()=>toast('تعذّر إنشاء الملف'));
 };
 
@@ -2026,7 +2026,7 @@ function updateDeposit(){
   const gd = $('govDepositAmt'); if (gd) gd.innerHTML = fmt(dep);
   if (BOOK.mode==='book') updateBookSummary();
 }
-recalc = function(){ _recalcOrig(); updateDeposit(); };
+recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); };
 
 async function copyBankVal(box, kind){
   const el = box.querySelector('.bb-val');
@@ -2169,16 +2169,28 @@ $('waBtn').onclick = async function(){
 
 /* ===== حفظ عرض السعر — Q-XXXX دائم، صلاحية 14 يومًا، لا ينشئ Order ولا contract ===== */
 const QUOTE_VALIDITY_DAYS = 14;
+/* رقم العرض المحفوظ يخص الاختيارات التي حُفظ بها فقط: بصمة من مسار الرابط (النوع والغرف والوحدات
+   والخدمات والإضافات) + الإجمالي. أي تعديل بعد الحفظ يعيد المستند «مبدئياً» ولا يُربط الرقم بطلب مختلف. */
+const quoteSig=()=>calcSegsFromState().join('/')+'#'+Math.round(lastTotal);
 function getSavedQuote(){
-  try{ const raw=sessionStorage.getItem('maawaa_quote'); return raw?JSON.parse(raw):null; }catch(_){ return null; }
+  try{ const raw=sessionStorage.getItem('maawaa_quote'); const q=raw?JSON.parse(raw):null; return q&&q.sig===quoteSig()?q:null; }catch(_){ return null; }
 }
+/* بعد حفظ العرض يتوقف الزر؛ وأي تعديل لاحق على الاختيارات يعيد تفعيله لحفظ عرض جديد */
+let savedSig=null;
+function releaseSavedQuote(){
+  if(savedSig===null || savedSig===quoteSig()) return;
+  savedSig=null;
+  const btn=$('confirmOrderBtn'); btn.disabled=false; btn.textContent=confirmLabel();
+  $('submitSuccess').classList.remove('on'); $('submitSuccess').innerHTML='';
+}
+const dmy=iso=>iso?String(iso).slice(0,10).split('-').reverse().join('/'):'—';
 async function saveQuote(total){
   try{
     const dryRun=(location.hostname==='127.0.0.1'||location.hostname==='localhost')&&new URLSearchParams(location.search).get('dryrun')==='1';
     if(dryRun){
       const d=new Date(Date.now()+QUOTE_VALIDITY_DAYS*864e5);
       const until=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-      const saved={number:'Q-TEST', valid_until:until, id:null};
+      const saved={number:'Q-TEST', valid_until:until, id:null, sig:quoteSig()};
       try{ sessionStorage.setItem('maawaa_quote', JSON.stringify(saved)); }catch(_){}
       return saved;
     }
@@ -2207,7 +2219,7 @@ async function saveQuote(total){
       p_payload: payload
     });
     if(error) throw error;
-    const saved={number:data.quote_number, valid_until:data.valid_until, id:data.id||null};
+    const saved={number:data.quote_number, valid_until:data.valid_until, id:data.id||null, sig:quoteSig()};
     try{ sessionStorage.setItem('maawaa_quote', JSON.stringify(saved)); }catch(_){}
     /* C-01 «عرض السعر جاهز» — fire-and-forget بعد نجاح الحفظ؛
        فشل الإشعار لا يؤثر على نجاح حفظ العرض ولا يغيّر UX */
@@ -2234,8 +2246,11 @@ $('confirmOrderBtn').onclick = async function(){
     const saved=await saveQuote(lastTotal);
     if(!saved){btn.textContent=label;btn.disabled=false;toast('تعذر حفظ عرض السعر حالياً، يرجى المحاولة مرة أخرى.');return;}
     const success=$('submitSuccess');
-    success.innerHTML='<h4>✓ تم حفظ عرض السعر بنجاح</h4><p>رقم العرض: <b>'+(saved.number||'—')+'</b> — صالح حتى <b>'+(saved.valid_until||'—')+'</b> (14 يومًا).</p><p>لم يُنشأ أي طلب حجز الآن. عند رغبتك بالحجز، أرسل طلب حجز أو تواصل مع مأوى مع ذكر رقم العرض.</p>';
-    btn.textContent='تم حفظ عرض السعر';
+    success.innerHTML=EN()
+      ? '<h4>✓ Quote saved</h4><p>Quote no. <b>'+(saved.number||'—')+'</b> — valid until <b>'+dmy(saved.valid_until)+'</b> (14 days).</p><p>No booking has been created. To book, send a booking request or contact MAWA quoting this number.</p>'
+      : '<h4>✓ تم حفظ عرض السعر بنجاح</h4><p>رقم العرض: <b>'+(saved.number||'—')+'</b> — صالح حتى <b>'+dmy(saved.valid_until)+'</b> (14 يومًا).</p><p>لم يُنشأ أي طلب حجز الآن. عند رغبتك بالحجز، أرسل طلب حجز أو تواصل مع مأوى مع ذكر رقم العرض.</p>';
+    btn.textContent=EN()?'Quote saved':'تم حفظ عرض السعر';
+    savedSig=saved.sig||quoteSig();
     success.classList.add('on'); success.scrollIntoView({behavior:'smooth',block:'nearest'});
     toast('✓ تم حفظ عرض السعر');
     return;
