@@ -949,6 +949,9 @@ const QUOTE_TARGET={type:'person',personName:'',personTitle:'',companyName:'',at
 /* حالة الحجز — تُعرَّف قبل أول رسم: الفئات الفاخرة تستدعي setBookMode أثناء التهيئة،
    وتعريفها بعد التهيئة كان يوقف الصفحة كاملة عند فتح رابط مثل /calculator/palace */
 const BOOK = { mode:'quote', date:null, time:null, facade:null };
+/* موقع التصوير (من اسم الحي في نموذج الحجز) — خارج الرياض = تسعير يدوي بلا عربون تلقائي */
+const state_loc={km:null,fee:0,label:'',outside:false};
+const outsideBooking=()=>BOOK.mode==='book'&&state_loc.outside;
 const $=id=>document.getElementById(id);
 const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
       roomsUnit=$('roomsUnit'), roomsNA=$('roomsNA'), roomsTitle=$('roomsTitle'),
@@ -1068,6 +1071,9 @@ const fmt=n=>{
   return num + ' ' + RIYAL;
 };
 const fmtT=n=>fmtParts(n).join('');
+/* رسائل واتساب وإشعار الفريق وملاحظات الطلب بالريال دائماً مهما كانت عملة العرض
+   (كانت تُكتب «260 $ ر.س» حين يختار الزائر الدولار) */
+const sar=n=>Math.round(n).toLocaleString('en-US')+' ر.س';
 
 /* ===== نموذج الوحدات المتعددة — 1 Site + N Units =====
    لا خصومات تلقائية على الوحدات (multiDiscRate أُلغيت بقرار معتمد).
@@ -1090,6 +1096,7 @@ function animateTotal(to){
 
 /* ===== إعادة الحساب ===== */
 let lastTotal=0;
+let lastItems=[]; // بنود آخر حساب {l: التسمية, v: المبلغ بالريال}
 const PERUNIT=['photo','video','vr360'];
 const servicesOf=dis=>[...state.sel].filter(k=>!dis.includes(k)).map(k=>EN()?(SERVICES[k].en||SERVICES[k].label):SERVICES[k].label).join(' + ');
 const unitSubtotalOf=(typeKey,rooms,dis)=>{ let s=0; state.sel.forEach(k=>{ if(dis.includes(k)||!PERUNIT.includes(k)) return; const p=priceOfFor(k,typeKey,rooms); if(p>0) s+=p; }); return s; };
@@ -1115,7 +1122,7 @@ function recalc(){
     sumMeta.textContent = EN() ? `${t.en||t.label} · Custom quote` : `${t.label} · عرض حسب المشروع`;
     linesEl.innerHTML = chosen.length ? chosen.map(k=>`<div class="line"><span class="l">${EN()?(SERVICES[k].en||SERVICES[k].label):SERVICES[k].label}</span><span class="v">${EN()?'Per project':'حسب المشروع'}</span></div>`).join('') : `<div class="line empty">${EN()?'Select at least one service':'اختر خدمة واحدة على الأقل'}</div>`;
     totalEl.classList.remove('bump'); totalEl.textContent=EN()?'Per project':'حسب المشروع'; totalEl.style.fontSize='1.4rem';
-    state.isCustom=true; curTotal=0; lastTotal=0;
+    state.isCustom=true; curTotal=0; lastTotal=0; lastItems=[];
     $('campNote').hidden=true;
     return;
   }
@@ -1151,6 +1158,7 @@ function recalc(){
   const baseSum=items.reduce((s,[,v])=>s+v,0);
   if(state.rush) items.push([EN()?'Rush delivery fee (+25%)':'رسوم تسليم عاجل (+25%)', Math.round(baseSum*0.25)]);
   const total=Math.max(0,items.reduce((s,[,v])=>s+v,0));
+  lastItems=items.map(([l,v])=>({l,v}));
 
   let meta = EN() ? `${t.en||t.label}${TYPES[state.type].rooms[1]!==0?(' · '+state.rooms+' '+(t.unitEn||t.unit)):''}` : `${t.label}${TYPES[state.type].rooms[1]!==0?(' · '+state.rooms+' '+t.unit):''}`;
   if(isMulti) meta += EN() ? ` · ${totalUnits()} units (same location)` : ` · ${totalUnits()} وحدات (نفس الموقع)`;
@@ -1861,14 +1869,25 @@ const DAYS_AR = ['الأحد','الاثنين','الثلاثاء','الأربع�
 function fmtTime(t){
   const h = +t.split(':')[0];
   if (typeof UI !== 'undefined' && UI.lang === 'en'){
-    if (h === 0) return '12:00 AM';
+    if (h === 0) return '12:00 Midnight';
     if (h === 12) return '12:00 PM';
     return (h < 12 ? h : h-12) + ':00 ' + (h < 12 ? 'AM' : 'PM');
   }
   if (h === 0)  return '12:00 منتصف الليل';
   if (h === 12) return '12:00 ظهراً';
-  return h < 12 ? t + ' صباحاً' : (h - 12) + ':00 مساءً';
+  return h < 12 ? h + ':00 صباحاً' : (h - 12) + ':00 مساءً';
 }
+/* خيار 00:00 يأتي في القائمة بعد 11 مساءً = منتصف الليل في نهاية اليوم المختار، أي بداية اليوم التالي.
+   كان يُحفظ بتاريخ اليوم المختار نفسه فيصير الموعد قبل المقصود بـ24 ساعة. */
+const slotLabel = t => fmtTime(t) + (t==='00:00' ? (EN()?' (end of day)':' (نهاية اليوم)') : '');
+function shootSlot(){
+  if (!BOOK.date || !BOOK.time) return null;
+  if (BOOK.time !== '00:00') return { date:BOOK.date, time:BOOK.time };
+  const d = new Date(BOOK.date+'T00:00:00'); d.setDate(d.getDate()+1);
+  const p = n => String(n).padStart(2,'0');
+  return { date:d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()), time:'00:00' };
+}
+const slotNote = () => { const s=shootSlot(); return s ? s.date+' الساعة '+s.time+(BOOK.time==='00:00'?' (منتصف الليل في نهاية '+BOOK.date+')':'') : ''; };
 
 /* تسمية زر الإرسال الرئيسي حسب نوع العقار ومسار الطلب */
 function confirmLabel(){
@@ -1901,12 +1920,15 @@ function fillTimes(dateStr){
   const pad = n => String(n).padStart(2,'0');
   const todayStr = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
   const cutoff = dateStr === todayStr ? now.getHours() : -1;
-  let html = '<option value="">— اختر الوقت —</option>';
+  const lg = L();
+  let html = '<option value="">'+lg.chooseTime+'</option>';
   for (let h = 4; h <= 23; h++){
     const v = pad(h) + ':00';
-    html += '<option value="'+v+'"'+(h<=cutoff?' disabled':'')+'>'+fmtTime(v)+(h<=cutoff?' (مضت)':'')+'</option>';
+    html += '<option value="'+v+'"'+(h<=cutoff?' disabled':'')+'>'+fmtTime(v)+(h<=cutoff?' '+lg.passed:'')+'</option>';
   }
-  html += '<option value="00:00">'+fmtTime('00:00')+'</option>';
+  /* منتصف ليل الخميس يقع في الجمعة (غير متاحة) */
+  const thu = !!dateStr && new Date(dateStr+'T00:00:00').getDay()===4;
+  html += '<option value="00:00"'+(thu?' disabled':'')+'>'+slotLabel('00:00')+'</option>';
   sel.innerHTML = html;
   if (BOOK.facade && dateStr && dateStr===BOOK.date){
     const w = bestWindow(dateStr, BOOK.facade);
@@ -1915,6 +1937,9 @@ function fillTimes(dateStr){
       if (o.value && !o.disabled && h>=w.a && h<=w.b) o.textContent += ' ★';
     });
   }
+  /* إعادة بناء القائمة (تغيير اللغة أو الواجهة) لا تمسح الوقت المختار ما دام متاحاً */
+  if (BOOK.time && dateStr && dateStr===BOOK.date && [...sel.options].some(o=>o.value===BOOK.time && !o.disabled)) sel.value = BOOK.time;
+  else if (BOOK.time){ BOOK.time = null; updateBookSummary(); }
 }
 
 /* محرك الشمس والواجهات — إحداثيات الرياض */
@@ -1983,7 +2008,6 @@ document.querySelectorAll('#facadeChips .fchip').forEach(ch=>{
     document.querySelectorAll('#facadeChips .fchip').forEach(x=>x.classList.remove('on'));
     if (BOOK.facade === ch.dataset.f){ BOOK.facade = null; }
     else { BOOK.facade = ch.dataset.f; ch.classList.add('on'); }
-    BOOK.time = null;
     updateSunAdvice();
   });
 });
@@ -1998,6 +2022,10 @@ function setupDateInput(){
   inp.addEventListener('change', () => {
     const v = inp.value;
     if (!v){ BOOK.date = null; $('bookSummary').classList.remove('on'); return; }
+    if (v < inp.min || v > inp.max){
+      inp.value=''; BOOK.date=null; BOOK.time=null; fillTimes(''); $('bookSummary').classList.remove('on');
+      toast(EN()?'Pick a date from today onwards':'اختر تاريخاً من اليوم فصاعداً'); return;
+    }
     if (new Date(v+'T00:00:00').getDay() === 5){
       inp.value=''; BOOK.date=null; BOOK.time=null;
       inp.classList.add('err');
@@ -2017,18 +2045,25 @@ function updateBookSummary(){
   const el = $('bookSummary');
   const dep = Math.round(lastTotal*0.25);
   $('govDepositAmt').innerHTML = fmt(dep);
-  if (!BOOK.date || !BOOK.time){ el.classList.remove('on'); return; }
+  if (BOOK.mode!=='book' || !BOOK.date || !BOOK.time){ el.classList.remove('on'); return; }
   const d = new Date(BOOK.date+'T00:00:00');
-    const lg = L();
-  el.innerHTML = lg.yourAppt+' <b>'+lg.days[d.getDay()]+' '+d.getDate()+' '+lg.months[d.getMonth()]+' '+d.getFullYear()+'</b> — '+(UI.lang==='en'?'at':'الساعة')+' <b>'+fmtTime(BOOK.time)+'</b>'+
-    '<br>'+lg.totalWord+' '+fmt(lastTotal)+' — '+lg.depNow+' <b>'+fmt(dep)+'</b> — '+lg.remaining+' '+fmt(lastTotal-dep);
+  const lg = L();
+  el.innerHTML = lg.yourAppt+' <b>'+lg.days[d.getDay()]+' '+d.getDate()+' '+lg.months[d.getMonth()]+' '+d.getFullYear()+'</b> — '+(EN()?'at':'الساعة')+' <b>'+slotLabel(BOOK.time)+'</b>'+
+    '<br>'+(outsideBooking()
+      ? (EN()?'Outside Riyadh — priced manually; no deposit until the price is approved':'الموقع خارج الرياض — يُسعَّر يدوياً، ولا عربون قبل اعتماد السعر')
+      : lg.totalWord+' '+fmt(lastTotal)+' — '+lg.depNow+' <b>'+fmt(dep)+'</b> — '+lg.remaining+' '+fmt(lastTotal-dep));
+  el.classList.add('on');
 }
 const _recalcOrig = recalc;
 function updateDeposit(){
   const dep = Math.round(lastTotal*0.25);
   const dv = $('depositVal'); if (dv) dv.innerHTML = fmt(dep);
   const gd = $('govDepositAmt'); if (gd) gd.innerHTML = fmt(dep);
-  if (BOOK.mode==='book') updateBookSummary();
+  /* خارج الرياض: لا عربون ولا مبلغ مستحق قبل اعتماد التسعير اليدوي */
+  const out = outsideBooking();
+  const dn = $('depositNote'); if (dn) dn.style.display = (BOOK.mode==='book' && !out && !state.isCustom) ? 'flex' : 'none';
+  const gBox = document.querySelector('#bookPanel .gov-deposit'); if (gBox) gBox.style.display = (out || state.isCustom) ? 'none' : '';
+  updateBookSummary();
 }
 recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); };
 
@@ -2062,12 +2097,13 @@ async function saveLead(total){
     const t=TYPES[state.type]; const dis=DISABLED[state.type]||[];
     const svcStr=[...state.sel].filter(k=>!dis.includes(k)).map(k=>SERVICES[k].label).join('، ')||'—';
     const svcRows=[...state.sel].filter(k=>!dis.includes(k)).map(k=>({name:SERVICES[k].label, pkg:'basic'}));
-    const breakdown=[...linesEl.querySelectorAll('.line:not(.empty)')].map(l=>l.querySelector('.l').childNodes[0].textContent.trim()+': '+l.querySelector('.v').innerHTML.replace(/<[^>]*>/g,'').trim()).join(' | ');
+    const breakdown=lastItems.map(it=>it.l+': '+sar(it.v)).join(' | ');
     const _luxDet=($('luxDetails').value||'').trim(), _luxCity=($('luxCity').value||'').trim(), _luxDate=($('luxDate').value||'').trim();
     const bookingDistrict=($('locAddr').value||'').trim();
     const bookingLocationUrl=($('locUrl').value||'').trim();
-    const notes=('طلب من الحاسبة — '+breakdown).slice(0,1100)+(CAMPAIGN.active?` | حملة: ${CAMPAIGN.name} step=${CAMPAIGN.step}%`:``)+(state.extraUnits.length?` | وحدات: ${unitsShortSummary()} (نفس الموقع)`:``)+(BOOK.facade?(' | واجهة العقار: '+T.ar['fac'+BOOK.facade]+' — أفضل وقت خارجي '+bestWindowLabel()):'')+(bookingLocationUrl?(' | رابط موقع التصوير: '+bookingLocationUrl):'')+(bookingDistrict?(' | الحي: '+bookingDistrict):'')+(state_loc.outside?(' | ★ خارج الرياض — تسعير يدوي مسبق'):(''))+(state.isCustom?(' | ★ طلب فاخر ('+TYPES[state.type].label+')'+(_luxCity?(' | الموقع: '+_luxCity):'')+(_luxDate?(' | تاريخ مفضل: '+_luxDate):'')+(_luxDet?(' | تفاصيل: '+_luxDet):'')):'')+(BOOK.mode==='book'?' | طلب حجز: '+BOOK.date+' الساعة '+BOOK.time+' | عربون مستحق: '+Math.round(total*0.25):' | طلب عرض سعر');
-    const shootDate = (BOOK.mode==='book'&&BOOK.date)?BOOK.date:null;
+    const notes=('طلب من الحاسبة — '+breakdown).slice(0,1100)+(CAMPAIGN.active?` | حملة: ${CAMPAIGN.name} step=${CAMPAIGN.step}%`:``)+(state.extraUnits.length?` | وحدات: ${unitsShortSummary()} (نفس الموقع)`:``)+(BOOK.facade?(' | واجهة العقار: '+T.ar['fac'+BOOK.facade]+' — أفضل وقت خارجي '+bestWindowLabel()):'')+(bookingLocationUrl?(' | رابط موقع التصوير: '+bookingLocationUrl):'')+(bookingDistrict?(' | الحي: '+bookingDistrict):'')+(outsideBooking()?(' | ★ خارج الرياض — تسعير يدوي مسبق'):(''))+(state.isCustom?(' | ★ طلب فاخر ('+TYPES[state.type].label+')'+(_luxCity?(' | الموقع: '+_luxCity):'')+(_luxDate?(' | تاريخ مفضل: '+_luxDate):'')+(_luxDet?(' | تفاصيل: '+_luxDet):'')):'')+(BOOK.mode==='book'?' | طلب حجز: '+slotNote()+(outsideBooking()?' | العربون: بعد اعتماد التسعير اليدوي':' | عربون مستحق: '+Math.round(total*0.25)):' | طلب عرض سعر');
+    const slot = BOOK.mode==='book' ? shootSlot() : null;
+    const shootDate = slot ? slot.date : null;
     const savedQ=getSavedQuote();
 
     // 1) الدالة الآمنة submit_lead (إن وُجدت)
@@ -2087,11 +2123,11 @@ async function saveLead(total){
         p_services: svcRows.length?svcRows:null,
         p_units: unitsPayload(),
         p_quote_number: savedQ?savedQ.number:null,
-        p_shoot_start_time: (BOOK.mode==='book' && BOOK.time) ? BOOK.time : null,
+        p_shoot_start_time: slot ? slot.time : null,
         p_shoot_end_time: null
       });
       if (!error){
-        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+fmtT(total)+' ر.س</b>'+(CAMPAIGN.active?' (بأسعار '+CAMPAIGN.name+')':'')+(shootDate?('\n📅 موعد التصوير: '+shootDate):'')+'', contractId);
+        notifyOwner('<b>طلب جديد من الحاسبة</b>\n━━━━━━━━━━━━\n👤 <b>'+(state.name||'—')+'</b>\n📞 '+(state.phone||'—')+'\n🏠 '+t.label+(TYPES[state.type].rooms[1]!==0?(' — '+state.rooms+' '+t.unit):'')+'\n💰 <b>'+sar(total)+'</b>'+(CAMPAIGN.active?' (بأسعار '+CAMPAIGN.name+')':'')+(slot?('\n📅 موعد التصوير: '+slot.date+' '+slot.time):'')+(outsideBooking()?'\n📍 خارج الرياض — تسعير يدوي':''), contractId);
         return contractId||true;
       }
       /* لا يوجد مسار إدخال مباشر عمدًا — الإنتاج يمر حصريًا عبر submit_lead المحصّنة
@@ -2145,15 +2181,16 @@ $('waBtn').onclick = async function(){
   const orig = _waOrig;
   if (orig) {
     const t=TYPES[state.type];
-    const stripV=v=>v.replace(/<[^>]*>/g,'').replace(/\s*\u00EA\s*/g,' ر.س ').replace(/\s+/g,' ').trim();
-    const lines=[...linesEl.querySelectorAll('.line:not(.empty):not(.disc)')].map(l=>'• '+l.querySelector('.l').childNodes[0].textContent.trim()+': '+stripV(l.querySelector('.v').innerHTML));
+    const lines=lastItems.map(it=>'• '+it.l+': '+sar(it.v));
     const meta='• الاسم: '+(state.name||'—')+(state.phone?'\n• الجوال: '+state.phone:'')+(state.email?'\n• البريد الإلكتروني: '+state.email:'')+(BOOK.facade?('\n• واجهة العقار: '+T.ar['fac'+BOOK.facade]):'')+'\n• نوع العقار: '+t.label+(TYPES[state.type].rooms[1]!==0?(' — عدد '+t.unit+': '+state.rooms):'')+((state.type==='apartment'||state.type==='villa')&&state.extraUnits.length?(' — الوحدات: '+unitsShortSummary()+' (نفس الموقع)'):'');
     let bookInfo='';
-    if (BOOK.mode==='book'){
+    if (BOOK.mode==='book' && BOOK.date && BOOK.time){
       const d=new Date(BOOK.date+'T00:00:00');
       const dateTxt=DAYS_AR[d.getDay()]+' '+d.getDate()+' '+MC_MONTHS[d.getMonth()]+' '+d.getFullYear();
-      bookInfo='\n\n🗓 تفاصيل طلب الحجز:\n• التاريخ المقترح: '+dateTxt+'\n• الوقت المقترح: '+fmtTime(BOOK.time)+'\n• رابط موقع التصوير: '+$('locUrl').value.trim()+'\n• العربون (25%): '+fmtT(Math.round(lastTotal*0.25))+' ر.س';
+      const loc=$('locUrl').value.trim();
+      bookInfo='\n\n🗓 تفاصيل طلب الحجز:\n• التاريخ المقترح: '+dateTxt+'\n• الوقت المقترح: '+slotLabel(BOOK.time)+(loc?'\n• رابط موقع التصوير: '+loc:'')+(outsideBooking()?'\n• الموقع خارج الرياض — أرجو التسعير اليدوي':'\n• العربون (25%): '+sar(lastTotal*0.25));
     }
+    const hello='السلام عليكم'+(state.name.trim()?'، معكم '+state.name.trim():'');
     let msg;
     if (state.isCustom){
       const svcs=[...state.sel].filter(k=>!dis.includes(k)).map(k=>SERVICES[k].label).join('، ');
@@ -2162,9 +2199,9 @@ $('waBtn').onclick = async function(){
       const ddate=($('luxDate').value||'').trim();
       const dtxt=ddate ? (()=>{const d=new Date(ddate+'T00:00:00');return DAYS_AR[d.getDay()]+' '+d.getDate()+' '+MC_MONTHS[d.getMonth()]+' '+d.getFullYear();})() : '';
       const luxBlock=(det||city||ddate)?'\n\n✦ تفاصيل المشروع:'+(city?'\n• الموقع: '+city:'')+(ddate?'\n• التاريخ المفضل: '+dtxt:'')+(det?'\n• تفاصيل إضافية: '+det:''):'';
-      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر مخصّص من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات:\n• '+svcs+luxBlock+'\n\nهذا المشروع من الفئة الفاخرة ويحتاج معاينة وتسعيراً مخصّصاً من فريقكم. أرجو التواصل لاستكمال التفاصيل.';
+      msg=hello+'\nأرغب بطلب عرض سعر مخصّص من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات:\n• '+svcs+luxBlock+'\n\nهذا المشروع من الفئة الفاخرة ويحتاج معاينة وتسعيراً مخصّصاً من فريقكم. أرجو التواصل لاستكمال التفاصيل.';
     } else {
-      msg='السلام عليكم، معكم '+state.name+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+fmtT(lastTotal)+' ر.س'+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``)+bookInfo;
+      msg=hello+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+sar(lastTotal)+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``)+bookInfo;
     }
     window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');
     toast('تم فتح واتساب للاستفسار');
@@ -2263,7 +2300,12 @@ $('confirmOrderBtn').onclick = async function(){
   if(!saved){btn.textContent=label;btn.disabled=false;toast('تعذر إرسال الطلب حالياً، يرجى المحاولة مرة أخرى.');return;}
   const success=$('submitSuccess');
   const ref=typeof saved==='string'?'<div class="request-ref">رقم الطلب: '+saved+'</div>':'';
-  if(BOOK.mode==='book'){
+  if(BOOK.mode==='book' && outsideBooking()){
+    success.innerHTML=EN()
+      ? '<h4>✓ Booking request received</h4><p>The location is outside Riyadh, so no deposit is due now: the MAWA team will contact you with a manual price for this location, and transfer details follow once it is approved.</p>'+ref
+      : '<h4>✓ تم استلام طلب الحجز</h4><p>موقع التصوير خارج مدينة الرياض، لذلك لا يُطلب عربون الآن: سيتواصل معك فريق مأوى بتسعير يدوي للموقع، وتصلك بيانات التحويل بعد اعتماده.</p>'+ref;
+    btn.textContent=EN()?'Booking request sent':'تم إرسال طلب الحجز';
+  }else if(BOOK.mode==='book'){
     const deposit=Math.round(lastTotal*.25);
     success.innerHTML='<h4>✓ تم استلام طلب الحجز بنجاح</h4><p>الخطوة التالية: حوّل العربون وأرسل الإيصال. بعد ذلك يراجع فريق مأوى الطلب وتوفر الموعد، ثم يُرسل العقد وتأكيد الحجز إلى بريدك الإلكتروني.</p>'+ref+'<div class="gov-deposit"><div class="gd-title">العربون المطلوب (25%)</div><div class="gd-amount">'+fmt(deposit)+'</div></div><div class="bank-box"><div class="bb-title">مصرف الراجحي — مؤسسة مأوى المهارة التجارية</div><div class="bb-row" onclick="copyBankVal(this,\'acct\')"><span class="bb-label">رقم الحساب</span><span class="bb-val" dir="ltr">6126-08016-0946</span><span class="bb-copy">نسخ</span></div><div class="bb-row" onclick="copyBankVal(this,\'iban\')"><span class="bb-label">الآيبان</span><span class="bb-val" dir="ltr">SA48 8000 0612 6080 1609 4625</span><span class="bb-copy">نسخ</span></div></div><button class="btn receipt-btn" id="receiptWaBtn" type="button">إرسال إيصال العربون عبر واتساب</button>';
     $('receiptWaBtn').onclick=()=>{const msg='السلام عليكم، أرسل لكم إيصال عربون طلب الحجز باسم '+state.name+(typeof saved==='string'?' — رقم الطلب: '+saved:'')+'.';window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');};
@@ -2338,7 +2380,7 @@ const kmOf=(a,b)=>{const R=6371,d=Math.PI/180,dLa=(b[0]-a[0])*d,dLo=(b[1]-a[1])*
  const h=Math.sin(dLa/2)**2+Math.cos(a[0]*d)*Math.cos(b[0]*d)*Math.sin(dLo/2)**2;
  return Math.round(R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h)));};
 const feeOf=km=>km<=DIST.free?0:Math.min(DIST.max,Math.ceil((km-DIST.free)/DIST.step)*DIST.fee); // (معطّل)
-const state_loc={km:null,fee:0,label:'',outside:false};
+/* state_loc معرّفة أعلى السكربت مع BOOK */
 function applyLoc(name,coords,districtKey){
   const km=kmOf([HQ.lat,HQ.lon],coords);
   state_loc.km=km; state_loc.fee=0; state_loc.label=name;
@@ -2346,18 +2388,28 @@ function applyLoc(name,coords,districtKey){
   const box=$('locResult');
   box.classList.add('on');
   if(state_loc.outside){
-    box.innerHTML='<b>'+name+'</b> — خارج مدينة الرياض<br><span>الخدمة القياسية داخل الرياض فقط — يتطلب هذا الموقع <b>تسعيرًا يدويًا مسبقًا</b> ولا يُعطى سعر تلقائي.</span><br><a class="ur-btn outside-cta" target="_blank" rel="noopener" href="https://wa.me/966531646152?text='+encodeURIComponent('مرحباً مأوى، أرغب بتسعير جلسة تصوير خارج الرياض: '+name)+'">تواصل معنا لتسعير يدوي</a>';
+    const wa='https://wa.me/966531646152?text='+encodeURIComponent('مرحباً مأوى، أرغب بتسعير جلسة تصوير خارج الرياض: '+name);
+    box.innerHTML=EN()
+      ? '<b>'+name+'</b> — outside Riyadh city<br><span>Standard service covers Riyadh only — this location needs <b>manual pricing first</b>. You can still send the request; no deposit is due until the price is approved.</span><br><a class="ur-btn outside-cta" target="_blank" rel="noopener" href="'+wa+'">Contact us for manual pricing</a>'
+      : '<b>'+name+'</b> — خارج مدينة الرياض<br><span>الخدمة القياسية داخل الرياض فقط — يتطلب هذا الموقع <b>تسعيرًا يدويًا مسبقًا</b>. يمكنك إرسال الطلب، ولا عربون قبل اعتماد السعر.</span><br><a class="ur-btn outside-cta" target="_blank" rel="noopener" href="'+wa+'">تواصل معنا لتسعير يدوي</a>';
   } else {
-    box.innerHTML='<b>'+name+'</b> — تبعد <span class="lr-km">'+km+' كم</span> عن '+HQ.label+'<br>التنقل داخل الرياض <b>مشمول في الخدمة القياسية</b> ✓';
+    box.innerHTML=EN()
+      ? '<b>'+name+'</b> — inside Riyadh<br>Travel is <b>included in the standard service</b> ✓'
+      : '<b>'+name+'</b> — داخل الرياض<br>التنقل <b>مشمول في الخدمة القياسية</b> ✓';
   }
   recalc();
 }
 $('locAddr').addEventListener('change',()=>{
-  const v=$('locAddr').value.trim();
-  if(!v)return;
-  const key=Object.keys(DISTRICTS).find(k=>k.includes(v)||v.includes(k));
-  if(key){applyLoc((OUTSIDE_RIYADH.has(key)?'':'حي ')+key,DISTRICTS[key],key);}
-  else{toast('حي غير معروف بعد — جرب اسماً من القائمة قريباً');}
+  const v=$('locAddr').value.trim().replace(/^حي\s+/,'');
+  const clear=()=>{ state_loc.km=null; state_loc.label=''; state_loc.outside=false; $('locResult').classList.remove('on'); $('locResult').innerHTML=''; recalc(); };
+  if(!v){ clear(); return; }
+  /* الاسم الكامل أولاً، ثم جزء من 3 أحرف فأكثر لا يطابق إلا حياً واحداً
+     (حرف واحد كان يطابق أول حي في القائمة، و«الخ» كانت تُقرأ «الخير» داخل الرياض بدل أن تُعد غامضة) */
+  const keys=Object.keys(DISTRICTS);
+  let key=keys.find(k=>v===k)||keys.find(k=>v.includes(k));
+  if(!key&&v.length>=3){ const c=keys.filter(k=>k.includes(v)); if(c.length===1) key=c[0]; }
+  if(key){applyLoc((OUTSIDE_RIYADH.has(key)||EN()?'':'حي ')+key,DISTRICTS[key],key);}
+  else{ clear(); toast(EN()?'District not recognised — the map link is enough':'لم نتعرّف على اسم الحي — يكفي رابط الموقع من الخرائط'); }
 });
 
 setupDateInput(); fillTimes('');
