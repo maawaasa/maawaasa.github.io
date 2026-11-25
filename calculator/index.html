@@ -135,6 +135,8 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .line .l .out{display:block;color:var(--gray);opacity:.7;font-size:.74rem;margin-top:1px}
 .line .v{font-weight:600;white-space:nowrap}
 .line.disc .l,.line.disc .v{color:var(--green)}
+.camp-note{font-size:.8rem;color:var(--green);margin:-2px 0 12px;line-height:1.6}
+.camp-note[hidden]{display:none}
 .line.empty{color:var(--gray);justify-content:center;border:none;font-size:.84rem}
 .subwrap{padding:12px 0;border-top:1px solid var(--border);margin-bottom:6px}
 .subwrap .rw{display:flex;justify-content:space-between;font-size:.82rem;color:var(--gray);padding:3px 0}
@@ -532,6 +534,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       <div class="s-hint" id="sumMeta">—</div>
       <div class="lines" id="lines"></div>
       <div class="total"><span class="t-l" data-t="total">الإجمالي التقديري</span><span class="t-v" id="total">0</span></div>
+      <div class="camp-note" id="campNote" hidden></div>
       <div class="deposit-note" id="depositNote" style="display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></svg>
         <span><span data-t="depositBanner">تأكيد الحجز يتطلب <b>عربون 25%</b> — بقيمة <b id="depositVal">0</b> — يُحوَّل على حساب المؤسسة ويُرسل الإيصال عبر واتساب لتثبيت الموعد.</span></span>
@@ -1113,6 +1116,7 @@ function recalc(){
     linesEl.innerHTML = chosen.length ? chosen.map(k=>`<div class="line"><span class="l">${EN()?(SERVICES[k].en||SERVICES[k].label):SERVICES[k].label}</span><span class="v">${EN()?'Per project':'حسب المشروع'}</span></div>`).join('') : `<div class="line empty">${EN()?'Select at least one service':'اختر خدمة واحدة على الأقل'}</div>`;
     totalEl.classList.remove('bump'); totalEl.textContent=EN()?'Per project':'حسب المشروع'; totalEl.style.fontSize='1.4rem';
     state.isCustom=true; curTotal=0; lastTotal=0;
+    $('campNote').hidden=true;
     return;
   }
   state.isCustom=false; totalEl.style.fontSize='';
@@ -1160,14 +1164,14 @@ function recalc(){
   const un=$('unitsNote');
   if(isMulti) un.textContent = EN()?'All units are at the same site within one quote.':'كل الوحدات في نفس الموقع ضمن عرض واحد.';
   else un.textContent='';
-  /* خصم الحملة — عرض فقط؛ الإجمالي محسوب بالصافي أصلاً */
-  let campAmt=0, campPct=0;
-  if(CAMPAIGN.active && !state.isCustom){
-    campAmt=campDiffTotal(dis);
-    campPct=Math.round(fullDisc(state.type)*CAMPAIGN.step);
-    if(campAmt>0) linesEl.insertAdjacentHTML('beforeend',
-      `<div class="line disc"><span class="l">${EN()?CAMPAIGN.nameEn+' — below list price':CAMPAIGN.name+' تحت سعر القائمة'}</span><span class="v">−${fmt(campAmt)}</span></div>`);
-  }
+  /* الحملة — ملاحظة توفير تحت الإجمالي لا سطر خصم بين البنود: البنود معروضة بالصافي أصلاً،
+     فسطر «−X» بينها كان يوحي بطرح لا يظهر في الإجمالي (975 ثم −439 ثم الإجمالي 975) */
+  const campNote=$('campNote');
+  const campAmt=(CAMPAIGN.active && items.length) ? campDiffTotal(dis) : 0;
+  campNote.hidden=!(campAmt>0);
+  if(campAmt>0) campNote.innerHTML=EN()
+    ? `✓ ${CAMPAIGN.nameEn}: you save ${fmt(campAmt)} vs. the list price`
+    : `✓ ${CAMPAIGN.name}: توفّر ${fmt(campAmt)} عن سعر القائمة`;
   animateTotal(total);
   lastTotal=total;
 }
