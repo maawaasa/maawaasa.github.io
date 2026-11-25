@@ -497,7 +497,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <h2><span class="n">2</span> <span id="roomsTitle">عدد الغرف</span></h2>
         <div class="hint"><span data-t="roomsHint">السعر يزداد كلما زادت الغرف (مساحة أكبر = تغطية أوسع). أدخل الرقم أو اسحب الشريط.</span></div>
         <div class="rooms-row">
-          <span class="rooms-n-a" id="roomsNA" style="display:none">لا ينطبق على هذا النوع</span>
+          <span class="rooms-n-a" id="roomsNA" data-t="notApplied" style="display:none">لا ينطبق على هذا النوع</span>
           <div class="rooms-num"><input type="number" id="roomsNum" min="1" max="6" value="2"><span id="roomsUnit">غرف</span></div>
         </div>
         <input type="range" id="rooms" min="1" max="6" value="2" style="margin-top:14px">
@@ -529,7 +529,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
           <label class="brochure-label" for="d-brochure">بروشور PDF</label>
           <span class="px">200 ر.س / صفحة</span>
           <div class="brochure-controls" id="brochureControls">
-            <label for="d-pages">عدد الصفحات</label>
+            <label for="d-pages" data-t="pagesL">عدد الصفحات</label>
             <input type="number" id="d-pages" min="1" max="200" value="1" disabled>
             <span class="brochure-total" id="d-pages-v">200 ر.س</span>
           </div>
@@ -547,7 +547,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 
       <div class="card">
         <h2><span class="n">4</span> موعد التسليم</h2>
-        <div class="hint">التسليم المعتاد خلال 7 إلى 10 أيام عمل من اكتمال جلسة التصوير.</div>
+        <div class="hint" data-t="deliveryHint">التسليم المعتاد خلال 7 إلى 10 أيام عمل من اكتمال جلسة التصوير.</div>
         <div class="addons">
           <label class="addon"><input type="checkbox" id="ao-rush"> تسليم عاجل خلال 3 أيام عمل <span class="px">+25%</span></label>
         </div>
@@ -566,20 +566,20 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
         <span><span data-t="depositBanner">تأكيد الحجز يتطلب <b>عربون 25%</b> — بقيمة <b id="depositVal">0</b> — يُحوَّل على حساب المؤسسة ويُرسل الإيصال عبر واتساب لتثبيت الموعد.</span></span>
       </div>
       <div class="note-mini" data-t="estimateNote">* السعر تقديري وقد يختلف حسب تفاصيل العقار. العرض النهائي يُحدَّد عند التواصل.</div>
-      <button class="btn quote-tool" id="quoteBtn" type="button">عرض سعر مبدئي</button>
+      <button class="btn quote-tool" id="quoteBtn" type="button" data-t="pdf">عرض سعر مبدئي</button>
 
       <div class="owner-head">
-        <b>بيانات صاحب الطلب</b>
-        <span>نستخدمها للتواصل وإرسال مستندات الطلب.</span>
+        <b data-t="ownerHead">بيانات صاحب الطلب</b>
+        <span data-t="ownerSub">نستخدمها للتواصل وإرسال مستندات الطلب.</span>
       </div>
       <div class="fields">
-        <div class="field full"><label class="field-label" for="custName">الاسم <span class="req">*</span></label><input type="text" id="custName" placeholder="الاسم الكامل" autocomplete="name" maxlength="120" required></div>
-        <div class="field"><label class="field-label" for="custPhone">الجوال <span class="req">*</span></label><input type="tel" id="custPhone" placeholder="05xxxxxxxx" autocomplete="tel" inputmode="tel" maxlength="20" required style="direction:ltr;text-align:right"></div>
-        <div class="field"><label class="field-label" for="custEmail">البريد الإلكتروني <span class="req">*</span></label><input type="email" id="custEmail" placeholder="name@example.com" autocomplete="email" maxlength="254" required aria-describedby="emailHint" style="direction:ltr;text-align:right"></div>
-        <p class="email-note field full" id="emailHint">مهم: بعد مراجعة الطلب وتأكيده، سنرسل العقد وجميع تفاصيل الطلب إلى هذا البريد الإلكتروني.</p>
+        <div class="field full"><label class="field-label" for="custName"><span data-t="nameL">الاسم</span> <span class="req">*</span></label><input type="text" id="custName" placeholder="الاسم الكامل" autocomplete="name" maxlength="120" required></div>
+        <div class="field"><label class="field-label" for="custPhone"><span data-t="phoneL">الجوال</span> <span class="req">*</span></label><input type="tel" id="custPhone" placeholder="05xxxxxxxx" autocomplete="tel" inputmode="tel" maxlength="20" required style="direction:ltr;text-align:right"></div>
+        <div class="field"><label class="field-label" for="custEmail"><span data-t="emailL">البريد الإلكتروني</span> <span class="req">*</span></label><input type="email" id="custEmail" placeholder="name@example.com" autocomplete="email" maxlength="254" required aria-describedby="emailHint" style="direction:ltr;text-align:right"></div>
+        <p class="email-note field full" id="emailHint" data-t="emailNote">مهم: بعد مراجعة الطلب وتأكيده، سنرسل العقد وجميع تفاصيل الطلب إلى هذا البريد الإلكتروني.</p>
       </div>
 
-      <div class="request-head"><b id="reqHead">ماذا تريد أن تفعل؟</b></div>
+      <div class="request-head"><b id="reqHead" data-t="reqHead">ماذا تريد أن تفعل؟</b></div>
       <div class="book-choice" role="radiogroup" aria-labelledby="reqHead">
         <div class="book-opt on" id="optQuote" role="radio" aria-checked="true" tabindex="0" onclick="setBookMode('quote')" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();setBookMode('quote')}">
           <div class="bo-t" data-t="quoteOnly">طلب عرض سعر</div>
@@ -629,22 +629,22 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       <div class="gov-step">
         <div class="gs-num">4</div>
         <div class="gs-body">
-          <label class="gs-label" for="locUrl">رابط موقع التصوير <span style="color:#A4243B">*</span></label>
+          <label class="gs-label" for="locUrl"><span data-t="locLabel">رابط موقع التصوير</span> <span style="color:#A4243B">*</span></label>
           <div class="map-link-row">
             <input type="url" class="gov-input" id="locUrl" placeholder="https://maps.app.goo.gl/..." inputmode="url" autocomplete="url" required>
-            <a class="map-open" href="https://maps.google.com" target="_blank" rel="noopener">فتح الخرائط</a>
+            <a class="map-open" href="https://maps.google.com" target="_blank" rel="noopener" data-t="mapOpen">فتح الخرائط</a>
           </div>
-          <div class="map-help"><b>الطريقة:</b> افتح موقع العقار في خرائط Google ← اضغط «مشاركة» ← «نسخ الرابط» ← الصق الرابط هنا.</div>
-          <input type="text" class="loc-addr" id="locAddr" placeholder="اسم الحي (اختياري)" aria-label="اسم الحي (اختياري)" maxlength="80" autocomplete="off">
+          <div class="map-help" data-t="mapHelp"><b>الطريقة:</b> افتح موقع العقار في خرائط Google ← اضغط «مشاركة» ← «نسخ الرابط» ← الصق الرابط هنا.</div>
+          <input type="text" class="loc-addr" id="locAddr" data-t-ph="locAddrPh" placeholder="اسم الحي (اختياري)" aria-label="اسم الحي (اختياري)" maxlength="80" autocomplete="off">
           <div class="loc-result" id="locResult"></div>
-          <div class="gs-hint">الخدمة القياسية داخل مدينة الرياض والتنقل مشمول — خارج الرياض يتطلب تسعيرًا يدويًا مسبقًا</div>
+          <div class="gs-hint" data-t="locHint">الخدمة القياسية داخل مدينة الرياض والتنقل مشمول — خارج الرياض يتطلب تسعيرًا يدويًا مسبقًا</div>
         </div>
       </div>
       <div class="book-summary" id="bookSummary"></div>
       <div class="gov-deposit">
         <div class="gd-title" data-t="depositTitle">العربون المطلوب بعد إرسال الطلب (25%)</div>
         <div class="gd-amount" id="govDepositAmt">0 ر.س</div>
-        <div class="gd-note">ستظهر بيانات التحويل بعد استلام طلب الحجز بنجاح.</div>
+        <div class="gd-note" data-t="gdNote">ستظهر بيانات التحويل بعد استلام طلب الحجز بنجاح.</div>
       </div>
       </div>
       </div>
@@ -666,19 +666,19 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       <button class="btn btn-confirm" id="confirmOrderBtn" type="button">حفظ عرض السعر</button>
       <section class="submit-success" id="submitSuccess" aria-live="polite"></section>
       <div class="secondary-actions">
-        <button class="btn" id="waBtn" type="button"><span id="waIco"></span> <span>لديك استفسار؟ تواصل معنا عبر واتساب</span></button>
-        <button class="btn btn-out" id="ptBtn" data-t="ptBtn"><span data-svg="clip"></span> جدول الأسعار الكامل</button>
+        <button class="btn" id="waBtn" type="button"><span id="waIco"></span> <span id="waTxt">لديك استفسار؟ تواصل معنا عبر واتساب</span></button>
+        <button class="btn btn-out" id="ptBtn" type="button"><span data-svg="clip"></span> <span data-t="ptBtn">جدول الأسعار الكامل</span></button>
       </div>
       <details class="how-service">
-        <summary>كيف تعمل الخدمة؟</summary>
-        <p class="how-intro">أكمل طلبك الآن، ونحن نتابع معك خطوة بخطوة حتى تثبيت موعد التصوير.</p>
+        <summary data-t="howT">كيف تعمل الخدمة؟</summary>
+        <p class="how-intro" data-t="howIntro">أكمل طلبك الآن، ونحن نتابع معك خطوة بخطوة حتى تثبيت موعد التصوير.</p>
         <ol>
-          <li><b>اختر الخدمات</b> المناسبة لعقارك، ثم راجع السعر التقديري.</li>
-          <li><b>أدخل بياناتك</b> وبريدك الإلكتروني لاستقبال المستندات الرسمية.</li>
-          <li><b>أرسل طلب عرض سعر أو طلب حجز</b> ليصل مباشرة إلى فريق مأوى.</li>
-          <li><b>عند طلب الحجز، حوّل العربون</b> بعد ظهور بيانات التحويل وأرسل الإيصال.</li>
-          <li><b>يراجع فريق مأوى الطلب وتوفر الموعد</b> قبل الاعتماد النهائي.</li>
-          <li><b>يصلك العقد والتأكيد عبر البريد</b> ثم تُنفذ جلسة التصوير في الموعد المعتمد.</li>
+          <li data-t="how1"><b>اختر الخدمات</b> المناسبة لعقارك، ثم راجع السعر التقديري.</li>
+          <li data-t="how2"><b>أدخل بياناتك</b> وبريدك الإلكتروني لاستقبال المستندات الرسمية.</li>
+          <li data-t="how3"><b>أرسل طلب عرض سعر أو طلب حجز</b> ليصل مباشرة إلى فريق مأوى.</li>
+          <li data-t="how4"><b>عند طلب الحجز، حوّل العربون</b> بعد ظهور بيانات التحويل وأرسل الإيصال.</li>
+          <li data-t="how5"><b>يراجع فريق مأوى الطلب وتوفر الموعد</b> قبل الاعتماد النهائي.</li>
+          <li data-t="how6"><b>يصلك العقد والتأكيد عبر البريد</b> ثم تُنفذ جلسة التصوير في الموعد المعتمد.</li>
         </ol>
       </details>
       <a class="call-fab" id="callFab" href="tel:+966531646152" aria-label="اتصال مباشر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
@@ -686,22 +686,22 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 <!-- توجيه عرض السعر المبدئي — بيانات محلية للعرض فقط -->
 <div class="target-overlay" id="quoteTargetOverlay" role="dialog" aria-modal="true" aria-labelledby="quoteTargetTitle">
   <div class="target-card">
-    <div class="target-head"><div><h3 id="quoteTargetTitle">توجيه عرض السعر المبدئي</h3><p>هذه البيانات تظهر في العرض فقط ولا تغيّر بيانات العميل أو العقد.</p></div><button type="button" id="quoteTargetClose" aria-label="إغلاق">×</button></div>
+    <div class="target-head"><div><h3 id="quoteTargetTitle" data-t="tgtTitle">توجيه عرض السعر المبدئي</h3><p data-t="tgtSub">هذه البيانات تظهر في العرض فقط ولا تغيّر بيانات العميل أو العقد.</p></div><button type="button" id="quoteTargetClose" aria-label="إغلاق">×</button></div>
     <div class="target-type" role="group" aria-label="نوع الجهة">
-      <button type="button" class="on" data-target-type="person">شخص</button>
-      <button type="button" data-target-type="company">شركة أو جهة</button>
+      <button type="button" class="on" data-target-type="person" data-t="tgtPerson">شخص</button>
+      <button type="button" data-target-type="company" data-t="tgtCompany">شركة أو جهة</button>
     </div>
     <div class="target-fields" id="targetPersonFields">
-      <label>اسم المستلم <span>*</span><input type="text" id="targetPersonName" placeholder="اسم المستلم"></label>
-      <label>المسمى الوظيفي (اختياري)<input type="text" id="targetPersonTitle" placeholder="مثال: مدير التسويق"></label>
+      <label><span data-t="tgtName">اسم المستلم</span> <span>*</span><input type="text" id="targetPersonName" data-t-ph="tgtName" maxlength="120" placeholder="اسم المستلم"></label>
+      <label><span data-t="tgtTitleL">المسمى الوظيفي (اختياري)</span><input type="text" id="targetPersonTitle" data-t-ph="tgtTitlePh" maxlength="120" placeholder="مثال: مدير التسويق"></label>
     </div>
     <div class="target-fields" id="targetCompanyFields" hidden>
-      <label>اسم الشركة أو الجهة <span>*</span><input type="text" id="targetCompanyName" placeholder="اسم الشركة أو الجهة"></label>
-      <label>عناية الأستاذ/ة أو المدير (اختياري)<input type="text" id="targetAttention" placeholder="اسم المسؤول"></label>
-      <label>القسم أو المسمى الوظيفي (اختياري)<input type="text" id="targetDepartment" placeholder="مثال: إدارة التسويق"></label>
-      <label>مقدّم بواسطة<input type="text" id="targetRequestedBy" placeholder="اسم مقدم الطلب"></label>
+      <label><span data-t="tgtCo">اسم الشركة أو الجهة</span> <span>*</span><input type="text" id="targetCompanyName" data-t-ph="tgtCo" maxlength="160" placeholder="اسم الشركة أو الجهة"></label>
+      <label><span data-t="tgtAttn">عناية الأستاذ/ة أو المدير (اختياري)</span><input type="text" id="targetAttention" data-t-ph="tgtAttnPh" maxlength="120" placeholder="اسم المسؤول"></label>
+      <label><span data-t="tgtDept">القسم أو المسمى الوظيفي (اختياري)</span><input type="text" id="targetDepartment" data-t-ph="tgtDeptPh" maxlength="120" placeholder="مثال: إدارة التسويق"></label>
+      <label><span data-t="tgtBy">مقدّم بواسطة</span><input type="text" id="targetRequestedBy" data-t-ph="tgtByPh" maxlength="120" placeholder="اسم مقدم الطلب"></label>
     </div>
-    <button class="btn btn-confirm" id="createPrelimQuote" type="button">إنشاء العرض المبدئي</button>
+    <button class="btn btn-confirm" id="createPrelimQuote" type="button" data-t="tgtCreate">إنشاء العرض المبدئي</button>
   </div>
 </div>
 
@@ -726,11 +726,11 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
 <!-- مستند عرض السعر الرسمي -->
 <div class="qoverlay" id="quoteOverlay">
   <div class="qbar">
-    <span>عرض سعر مبدئي — مأوى للتصوير العقاري</span>
+    <span data-t="qbarT">عرض سعر مبدئي — مأوى للتصوير العقاري</span>
     <div class="acts">
-      <button class="primary" id="pdfBtn"><span data-svg="dl"></span> تحميل PDF</button>
-      <button id="printBtn"><span data-svg="print"></span> طباعة</button>
-      <button id="closeQuote"><span data-svg="x"></span> إغلاق</button>
+      <button type="button" class="primary" id="pdfBtn"><span data-svg="dl"></span> <span data-t="dlPdf">تحميل PDF</span></button>
+      <button type="button" id="printBtn"><span data-svg="print"></span> <span data-t="printBtn">طباعة</span></button>
+      <button type="button" id="closeQuote"><span data-svg="x"></span> <span data-t="closeQuote">إغلاق</span></button>
     </div>
   </div>
   <div class="qdoc" id="quoteDoc">
@@ -1051,7 +1051,7 @@ function applyLuxury(){
   if(span){ span.dataset.t = lux ? 'sendLux' : 'send'; span.textContent = T[UI.lang][span.dataset.t]; }
   /* الفاخر يعود لمسار العرض المخصّص؛ والعودة منه لنوع عادي تعيد تسمية الزر حسب المسار الحالي */
   if(lux) setBookMode('quote');
-  else { const cBtn=$('confirmOrderBtn'); if(cBtn && !cBtn.disabled) cBtn.textContent=confirmLabel(); }
+  else { const cBtn=$('confirmOrderBtn'); if(cBtn && !cBtn.disabled) cBtn.textContent=confirmLabel(); $('requestDescription').textContent=requestDescText(); }
 }
 
 /* ===== حساب سعر خدمة (معمّم لكل وحدة) ===== */
@@ -1467,7 +1467,7 @@ const T = {
     luxPh:'مساحة العقار، الموقع، الخدمات المطلوبة، موعد التسليم المتوقع...',
     luxCity:'الموقع (الحي / المدينة)',
     send:'اطلب هذا العرض عبر واتساب', sendLux:'أرسل طلبك المخصّص — واتساب',
-    typeTitle:'1 نوع العقار', typeHint:'Determines the base pricing for each service.',
+    typeTitle:'1 نوع العقار', typeHint:'يحدّد التسعيرة الأساسية لكل خدمة.',
     roomsTitle:'عدد الغرف', unitsTitle:'وحدات متعددة (شقق/فلل)', unitsHint:'وحدات إضافية',
     svcTitle:'الخدمات المطلوبة', svcHint:'اختر خدمة واحدة أو أكثر',
     addonsTitle:'+ إضافات التصوير (اختياري)',
@@ -1535,7 +1535,28 @@ const T = {
     footer:'© 2026 مأوى للتصوير العقاري — الأسعار بالريال السعودي. التصوير داخل الرياض فقط.',
     quoteBar:'عرض سعر رسمي — مأوى للتصوير العقاري', dlPdf:'تحميل PDF', printBtn:'طباعة', closeQuote:'إغلاق',
     customMsg:'هذا النوع يُسعَّر بعد المعاينة', perReq:'حسب الطلب',
-    sar:'ر.س', usd:'دولار', mbarGo:'متابعة الطلب ↓'
+    sar:'ر.س', usd:'دولار', mbarGo:'متابعة الطلب ↓',
+    deliveryHint:'التسليم المعتاد خلال 7 إلى 10 أيام عمل من اكتمال جلسة التصوير.',
+    ownerHead:'بيانات صاحب الطلب', ownerSub:'نستخدمها للتواصل وإرسال مستندات الطلب.',
+    nameL:'الاسم', phoneL:'الجوال', emailL:'البريد الإلكتروني',
+    emailNote:'مهم: بعد مراجعة الطلب وتأكيده، سنرسل العقد وجميع تفاصيل الطلب إلى هذا البريد الإلكتروني.',
+    reqHead:'ماذا تريد أن تفعل؟', waAsk:'لديك استفسار؟ تواصل معنا عبر واتساب',
+    howT:'كيف تعمل الخدمة؟', howIntro:'أكمل طلبك الآن، ونحن نتابع معك خطوة بخطوة حتى تثبيت موعد التصوير.',
+    how1:'<b>اختر الخدمات</b> المناسبة لعقارك، ثم راجع السعر التقديري.',
+    how2:'<b>أدخل بياناتك</b> وبريدك الإلكتروني لاستقبال المستندات الرسمية.',
+    how3:'<b>أرسل طلب عرض سعر أو طلب حجز</b> ليصل مباشرة إلى فريق مأوى.',
+    how4:'<b>عند طلب الحجز، حوّل العربون</b> بعد ظهور بيانات التحويل وأرسل الإيصال.',
+    how5:'<b>يراجع فريق مأوى الطلب وتوفر الموعد</b> قبل الاعتماد النهائي.',
+    how6:'<b>يصلك العقد والتأكيد عبر البريد</b> ثم تُنفذ جلسة التصوير في الموعد المعتمد.',
+    locLabel:'رابط موقع التصوير', mapOpen:'فتح الخرائط',
+    mapHelp:'<b>الطريقة:</b> افتح موقع العقار في خرائط Google ← اضغط «مشاركة» ← «نسخ الرابط» ← الصق الرابط هنا.',
+    locAddrPh:'اسم الحي (اختياري)', locHint:'الخدمة القياسية داخل مدينة الرياض والتنقل مشمول — خارج الرياض يتطلب تسعيرًا يدويًا مسبقًا',
+    gdNote:'ستظهر بيانات التحويل بعد استلام طلب الحجز بنجاح.', pagesL:'عدد الصفحات',
+    tgtTitle:'توجيه عرض السعر المبدئي', tgtSub:'هذه البيانات تظهر في العرض فقط ولا تغيّر بيانات العميل أو العقد.',
+    tgtPerson:'شخص', tgtCompany:'شركة أو جهة', tgtName:'اسم المستلم', tgtTitleL:'المسمى الوظيفي (اختياري)', tgtTitlePh:'مثال: مدير التسويق',
+    tgtCo:'اسم الشركة أو الجهة', tgtAttn:'عناية الأستاذ/ة أو المدير (اختياري)', tgtAttnPh:'اسم المسؤول',
+    tgtDept:'القسم أو المسمى الوظيفي (اختياري)', tgtDeptPh:'مثال: إدارة التسويق', tgtBy:'مقدّم بواسطة', tgtByPh:'اسم مقدم الطلب',
+    tgtCreate:'إنشاء العرض المبدئي', qbarT:'عرض سعر مبدئي — مأوى للتصوير العقاري',
   },
   en: {
     eyebrow:'Instant Price Calculator',
@@ -1622,7 +1643,28 @@ const T = {
     footer:'© 2026 MAWA Real Estate Photography — Prices in Saudi Riyal. Riyadh only.',
     quoteBar:'Official Quote — MAWA Real Estate Photography', dlPdf:'Download PDF', printBtn:'Print', closeQuote:'Close',
     customMsg:'This type is priced after a site visit', perReq:'On request',
-    sar:'SAR', usd:'USD', mbarGo:'Continue ↓'
+    sar:'SAR', usd:'USD', mbarGo:'Continue ↓',
+    deliveryHint:'Standard delivery: 7–10 business days after the shoot.',
+    ownerHead:'Your details', ownerSub:'We use them to contact you and send the request documents.',
+    nameL:'Name', phoneL:'Mobile', emailL:'Email',
+    emailNote:'Important: once your request is reviewed and confirmed, we will send the contract and all request details to this email.',
+    reqHead:'What would you like to do?', waAsk:'Have a question? Message us on WhatsApp',
+    howT:'How does it work?', howIntro:'Complete your request now — we follow up step by step until your shoot is confirmed.',
+    how1:'<b>Choose the services</b> for your property, then review the estimated price.',
+    how2:'<b>Enter your details</b> and email to receive the official documents.',
+    how3:'<b>Send a quote or booking request</b> straight to the MAWA team.',
+    how4:'<b>For a booking, transfer the deposit</b> once the transfer details appear, and send the receipt.',
+    how5:'<b>The MAWA team reviews the request and availability</b> before final approval.',
+    how6:'<b>You receive the contract and confirmation by email</b>, then the shoot takes place at the approved time.',
+    locLabel:'Shoot location link', mapOpen:'Open Maps',
+    mapHelp:'<b>How:</b> open the property in Google Maps → tap Share → Copy link → paste it here.',
+    locAddrPh:'District name (optional)', locHint:'Standard service covers Riyadh city with travel included — outside Riyadh needs manual pricing first',
+    gdNote:'Transfer details appear once your booking request is received.', pagesL:'Pages',
+    tgtTitle:'Address the preliminary quote', tgtSub:'These details appear on the quote only and do not change any client or contract data.',
+    tgtPerson:'Person', tgtCompany:'Company or organisation', tgtName:'Recipient name', tgtTitleL:'Job title (optional)', tgtTitlePh:'e.g. Marketing Manager',
+    tgtCo:'Company or organisation name', tgtAttn:'Attention of (optional)', tgtAttnPh:'Contact name',
+    tgtDept:'Department or title (optional)', tgtDeptPh:'e.g. Marketing Department', tgtBy:'Submitted by', tgtByPh:'Requester name',
+    tgtCreate:'Create preliminary quote', qbarT:'Preliminary quote — MAWA Real Estate Photography',
   }
 };
 
@@ -1687,6 +1729,8 @@ function applyLang(){
     if (t[k] !== undefined) el.innerHTML = t[k];
   });
   // زر الإرسال
+  const wt = $('waTxt'); if (wt) wt.textContent = t.waAsk;
+  const rd = $('requestDescription'); if (rd) rd.textContent = requestDescText();
   const wa = $('waBtn');
   const waSpan = wa.querySelector('[data-t]');
   if (waSpan){ waSpan.dataset.t = (TYPES[state.type]||{}).luxury ? 'sendLux' : (BOOK.mode==='book' ? 'sendBook' : 'send'); waSpan.textContent = t[waSpan.dataset.t]; }
@@ -1848,7 +1892,7 @@ const fmtDoc=n=>Math.round(n).toLocaleString('en-US')+' '+RIYAL;
 function openQuote(){
   const dis=DISABLED[state.type]||[]; const d=buildQuoteData();
   const hasSel=[...state.sel].some(k=>!dis.includes(k));
-  if(!hasSel && !(state.logo||state.sign||state.pages>0)){ toast('اختر خدمة واحدة على الأقل'); return; }
+  if(!hasSel && !(state.logo||state.sign||state.pages>0)){ toast(tx('اختر خدمة واحدة على الأقل','Select at least one service')); return; }
   const setQuoteLine=(id,text)=>{const el=$(id); el.textContent=text||''; el.style.display=text?'block':'none';};
   if(QUOTE_TARGET.type==='company'){
     $('qTo').textContent=QUOTE_TARGET.companyName;
@@ -1893,7 +1937,7 @@ function setQuoteTargetType(type){
 }
 function openQuoteTarget(){
   const dis=DISABLED[state.type]||[];
-  if(![...state.sel].some(k=>!dis.includes(k)) && !(state.logo||state.sign||state.pages>0)){toast('اختر خدمة واحدة على الأقل');return;}
+  if(![...state.sel].some(k=>!dis.includes(k)) && !(state.logo||state.sign||state.pages>0)){toast(tx('اختر خدمة واحدة على الأقل','Select at least one service'));return;}
   if(!$('targetPersonName').value.trim()) $('targetPersonName').value=state.name||'';
   if(!$('targetRequestedBy').value.trim()) $('targetRequestedBy').value=state.name||'';
   $('quoteTargetOverlay').classList.add('open'); document.body.style.overflow='hidden';
@@ -1904,10 +1948,10 @@ $('quoteTargetClose').onclick=closeQuoteTarget;
 $('quoteTargetOverlay').onclick=e=>{if(e.target===$('quoteTargetOverlay'))closeQuoteTarget();};
 $('createPrelimQuote').onclick=()=>{
   if(QUOTE_TARGET.type==='person'){
-    const name=$('targetPersonName').value.trim(); if(!name){toast('أدخل اسم مستلم عرض السعر');$('targetPersonName').focus();return;}
+    const name=$('targetPersonName').value.trim(); if(!name){toast(tx('أدخل اسم مستلم عرض السعر','Enter the quote recipient name'));$('targetPersonName').focus();return;}
     QUOTE_TARGET.personName=name; QUOTE_TARGET.personTitle=$('targetPersonTitle').value.trim();
   }else{
-    const company=$('targetCompanyName').value.trim(); if(!company){toast('أدخل اسم الشركة أو الجهة');$('targetCompanyName').focus();return;}
+    const company=$('targetCompanyName').value.trim(); if(!company){toast(tx('أدخل اسم الشركة أو الجهة','Enter the company or organisation name'));$('targetCompanyName').focus();return;}
     QUOTE_TARGET.companyName=company; QUOTE_TARGET.attention=$('targetAttention').value.trim(); QUOTE_TARGET.department=$('targetDepartment').value.trim(); QUOTE_TARGET.requestedBy=$('targetRequestedBy').value.trim();
   }
   closeQuoteTarget(); openQuote();
@@ -1916,9 +1960,9 @@ $('quoteBtn').onclick=openQuoteTarget;
 $('closeQuote').onclick=()=>{$('quoteOverlay').classList.remove('open'); document.body.style.overflow='';};
 $('printBtn').onclick=()=>window.print();
 $('pdfBtn').onclick=()=>{
-  toast('جاري تجهيز ملف PDF...');
+  toast(tx('جاري تجهيز ملف PDF...','Preparing the PDF...'));
   const opt={margin:[10,10,10,10],filename:'عرض-سعر-مأوى-'+((getSavedQuote()||{}).number||'مبدئي')+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#FBFAF6'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},pagebreak:{mode:['avoid-all','css','legacy']}};
-  html2pdf().set(opt).from($('quoteDoc')).save().then(()=>toast('✓ تم تجهيز ملف PDF')).catch(()=>toast('تعذّر إنشاء الملف'));
+  html2pdf().set(opt).from($('quoteDoc')).save().then(()=>toast(tx('✓ تم تجهيز ملف PDF','✓ PDF ready'))).catch(()=>toast(tx('تعذّر إنشاء الملف','Could not create the file')));
 };
 
 /* ===== init ===== */
@@ -1963,6 +2007,14 @@ function confirmLabel(){
   return BOOK.mode==='book' ? (EN()?'Send booking request':'إرسال طلب الحجز') : (EN()?'Save quote':'حفظ عرض السعر');
 }
 
+/* وصف المسار تحت «ماذا تريد أن تفعل؟» — الفاخر لا يُحفظ كعرض برقم وصلاحية بل يذهب للفريق */
+function requestDescText(){
+  if((TYPES[state.type]||{}).luxury) return tx('أرسل طلبك وسيتواصل معك فريق مأوى لمناقشة التفاصيل، ثم يصلك عرض سعر رسمي مخصّص.','Send your request — the MAWA team will contact you to discuss the details, then send a tailored official quote.');
+  return BOOK.mode==='book'
+    ? tx('اختر الموعد المناسب لك، وسيراجع فريق مأوى توفره وتفاصيل الطلب قبل إرسال التأكيد النهائي.','Pick a time that suits you; the MAWA team checks availability and the request details before sending final confirmation.')
+    : tx('يُحفظ عرض السعر برقم رسمي وصلاحية 14 يومًا. لا يُنشئ هذا الخيار طلب حجز ولا يتطلب موعدًا أو عربونًا الآن.','Your quote is saved with an official number, valid for 14 days. This creates no booking and needs no appointment or deposit now.');
+}
+
 function setBookMode(m){
   BOOK.mode = m; BOOK.date = null; BOOK.time = null; BOOK.facade = null;
   document.querySelectorAll('#facadeChips .fchip').forEach(x=>{ x.classList.remove('on'); x.setAttribute('aria-pressed','false'); });
@@ -1974,9 +2026,7 @@ function setBookMode(m){
   $('govDate').value = ''; fillTimes('');
   $('locUrl').classList.remove('err');
   $('bookSummary').classList.remove('on');
-  $('requestDescription').textContent=m==='book'
-    ? 'اختر الموعد المناسب لك، وسيراجع فريق مأوى توفره وتفاصيل الطلب قبل إرسال التأكيد النهائي.'
-    : 'يُحفظ عرض السعر برقم رسمي وصلاحية 14 يومًا. لا يُنشئ هذا الخيار طلب حجز ولا يتطلب موعدًا أو عربونًا الآن.';
+  $('requestDescription').textContent=requestDescText();
   $('confirmOrderBtn').textContent=confirmLabel();
   $('confirmOrderBtn').disabled=false;
   $('submitSuccess').classList.remove('on'); $('submitSuccess').innerHTML='';
@@ -2098,7 +2148,7 @@ function setupDateInput(){
     if (new Date(v+'T00:00:00').getDay() === 5){
       inp.value=''; BOOK.date=null; BOOK.time=null;
       inp.classList.add('err');
-      toast('الجمعة غير متاحة — اختر يوماً آخر');
+      toast(L().friday);
       setTimeout(()=>inp.classList.remove('err'),1600);
       fillTimes(''); $('bookSummary').classList.remove('on');
       return;
@@ -2134,15 +2184,19 @@ function updateDeposit(){
   const gBox = document.querySelector('#bookPanel .gov-deposit'); if (gBox) gBox.style.display = (out || state.isCustom) ? 'none' : '';
   updateBookSummary();
 }
+function updateStaticPrices(){
+  const bp=document.querySelector('#brochureOption > .px'); if(bp) bp.innerHTML=fmt(200)+tx(' / صفحة',' / page');
+  [['d-logo',1200],['d-sign',700]].forEach(([id,v])=>{ const el=$(id)&&$(id).closest('.addon'); const px=el&&el.querySelector('.px'); if(px) px.innerHTML=fmt(v); });
+}
 function updateMbar(){ const v=$('mbarTotal'); if(v) v.innerHTML=state.isCustom?tx('حسب المشروع','Per project'):fmt(lastTotal); }
-recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); updateMbar(); };
+recalc = function(){ _recalcOrig(); updateDeposit(); releaseSavedQuote(); updateMbar(); updateStaticPrices(); };
 
 async function copyBankVal(box, kind){
   const el = box.querySelector('.bb-val');
   const val = el ? el.textContent.replace(/\s+/g,'') : '';
   try{ await navigator.clipboard.writeText(val); }
   catch{ const ta=document.createElement('textarea'); ta.value=val; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-  toast(kind==='acct' ? '✓ تم نسخ رقم الحساب' : '✓ تم نسخ رقم الآيبان');
+  toast(kind==='acct' ? tx('✓ تم نسخ رقم الحساب','✓ Account number copied') : tx('✓ تم نسخ رقم الآيبان','✓ IBAN copied'));
 }
 
 /* حفظ الطلب: يحاول الدالة الآمنة أولاً، وإن لم تكن منشأة في القاعدة يدرج مباشرة في الجداول */
@@ -2314,7 +2368,7 @@ $('waBtn').onclick = async function(){
       msg=hello+'\nأرغب بطلب عرض سعر من مأوى للتصوير العقاري (عبر الموقع):\n\n📋 بيانات الطلب:\n'+meta+'\n\n📸 الخدمات المختارة:\n'+lines.join('\n')+'\n\n💰 الإجمالي التقديري: '+sar(lastTotal)+(CAMPAIGN.active?` (بأسعار ${CAMPAIGN.name})`:``)+bookInfo;
     }
     window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');
-    toast('تم فتح واتساب للاستفسار');
+    toast(tx('تم فتح واتساب للاستفسار','WhatsApp opened'));
   }
 };
 
@@ -2394,7 +2448,7 @@ $('confirmOrderBtn').onclick = async function(){
   lastSubmitError=null;
   const btn=this, label=btn.textContent;
   const isQuoteSave = !state.isCustom && BOOK.mode!=='book';
-  btn.textContent=isQuoteSave?'جارٍ حفظ العرض...':'جارٍ إرسال الطلب...'; btn.disabled=true;
+  btn.textContent=isQuoteSave?tx('جارٍ حفظ العرض...','Saving quote...'):tx('جارٍ إرسال الطلب...','Sending request...'); btn.disabled=true;
   if(isQuoteSave){
     const saved=await saveQuote(lastTotal);
     if(!saved){btn.textContent=label;btn.disabled=false;toast(submitErrorMsg(true));return;}
@@ -2406,13 +2460,13 @@ $('confirmOrderBtn').onclick = async function(){
     savedSig=saved.sig||quoteSig();
     releaseSavedQuote(); // إن تغيّرت الاختيارات أثناء الحفظ يعود الزر فوراً
     success.classList.add('on'); success.scrollIntoView({behavior:'smooth',block:'nearest'});
-    toast('✓ تم حفظ عرض السعر');
+    toast(tx('✓ تم حفظ عرض السعر','✓ Quote saved'));
     return;
   }
   const saved=await saveLead(lastTotal);
   if(!saved){btn.textContent=label;btn.disabled=false;toast(submitErrorMsg(false));return;}
   const success=$('submitSuccess');
-  const ref=typeof saved==='string'?'<div class="request-ref">رقم الطلب: '+saved+'</div>':'';
+  const ref=typeof saved==='string'?'<div class="request-ref">'+tx('رقم الطلب: ','Request no.: ')+saved+'</div>':'';
   if(BOOK.mode==='book' && outsideBooking()){
     success.innerHTML=EN()
       ? '<h4>✓ Booking request received</h4><p>The location is outside Riyadh, so no deposit is due now: the MAWA team will contact you with a manual price for this location, and transfer details follow once it is approved.</p>'+ref
@@ -2420,15 +2474,15 @@ $('confirmOrderBtn').onclick = async function(){
     btn.textContent=EN()?'Booking request sent':'تم إرسال طلب الحجز';
   }else if(BOOK.mode==='book'){
     const deposit=Math.round(lastTotal*.25);
-    success.innerHTML='<h4>✓ تم استلام طلب الحجز بنجاح</h4><p>الخطوة التالية: حوّل العربون وأرسل الإيصال. بعد ذلك يراجع فريق مأوى الطلب وتوفر الموعد، ثم يُرسل العقد وتأكيد الحجز إلى بريدك الإلكتروني.</p>'+ref+'<div class="gov-deposit"><div class="gd-title">العربون المطلوب (25%)</div><div class="gd-amount">'+fmt(deposit)+'</div></div><div class="bank-box"><div class="bb-title">مصرف الراجحي — مؤسسة مأوى المهارة التجارية</div><div class="bb-row" onclick="copyBankVal(this,\'acct\')"><span class="bb-label">رقم الحساب</span><span class="bb-val" dir="ltr">6126-08016-0946</span><span class="bb-copy">نسخ</span></div><div class="bb-row" onclick="copyBankVal(this,\'iban\')"><span class="bb-label">الآيبان</span><span class="bb-val" dir="ltr">SA48 8000 0612 6080 1609 4625</span><span class="bb-copy">نسخ</span></div></div><button class="btn receipt-btn" id="receiptWaBtn" type="button">إرسال إيصال العربون عبر واتساب</button>';
+    success.innerHTML=tx('<h4>✓ تم استلام طلب الحجز بنجاح</h4><p>الخطوة التالية: حوّل العربون وأرسل الإيصال. بعد ذلك يراجع فريق مأوى الطلب وتوفر الموعد، ثم يُرسل العقد وتأكيد الحجز إلى بريدك الإلكتروني.</p>','<h4>✓ Booking request received</h4><p>Next step: transfer the deposit and send the receipt. The MAWA team then reviews the request and availability, and sends the contract and booking confirmation to your email.</p>')+ref+'<div class="gov-deposit"><div class="gd-title">'+tx('العربون المطلوب (25%)','Deposit due (25%)')+'</div><div class="gd-amount">'+fmt(deposit)+'</div></div><div class="bank-box"><div class="bb-title">'+tx('مصرف الراجحي','Al Rajhi Bank')+' — مؤسسة مأوى المهارة التجارية</div><div class="bb-row" onclick="copyBankVal(this,\'acct\')"><span class="bb-label">'+tx('رقم الحساب','Account no.')+'</span><span class="bb-val" dir="ltr">6126-08016-0946</span><span class="bb-copy">'+tx('نسخ','Copy')+'</span></div><div class="bb-row" onclick="copyBankVal(this,\'iban\')"><span class="bb-label">'+tx('الآيبان','IBAN')+'</span><span class="bb-val" dir="ltr">SA48 8000 0612 6080 1609 4625</span><span class="bb-copy">'+tx('نسخ','Copy')+'</span></div></div><button class="btn receipt-btn" id="receiptWaBtn" type="button">'+tx('إرسال إيصال العربون عبر واتساب','Send the deposit receipt on WhatsApp')+'</button>';
     $('receiptWaBtn').onclick=()=>{const msg='السلام عليكم، أرسل لكم إيصال عربون طلب الحجز باسم '+state.name+(typeof saved==='string'?' — رقم الطلب: '+saved:'')+'.';window.open('https://wa.me/966531646152?text='+encodeURIComponent(msg),'_blank');};
-    btn.textContent='تم إرسال طلب الحجز';
+    btn.textContent=tx('تم إرسال طلب الحجز','Booking request sent');
   }else{
-    success.innerHTML='<h4>✓ تم استلام طلب عرض السعر</h4><p>سيراجع فريق مأوى تفاصيل العقار والخدمات ويتواصل معك. لا يلزم تحديد موعد أو دفع عربون الآن.</p>'+ref;
-    btn.textContent='تم إرسال طلب عرض السعر';
+    success.innerHTML=tx('<h4>✓ تم استلام طلب عرض السعر</h4><p>سيراجع فريق مأوى تفاصيل العقار والخدمات ويتواصل معك. لا يلزم تحديد موعد أو دفع عربون الآن.</p>','<h4>✓ Quote request received</h4><p>The MAWA team will review the property and services and contact you. No appointment or deposit is needed now.</p>')+ref;
+    btn.textContent=tx('تم إرسال طلب عرض السعر','Quote request sent');
   }
   success.classList.add('on'); success.scrollIntoView({behavior:'smooth',block:'nearest'});
-  toast('✓ تم إرسال الطلب بنجاح');
+  toast(tx('✓ تم إرسال الطلب بنجاح','✓ Request sent'));
 };
 
 /* ===== نافذة جدول الأسعار (مبنية من PRICING — توحيد تلقائي) ===== */
