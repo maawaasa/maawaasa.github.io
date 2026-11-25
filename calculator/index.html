@@ -468,7 +468,7 @@ select.gov-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://w
       </div>
 
       <div class="card" id="roomsCard">
-        <h2><span class="n">2</span> <span id="roomsTitle" data-t="roomsTitle">عدد الغرف</span></h2>
+        <h2><span class="n">2</span> <span id="roomsTitle">عدد الغرف</span></h2>
         <div class="hint"><span data-t="roomsHint">السعر يزداد كلما زادت الغرف (مساحة أكبر = تغطية أوسع). أدخل الرقم أو اسحب الشريط.</span></div>
         <div class="rooms-row">
           <span class="rooms-n-a" id="roomsNA" style="display:none">لا ينطبق على هذا النوع</span>
@@ -978,17 +978,20 @@ function renderServices(){
     el.onclick=()=>{const k=el.dataset.k; state.sel.has(k)?state.sel.delete(k):state.sel.add(k); el.classList.toggle('on'); recalc(); syncUrl();};
   });
 }
-function onTypeChange(){
+function onTypeChange(keepRooms){
+  /* الوحدات المتعددة للشقق والفلل فقط — بقاياها بعد التحويل لنوع آخر كانت تفسد الرابط وملخص الطلب */
+  if(!UNIT_TYPES.includes(state.type)) state.extraUnits=[];
   typesEl.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b.dataset.k===state.type));
   const t=TYPES[state.type]; const [min,max,def]=t.rooms; const no=max===0;
   roomsNA.style.display=no?'inline':'none'; roomsNum.parentElement.style.display=no?'none':'flex'; roomsEl.style.display=no?'none':'block';
-  roomsTitle.textContent= state.type==='project'?'عدد الوحدات':'عدد الغرف';
+  roomsTitle.textContent= state.type==='project' ? (EN()?'Number of Units':'عدد الوحدات') : (EN()?'Number of Rooms':'عدد الغرف');
   if(!no){
     roomsEl.min=min; roomsEl.max=max; roomsNum.min=min; roomsNum.max=max;
     /* الحفاظ على غرف الرابط المشترك عند التحميل الأول — والافتراضي عند تبديل النوع يدويًا */
-    const keep = urlLoadedRooms && state.rooms>=min && state.rooms<=max ? state.rooms : Math.min(Math.max(def,min),max);
+    /* تغيير اللغة يحافظ على عدد الغرف (كان يعيده للافتراضي: 4 غرف ← 2 والرابط ما زال /apartment/4) */
+    const keep = (keepRooms||urlLoadedRooms) && state.rooms>=min && state.rooms<=max ? state.rooms : Math.min(Math.max(def,min),max);
     urlLoadedRooms=false;
-    state.rooms=keep; roomsEl.value=state.rooms; roomsNum.value=state.rooms; roomsUnit.textContent=t.unit;
+    state.rooms=keep; roomsEl.value=state.rooms; roomsNum.value=state.rooms; roomsUnit.textContent=EN()?(t.unitEn||t.unit):t.unit;
   }
   $('inclNote').style.display = (!t.custom && !no) ? '' : 'none';
   $('unitsCard').style.display = (state.type==='apartment'||state.type==='villa') ? '' : 'none';
@@ -1039,7 +1042,7 @@ function listPriceOfFor(svc, typeKey, rooms){
 const listPriceOf = svc => listPriceOfFor(svc, state.type, state.rooms);
 /* مُخرجات تقريبية لكل خدمة */
 function deliverableOf(svc){
-  const r=state.rooms;
+  const r=TYPES[state.type].rooms[1]===0?0:state.rooms; // الأرض بلا غرف — كانت تأخذ غرف النوع السابق
   if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?10:10+r; return `≈ ${n} صورة HDR`; }
   if(svc==='video'){ const sec=45+r*12; return `≈ فيديو ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} دقيقة`; }
   if(svc==='drone') return `≈ 10–15 لقطة جوية`;
@@ -1049,7 +1052,7 @@ function deliverableOf(svc){
 }
 const L = () => (typeof T !== 'undefined' && typeof UI !== 'undefined') ? T[UI.lang] : {days:['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'], months:['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'], midnight:'12:00 منتصف الليل', noon:'12:00 ظهراً', am:'صباحاً', pm:'مساءً', chooseTime:'— اختر الوقت —', passed:'(مضت)', friday:'الجمعة غير متاحة', yourAppt:'موعدك:', totalWord:'الإجمالي:', depNow:'العربون الآن:', remaining:'المتبقي بعد الجلسة:'};
 function deliverableOfEn(svc){
-  const r=state.rooms;
+  const r=TYPES[state.type].rooms[1]===0?0:state.rooms; // الأرض بلا غرف — كانت تأخذ غرف النوع السابق
   if(svc==='photo'){ const n=state.type==='villa'?14+r*2: state.type==='apartment'?8+r*2: state.type==='studio'?10:10+r; return `≈ ${n} HDR photos`; }
   if(svc==='video'){ const sec=45+r*12; return `≈ ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} min video`; }
   if(svc==='drone') return `≈ 10–15 aerial shots`;
@@ -1195,13 +1198,17 @@ $('d-brochure').onchange=e=>{
   $('brochureOption').classList.toggle('on',e.target.checked);
   updateBrochureUi(); recalc(); syncUrl();
 };
-$('d-pages').oninput=e=>{state.pages=Math.max(1,Math.min(200,+e.target.value||1)); updateBrochureUi(); recalc(); syncUrl();};
+$('d-pages').oninput=e=>{state.pages=clampInt(e.target.value,1,200); updateBrochureUi(); recalc(); syncUrl();};
+$('d-pages').onchange=e=>{ if(state.pages>0) e.target.value=state.pages; };
 function updateBrochureUi(){
   const net=brochureNet();
   $('d-pages-v').innerHTML=fmt(net);
 }
-roomsEl.oninput=e=>{state.rooms=+e.target.value; roomsNum.value=state.rooms; recalc(); syncUrl();};
-roomsNum.oninput=e=>{let v=Math.max(+roomsNum.min||1,Math.min(+roomsNum.max||99,+e.target.value||1)); state.rooms=v; roomsEl.value=v; recalc(); syncUrl();};
+roomsEl.oninput=e=>{state.rooms=clampInt(e.target.value,+roomsEl.min||1,+roomsEl.max||99); roomsNum.value=state.rooms; recalc(); syncUrl();};
+/* أثناء الكتابة يُسعَّر العدد الصحيح المحصور دون الكتابة فوق الحقل، وعند الخروج يُعرض العدد المعتمد
+   (كانت 2.5 غرفة تُقبل وتُكتب في الرابط، و«1» لفيلا تبقى ظاهرة بينما يُسعَّر 3) */
+roomsNum.oninput=e=>{state.rooms=clampInt(e.target.value,+roomsNum.min||1,+roomsNum.max||99); roomsEl.value=state.rooms; recalc(); syncUrl();};
+roomsNum.onchange=()=>{ roomsNum.value=state.rooms; };
 
 /* ===== واجهة الوحدات — 1 Site + N Units ===== */
 function renderUnits(){
@@ -1233,11 +1240,16 @@ function renderUnits(){
   wrap.querySelectorAll('.unit-row').forEach(row=>{
     const u=state.extraUnits.find(x=>x.uid===row.dataset.uid); if(!u) return;
     row.querySelector('.ur-type').onchange=e=>{ u.type=e.target.value; u.rooms=Math.min(Math.max(TYPES[u.type].rooms[2],TYPES[u.type].rooms[0]),TYPES[u.type].rooms[1]); refreshUnits(); };
-    row.querySelector('.ur-rooms').oninput=e=>{ u.rooms=Math.max(TYPES[u.type].rooms[0],Math.min(TYPES[u.type].rooms[1],+e.target.value||1)); refreshUnits(); };
+    /* الكتابة في حقول الوحدة لا تعيد رسم الصفوف (كانت تُفقد المؤشر بعد أول رقم فيستحيل كتابة 10 أو 12)،
+       والقيمة المعتمدة — عدد صحيح داخل النطاق — تُكتب في الحقل عند الخروج منه */
+    const unitEdited=()=>{ updateUnitSubtotals(); recalc(); syncUrl(); };
+    row.querySelector('.ur-rooms').oninput=e=>{ const R=TYPES[u.type].rooms; u.rooms=clampInt(e.target.value,R[0],R[1]); unitEdited(); };
+    row.querySelector('.ur-rooms').onchange=e=>{ e.target.value=u.rooms; };
     row.querySelector('.ur-qty').oninput=e=>{
-      let q=Math.max(1,Math.min(UNITS_CAP-1-state.extraUnits.reduce((s,x)=>s+(x===u?0:(+x.qty||1)),0),+e.target.value||1));
-      u.qty=q; refreshUnits();
+      const others=state.extraUnits.reduce((s,x)=>s+(x===u?0:(+x.qty||1)),0);
+      u.qty=clampInt(e.target.value,1,Math.max(1,UNITS_CAP-1-others)); unitEdited();
     };
+    row.querySelector('.ur-qty').onchange=e=>{ e.target.value=u.qty; };
     row.querySelector('[data-act="dup"]').onclick=()=>{ if(totalUnits()>=UNITS_CAP){toast(en?'Maximum 20 units':'الحد الأقصى 20 وحدة');return;} state.extraUnits.push({uid:newUid(),type:u.type,rooms:u.rooms,qty:1}); refreshUnits(); };
     row.querySelector('[data-act="del"]').onclick=()=>{ state.extraUnits=state.extraUnits.filter(x=>x.uid!==u.uid); refreshUnits(); };
   });
@@ -1591,7 +1603,7 @@ function setLang(l){
   document.documentElement.lang = l;
   $('langAR').classList.toggle('on', l==='ar');
   $('langEN').classList.toggle('on', l==='en');
-  renderTypes(); onTypeChange();
+  renderTypes(); onTypeChange(true);
   applyLang();
   fillTimes(BOOK.date || '');
   updateSunAdvice();
