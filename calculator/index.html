@@ -982,6 +982,7 @@ const BOOK = { mode:'quote', date:null, time:null, facade:null };
 /* موقع التصوير (من اسم الحي في نموذج الحجز) — خارج الرياض = تسعير يدوي بلا عربون تلقائي */
 const state_loc={km:null,fee:0,label:'',outside:false};
 const outsideBooking=()=>BOOK.mode==='book'&&state_loc.outside;
+let savedSig=null; // بصمة آخر عرض محفوظ — تُقرأ في كل إعادة حساب
 const $=id=>document.getElementById(id);
 const typesEl=$('types'), svcsEl=$('svcs'), roomsEl=$('rooms'), roomsNum=$('roomsNum'),
       roomsUnit=$('roomsUnit'), roomsNA=$('roomsNA'), roomsTitle=$('roomsTitle'),
@@ -1991,7 +1992,8 @@ function fmtTime(t){
 }
 /* خيار 00:00 يأتي في القائمة بعد 11 مساءً = منتصف الليل في نهاية اليوم المختار، أي بداية اليوم التالي.
    كان يُحفظ بتاريخ اليوم المختار نفسه فيصير الموعد قبل المقصود بـ24 ساعة. */
-const slotLabel = t => fmtTime(t) + (t==='00:00' ? (EN()?' (end of day)':' (نهاية اليوم)') : '');
+/* دوال (لا const): تُستدعى أثناء التهيئة للفئات الفاخرة عبر setBookMode ← fillTimes */
+function slotLabel(t){ return fmtTime(t) + (t==='00:00' ? (EN()?' (end of day)':' (نهاية اليوم)') : ''); }
 function shootSlot(){
   if (!BOOK.date || !BOOK.time) return null;
   if (BOOK.time !== '00:00') return { date:BOOK.date, time:BOOK.time };
@@ -1999,7 +2001,7 @@ function shootSlot(){
   const p = n => String(n).padStart(2,'0');
   return { date:d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()), time:'00:00' };
 }
-const slotNote = () => { const s=shootSlot(); return s ? s.date+' الساعة '+s.time+(BOOK.time==='00:00'?' (منتصف الليل في نهاية '+BOOK.date+')':'') : ''; };
+function slotNote(){ const s=shootSlot(); return s ? s.date+' الساعة '+s.time+(BOOK.time==='00:00'?' (منتصف الليل في نهاية '+BOOK.date+')':'') : ''; }
 
 /* تسمية زر الإرسال الرئيسي حسب نوع العقار ومسار الطلب */
 function confirmLabel(){
@@ -2382,12 +2384,11 @@ $('waBtn').onclick = async function(){
 const QUOTE_VALIDITY_DAYS = 14;
 /* رقم العرض المحفوظ يخص الاختيارات التي حُفظ بها فقط: بصمة من مسار الرابط (النوع والغرف والوحدات
    والخدمات والإضافات) + الإجمالي. أي تعديل بعد الحفظ يعيد المستند «مبدئياً» ولا يُربط الرقم بطلب مختلف. */
-const quoteSig=()=>calcSegsFromState().join('/')+'#'+Math.round(lastTotal);
+function quoteSig(){ return calcSegsFromState().join('/')+'#'+Math.round(lastTotal); }
 function getSavedQuote(){
   try{ const raw=sessionStorage.getItem('maawaa_quote'); const q=raw?JSON.parse(raw):null; return q&&q.sig===quoteSig()?q:null; }catch(_){ return null; }
 }
-/* بعد حفظ العرض يتوقف الزر؛ وأي تعديل لاحق على الاختيارات يعيد تفعيله لحفظ عرض جديد */
-let savedSig=null;
+/* بعد حفظ العرض يتوقف الزر؛ وأي تعديل لاحق على الاختيارات يعيد تفعيله لحفظ عرض جديد (savedSig معرّفة أعلى السكربت) */
 function releaseSavedQuote(){
   if(savedSig===null || savedSig===quoteSig()) return;
   savedSig=null;
