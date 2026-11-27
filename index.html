@@ -582,9 +582,11 @@ bdi{unicode-bidi:isolate}
 }
 @media (max-width:760px){
   .hero{display:block;min-height:0}
-  .hero-media{position:relative;height:min(62svh,520px)}
+  .hero-media{position:relative;height:clamp(380px,62svh,520px)}
   .hero-fade{background:linear-gradient(180deg,rgba(var(--bg-rgb),0) 45%,rgba(var(--bg-rgb),.85) 82%,var(--bg) 100%)}
-  .hero-in{padding-top:0;margin-top:-70px;padding-bottom:56px}
+  .hero-in{padding-top:0;margin-top:-24px;padding-bottom:56px}
+  /* الجوال: الصورة تبقى ظاهرة أطول وتتلاشى حيث يبدأ النص (النص أنزل بطلب المالك 2026-11-27) */
+  .hero-fade{background:linear-gradient(180deg,rgba(var(--bg-rgb),0) 50%,rgba(var(--bg-rgb),.8) 72%,rgba(var(--bg-rgb),.96) 84%,var(--bg) 100%)}
   .f1{top:88px;left:16px}
   .f2{display:none}
   .f3{top:200px;left:auto;right:20px;margin-left:0}
