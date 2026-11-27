@@ -195,9 +195,6 @@ bdi{unicode-bidi:isolate}
 .hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:36px}
 .hero-row .small{max-width:380px}
 .btns{display:flex;gap:12px;flex-wrap:wrap}
-.specs{display:grid;grid-template-columns:repeat(4,auto);gap:30px;margin-bottom:8px}
-.specs dt{font-size:12px;color:var(--grey);margin-bottom:6px}
-.specs dd{font-family:var(--ar);font-weight:500;font-size:16px}
 .float{position:absolute;z-index:2;left:max(var(--gut),calc((100% - var(--maxw))/2))}
 .float>*{animation:bob 7s ease-in-out infinite}
 .f1{top:22%}
@@ -330,9 +327,9 @@ bdi{unicode-bidi:isolate}
   --rim-dark:linear-gradient(225deg,rgba(var(--teal-hi-rgb),.9) 0%,rgba(255,255,255,.85) 9%,rgba(var(--teal-hi-rgb),.7) 20%,rgba(255,255,255,.06) 52%,rgba(var(--teal-hi-rgb),.3) 82%,rgba(var(--teal-hi-rgb),.55) 100%);
   --rim-glint:linear-gradient(105deg,transparent 40%,rgba(var(--teal-hi-rgb),.9) 46%,#fff 50%,rgba(var(--teal-hi-rgb),.9) 54%,transparent 60%) 120% 0/300% 100% no-repeat;
   --rim-sheen:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.34) 47%,rgba(var(--teal-hi-rgb),.16) 53%,transparent 64%) 120% 0/300% 100% no-repeat}
-:is(.ptable,.notif,.invite,.proj){position:relative}
-:is(.ptable,.picker,.panel,.invite,.notif,.proj,.reel-frame){border-color:transparent}
-:is(.ptable,.picker,.panel,.invite,.notif,.proj,.reel-frame)::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;background:var(--rim);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+:is(.ptable,.notif,.invite){position:relative}
+:is(.ptable,.picker,.panel,.invite,.notif,.reel-frame){border-color:transparent}
+:is(.ptable,.picker,.panel,.invite,.notif,.reel-frame)::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;background:var(--rim);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 .reel-frame::after{inset:0}
 .col .invite::after{background:var(--rim-dark)}
 /* ظل تيل خفيف جداً تحت الإطارات الكبيرة — من نفس عائلة توهّج الشريط الأسود */
@@ -374,12 +371,6 @@ bdi{unicode-bidi:isolate}
 .reveal-hud .hint{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--ar);font-size:13px;font-weight:600;letter-spacing:0}
 .reveal-hud .hint span{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:99px;padding:6px 14px}
 .reveal-hud .hint::after{content:"";width:1px;height:30px;background:var(--ink);opacity:.7}
-.works .projects{margin-top:clamp(34px,4vw,52px)}
-.projects{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.proj{display:inline-flex;align-items:center;gap:14px;border-radius:999px;padding-block:8px;padding-inline:22px 8px;border:1px solid rgba(255,255,255,.8);text-align:start}
-.proj b{font-weight:600;font-size:14.5px}
-.proj span.m{font-size:12.5px;color:var(--grey)}
-.proj .arr{flex:0 0 34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center}
 
 /* ---------- showreel ---------- */
 .reel{padding-block:calc(var(--sec)*.5) var(--sec)}
@@ -416,10 +407,7 @@ bdi{unicode-bidi:isolate}
 .invite li.k{color:var(--ink);font-weight:600}
 .invite li.k::before{background:var(--ink)}
 .invite .acts{margin-top:auto;display:flex;flex-wrap:wrap;gap:10px}
-.col-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:clamp(50px,6vw,84px) 0 40px;text-align:center}
-.col-stats dd b{display:block;font-family:var(--disp);font-weight:300;font-size:clamp(48px,5vw,72px);line-height:1.15;direction:ltr}
-.col-stats dd span{font-size:13.5px;color:var(--grey)}
-.col-cta{display:flex;justify-content:center}
+.col-cta{display:flex;justify-content:center;margin-top:clamp(36px,4.4vw,60px)}
 
 /* ---------- pricing ---------- */
 .price{padding-block:var(--sec)}
@@ -518,7 +506,7 @@ bdi{unicode-bidi:isolate}
 
 /* ---------- footer ---------- */
 .foot{padding-block:clamp(60px,7vw,90px) 36px;border-top:1px solid var(--line)}
-.foot-top{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));gap:32px}
+.foot-top{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px}
 .foot .logo img{height:32px;width:auto;margin-bottom:16px}
 .foot .slogan{font-family:var(--disp);font-weight:300;font-feature-settings:var(--swash);font-size:20px;color:var(--grey-d);line-height:1.6}
 .foot .en{direction:ltr;text-align:right;font-size:12px;color:var(--grey);margin-top:4px}
@@ -566,7 +554,6 @@ bdi{unicode-bidi:isolate}
 /* ---------- responsive ---------- */
 @media (max-width:1100px){
   .hero-grid{grid-template-columns:1fr}
-  .specs{justify-content:start}
   .foot-top{grid-template-columns:repeat(2,minmax(0,1fr))}
   .foot-brand{grid-column:1/-1}
 }
@@ -582,22 +569,28 @@ bdi{unicode-bidi:isolate}
 }
 @media (max-width:760px){
   .hero{display:block;min-height:0}
-  .hero-media{position:relative;height:min(62svh,520px)}
+  .hero-media{position:relative;height:clamp(380px,62svh,520px)}
   .hero-fade{background:linear-gradient(180deg,rgba(var(--bg-rgb),0) 45%,rgba(var(--bg-rgb),.85) 82%,var(--bg) 100%)}
-  .hero-in{padding-top:0;margin-top:-70px;padding-bottom:56px}
+  .hero-in{padding-top:0;margin-top:-24px;padding-bottom:56px}
+  /* الجوال: الصورة تبقى ظاهرة أطول وتتلاشى حيث يبدأ النص (النص أنزل بطلب المالك 2026-11-27) */
+  .hero-fade{background:linear-gradient(180deg,rgba(var(--bg-rgb),0) 50%,rgba(var(--bg-rgb),.8) 72%,rgba(var(--bg-rgb),.96) 84%,var(--bg) 100%)}
   .f1{top:88px;left:16px}
   .f2{display:none}
   .f3{top:200px;left:auto;right:20px;margin-left:0}
   .notif{width:min(300px,calc(100vw - 32px))}
   .hero-row{flex-direction:column;align-items:stretch;gap:22px}
-  .specs{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px;margin-top:10px}
-  .stats{grid-template-columns:1fr;gap:60px}
-  .mosaic{height:auto;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:clamp(130px,40vw,180px);grid-template-areas:"x x" "x x" "a b" "c d" "e f" "g h";gap:10px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:56px}.stat h3{font-size:15px}.stat .num{font-size:54px;margin:8px 0 4px}.stat .lbl{font-size:12px;line-height:1.65}
+  .mosaic{height:auto;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:clamp(130px,40vw,180px);grid-template-areas:"x x" "x x" "a b" "c d";gap:10px}
+  /* الجوال: الصورة الكبيرة وأربع صور فقط؛ البقية في العارض */
+  .mosaic .t-5,.mosaic .t-6,.mosaic .t-7,.mosaic .t-8{display:none}
+  /* الجوال: بطاقات المجموعة الخاصة صفّ يُسحب أفقيًا (بطاقة في الشاشة والتالية تطلّ من الطرف) بدل ثلاث بطاقات فوق بعض */
+  .invites{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;margin-inline:calc(var(--gut) * -1);padding:6px var(--gut) 26px;scrollbar-width:none}
+  .invites::-webkit-scrollbar{display:none}
+  .invite{flex:0 0 84%;scroll-snap-align:center}
   .tile{border-radius:18px}
   .tile .cap{inset-inline-start:8px;bottom:8px;padding:6px 10px;font-size:11.5px}
   .t-x .cap{font-size:13px;padding:9px 14px}
   .reel-frame{aspect-ratio:4/5;border-radius:24px}
-  .col-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pt-p strong{font-size:24px}
   .picker{padding:24px 20px}
   .row2{grid-template-columns:1fr}
@@ -688,12 +681,6 @@ bdi{unicode-bidi:isolate}
           <div class="btns"><a class="btn btn-ink" href="calculator/">احسب سعرك<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a><a class="btn btn-glass glass" href="#work">شاهد أعمالنا</a></div>
         </div>
       </div>
-      <dl class="specs">
-        <div><dt>دقة التصوير</dt><dd><bdi>4K</bdi></dd></div>
-        <div><dt>جولات افتراضية</dt><dd><bdi>360°</bdi></dd></div>
-        <div><dt>معالجة احترافية</dt><dd><bdi>HDR</bdi></dd></div>
-        <div><dt>سنوات خبرة</dt><dd><bdi dir="ltr">+5</bdi></dd></div>
-      </dl>
     </div>
   </div>
 </section>
@@ -710,7 +697,6 @@ bdi{unicode-bidi:isolate}
       <div class="stat"><h3>فريق <span>حقيقي.</span></h3><p class="num gn"><span data-to="3">3</span></p><p class="lbl"><b>شركاء</b> محترفون هم أنفسهم المصوّرون، بلا وسطاء.</p></div>
       <div class="stat"><h3>سرعة <span>حقيقية.</span></h3><p class="num gn"><span data-to="24">24</span></p><p class="lbl"><b>ساعة</b>، نردّ فيها على طلبك بعرض تصوير مخصّص.</p></div>
     </div>
-    <p class="sign">مؤسسة مأوى المهارة التجارية · سجل تجاري <bdi>1009034486</bdi> · الرياض، المملكة العربية السعودية</p>
   </div>
 </section>
 
@@ -816,12 +802,6 @@ bdi{unicode-bidi:isolate}
       </div>
     </div>
   </div>
-  <div class="wrap">
-    <div class="projects">
-      <button class="proj glass" type="button" data-open="villas" data-i="1"><span><b>فيلا فاخرة — الرياض</b><br><span class="m">15 لقطة · داخلي وخارجي</span></span><span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></button>
-      <button class="proj glass" type="button" data-open="qurtubah" data-i="1"><span><b>شقة قرطبة — الرياض</b><br><span class="m">5 لقطات · داخلي</span></span><span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></button>
-    </div>
-  </div>
 </section>
 
 <section class="reel" id="showreel" aria-labelledby="reel-h">
@@ -858,30 +838,24 @@ bdi{unicode-bidi:isolate}
         <div class="top"><span class="roman gn" aria-hidden="true">I</span><span class="en">Palaces &amp; Estates</span></div>
         <h3>قصور وعقارات فاخرة</h3>
         <p>تصوير سينمائي يليق بالقصور والاستراحات الكبرى — يجمع بين الفخامة والتفاصيل الدقيقة التي تليق بعقار استثنائي.</p>
-        <ul><li>تصوير سينمائي وتصحيح ألوان متقدّم</li><li>لقطات درون 4K وتصوير ليلي فاخر</li><li>جولات افتراضية 360° تفاعلية</li><li>فريق متخصّص ومعدّات سينمائية</li><li class="k">التسعير بعد المعاينة فقط — عرض مخصّص لكل عقار</li></ul>
-        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%82%D8%B5%D8%B1" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a><a class="btn btn-line sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%B9%D8%B1%D8%B6%20%D9%85%D8%AE%D8%B5%D9%91%D8%B5%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%82%D8%B5%D8%B1" target="_blank" rel="noopener">اطلب عرضاً مخصّصاً</a></div>
+        <ul><li>لقطات درون 4K وتصوير ليلي فاخر</li><li>فريق متخصّص ومعدّات سينمائية</li><li class="k">التسعير بعد المعاينة فقط — عرض مخصّص لكل عقار</li></ul>
+        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%82%D8%B5%D8%B1" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a></div>
       </article>
       <article class="invite glass">
         <div class="top"><span class="roman gn" aria-hidden="true">II</span><span class="en">Auctions</span></div>
         <h3>المزادات العقارية</h3>
         <p>تغطية متكاملة للعقارات المعروضة في المزادات والحراج، تُبرز القيمة الحقيقية وتُسرّع القرار — مع تكامل مع منصات البيع.</p>
-        <ul><li>صور HDR وفيديو تسويقي احترافي</li><li>تصوير جوي شامل للموقع والمحيط</li><li>جولة افتراضية لإثراء عرض المزاد</li><li>تكامل مع منصة حراج ومواقع النشر</li><li class="k">تسليم عاجل يواكب موعد المزاد</li></ul>
-        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D8%B9%D9%82%D8%A7%D8%B1%20%D9%84%D9%84%D9%85%D8%B2%D8%A7%D8%AF" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a><a class="btn btn-line sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%B9%D8%B1%D8%B6%20%D9%85%D8%AE%D8%B5%D9%91%D8%B5%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D8%B9%D9%82%D8%A7%D8%B1%20%D9%84%D9%84%D9%85%D8%B2%D8%A7%D8%AF" target="_blank" rel="noopener">اطلب عرضاً مخصّصاً</a></div>
+        <ul><li>تصوير جوي شامل للموقع والمحيط</li><li>تكامل مع منصة حراج ومواقع النشر</li><li class="k">تسليم عاجل يواكب موعد المزاد</li></ul>
+        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D8%B9%D9%82%D8%A7%D8%B1%20%D9%84%D9%84%D9%85%D8%B2%D8%A7%D8%AF" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a></div>
       </article>
       <article class="invite glass">
         <div class="top"><span class="roman gn" aria-hidden="true">III</span><span class="en">Hotels &amp; Resorts</span></div>
         <h3>فنادق ومنتجعات</h3>
         <p>تصوير سينمائي للفنادق والمنتجعات يُبرز تجربة الضيافة والتفاصيل المعمارية — من الأجنحة والمرافق إلى الإطلالات والأجواء.</p>
-        <ul><li>تصوير سينمائي للأجنحة والمرافق العامة</li><li>لقطات درون للمسبح والحدائق والإطلالات</li><li>جولات افتراضية 360° للغرف والأماكن العامة</li><li>تصوير طعام ومطاعم احترافي</li><li class="k">محتوى متكامل لمواقع الحجز والتسويق</li></ul>
-        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%81%D9%86%D8%AF%D9%82%2F%D9%85%D9%86%D8%AA%D8%AC%D8%B9" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a><a class="btn btn-line sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%B9%D8%B1%D8%B6%20%D9%85%D8%AE%D8%B5%D9%91%D8%B5%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%81%D9%86%D8%AF%D9%82%2F%D9%85%D9%86%D8%AA%D8%AC%D8%B9" target="_blank" rel="noopener">اطلب عرضاً مخصّصاً</a></div>
+        <ul><li>لقطات درون للمسبح والحدائق والإطلالات</li><li>تصوير طعام ومطاعم احترافي</li><li class="k">محتوى متكامل لمواقع الحجز والتسويق</li></ul>
+        <div class="acts"><a class="btn btn-ink sm" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AA%D9%86%D8%B3%D9%8A%D9%82%20%D9%85%D8%B9%D8%A7%D9%8A%D9%86%D8%A9%20%D9%84%D8%AA%D8%B5%D9%88%D9%8A%D8%B1%20%D9%81%D9%86%D8%AF%D9%82%2F%D9%85%D9%86%D8%AA%D8%AC%D8%B9" target="_blank" rel="noopener">نسّق معاينة خاصة<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a></div>
       </article>
     </div>
-    <dl class="col-stats">
-      <div><dt class="sr">الدقة</dt><dd><b class="gn">8K</b><span>تصوير جوي فائق الدقة</span></dd></div>
-      <div><dt class="sr">اللقطات</dt><dd><b class="gn">+100</b><span>لقطة معالَجة باحتراف</span></dd></div>
-      <div><dt class="sr">التسليم</dt><dd><b class="gn">48h</b><span>تسليم أولي مسرّع</span></dd></div>
-      <div><dt class="sr">التواصل</dt><dd><b class="gn">VIP</b><span>قناة تواصل خاصة</span></dd></div>
-    </dl>
     <div class="col-cta"><a class="btn btn-ink" href="https://wa.me/966531646152?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D8%A8%D8%AD%D8%AF%D9%8A%D8%AB%20%D8%AE%D8%A7%D8%B5%20%D8%AD%D9%88%D9%84%20%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%84%D8%B9%D9%82%D8%A7%D8%B1%D9%8A" target="_blank" rel="noopener">محادثة خاصة مع الشركاء<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a></div>
   </div>
 </section>
@@ -901,7 +875,7 @@ bdi{unicode-bidi:isolate}
         <a class="pt-row" href="calculator/"><span class="pt-n"><i>03</i><span>التصوير الجوي بالدرون</span></span><span class="pt-d">شامل التصاريح · جميع العقارات</span><span class="pt-p"><small></small><strong><bdi>1,200</bdi><em>ر.س</em></strong></span></a>
         <a class="pt-row" href="calculator/"><span class="pt-n"><i>04</i><span>الجولات الافتراضية <bdi>360°</bdi></span></span><span class="pt-d">من الاستوديو إلى مشاريع الشقق</span><span class="pt-p"><small>يبدأ من</small><strong><bdi>1,300</bdi><em>ر.س</em></strong></span></a>
         <a class="pt-row" href="calculator/"><span class="pt-n"><i>05</i><span>التصميم والهوية</span></span><span class="pt-d">بروشور، شعار عقاري، لوحات خارجية</span><span class="pt-p"><small>يبدأ من</small><strong><bdi>700</bdi><em>ر.س</em></strong></span></a>
-        <div class="pt-foot"><p>للباقات المخصّصة والمشاريع الكبيرة نقدّم عرض سعر خاصاً. الخدمات الفاخرة تُسعَّر بعد المعاينة فقط.</p><a class="btn btn-ink sm" href="calculator/">احسب عرض سعرك الدقيق<span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span></a></div>
+        <div class="pt-foot"><p>للباقات المخصّصة والمشاريع الكبيرة نقدّم عرض سعر خاصاً. الخدمات الفاخرة تُسعَّر بعد المعاينة فقط.</p></div>
       </div>
       <div class="picker glass" id="picker">
         <h3>احسب سعرك <small>دقيقة واحدة</small></h3>
@@ -1009,13 +983,10 @@ bdi{unicode-bidi:isolate}
       <a href="https://snapchat.com/add/Maawaasa" target="_blank" rel="noopener" aria-label="سناب شات"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.2 1.5c2.9 0 4.9 2.2 4.9 5.2l-.1 2.6c.6.2 1.3-.1 1.7-.1.6 0 1 .4 1 .8 0 .7-1.1 1-1.9 1.3-.4.1-.6.4-.5.8.6 1.5 1.8 2.8 3.4 3.3.3.1.5.4.4.7-.2.7-1.6 1-2.5 1.1-.2.3-.2 1-.6 1.2-.5.2-1.6-.3-2.8.1-1 .4-1.8 1.9-4 1.9s-3-1.5-4-1.9c-1.2-.4-2.3.1-2.8-.1-.4-.2-.4-.9-.6-1.2-.9-.1-2.3-.4-2.5-1.1-.1-.3.1-.6.4-.7 1.6-.5 2.8-1.8 3.4-3.3.1-.4-.1-.7-.5-.8-.8-.3-1.9-.6-1.9-1.3 0-.4.4-.8 1-.8.4 0 1.1.3 1.7.1l-.1-2.6c0-3 2-5.2 4.9-5.2z"/></svg></a>
         </div>
       </div>
-      <div><h4>إنتاج</h4><ul><li>مؤسسة مأوى المهارة التجارية</li><li>سجل تجاري <bdi>1009034486</bdi></li></ul></div>
-      <div><h4>الخدمات</h4><ul><li><a href="#services">تصوير فوتوغرافي HDR</a></li><li><a href="#services">فيديو سينمائي</a></li><li><a href="#services">درون 4K · جولات 360°</a></li><li><a href="#pricing">التصميم والهوية</a></li></ul></div>
-      <div><h4>للتواصل</h4><ul><li><a href="tel:+966531646152" dir="ltr">+966 53 164 6152</a></li><li><a href="mailto:info@maawaa.sa">info@maawaa.sa</a></li><li><a href="https://wa.me/966531646152" target="_blank" rel="noopener">واتساب مباشر</a></li></ul></div>
       <div><h4>روابط</h4><ul><li><a href="calculator/">حاسبة الأسعار</a></li><li><a href="blog/">المدونة</a></li><li><a href="https://www.youtube.com/@Maawaasa" target="_blank" rel="noopener">مكتبة الأفلام على يوتيوب</a></li><li><a href="#contact">نموذج الطلب</a></li></ul></div>
     </div>
     <p class="areas"><b>موقع التصوير — الرياض</b></p>
-    <div class="legal"><span>© 2026 مأوى للتصوير العقاري — مؤسسة مأوى المهارة التجارية. جميع الحقوق محفوظة.</span><span>صُنع في الرياض</span></div>
+    <div class="legal"><span>© 2026 مأوى للتصوير العقاري — مؤسسة مأوى المهارة التجارية · سجل تجاري <bdi>1009034486</bdi>. جميع الحقوق محفوظة.</span><span>صُنع في الرياض</span></div>
   </div>
 </footer>
 
@@ -1468,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .from('#nav .cap', { y: -30, autoAlpha: 0, duration: 1 }, .15)
     .from('.hero .tt .kick, .hero .tt .thin', { y: 26, autoAlpha: 0, duration: 1, stagger: .08 }, .3)
     .from('.hero .tt .bold .w', { yPercent: 60, autoAlpha: 0, duration: 1.15, stagger: .09 }, .45)
-    .from('.hero-row > *, .specs > div', { y: 20, autoAlpha: 0, duration: .9, stagger: .06 }, .75)
+    .from('.hero-row > *', { y: 20, autoAlpha: 0, duration: .9, stagger: .06 }, .75)
     .from('.hero .float > *', { y: 50, autoAlpha: 0, duration: 1.3, stagger: .14 }, .6);
   gsap.to('.hero-media', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   [['.f1', -150], ['.f2', -70], ['.f3', -210]].forEach(function (a) {
@@ -1528,14 +1499,12 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     gsap.from('.mosaic .tile', { y: 60, autoAlpha: 0, duration: 1, stagger: .08, ease: E, scrollTrigger: { trigger: '#mosaic', start: 'top 82%' } });
   }
-  gsap.from('.proj', { y: 24, autoAlpha: 0, duration: .9, stagger: .1, ease: E, scrollTrigger: { trigger: '.projects', start: 'top 92%' } });
 
   /* الشوريل */
   gsap.fromTo('.reel-frame', { scale: .9 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.reel-frame', start: 'top bottom', end: 'top 30%', scrub: true } });
 
   /* المجموعة الخاصة */
   gsap.from('.invite', { y: 60, autoAlpha: 0, duration: 1.1, stagger: .14, ease: E, scrollTrigger: { trigger: '.invites', start: 'top 82%' } });
-  gsap.from('.col-stats > div', { y: 30, autoAlpha: 0, duration: .9, stagger: .08, ease: E, scrollTrigger: { trigger: '.col-stats', start: 'top 90%' } });
 
   /* الأسعار */
   gsap.from('.pt-row', { y: 22, autoAlpha: 0, duration: .8, stagger: .07, ease: E, scrollTrigger: { trigger: '.ptable', start: 'top 84%' } });
