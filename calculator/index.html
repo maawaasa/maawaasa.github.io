@@ -17,9 +17,20 @@
 <meta property="og:title" content="حاسبة أسعار التصوير العقاري | مأوى للتصوير العقاري">
 <meta property="og:description" content="احسب سعر تصوير عقارك في الرياض فوراً حسب نوع العقار وعدد الغرف والخدمات.">
 <meta property="og:type" content="website">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/assets/js/supabase-config.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<meta property="og:url" content="https://maawaa.sa/calculator">
+<meta property="og:site_name" content="مأوى للتصوير العقاري">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:image" content="https://maawaa.sa/assets/lux/og-1200.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="صالة وغرفة طعام في فيلا بالرياض، من أعمال مأوى للتصوير العقاري">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="حاسبة أسعار التصوير العقاري | مأوى للتصوير العقاري">
+<meta name="twitter:description" content="احسب سعر تصوير عقارك في الرياض فوراً حسب نوع العقار وعدد الغرف والخدمات.">
+<meta name="twitter:image" content="https://maawaa.sa/assets/lux/og-1200.jpg">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="/assets/js/supabase-config.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 <script type="application/ld+json">{
   "@context":"https://schema.org",
   "@type":"Service",
@@ -656,6 +667,29 @@ html[dir=ltr] #custPhone,html[dir=ltr] #custEmail{text-align:left!important}
 @media(max-width:640px){html[dir=ltr] .book-opt{text-align:left}}
 /* النوافذ (جدول الأسعار، العرض المبدئي، اختيار المستلم) والتنبيهات تعلو الهيدر العائم: غلاف المحتوى لا يحبسها تحته */
 .topbar~.wrap{z-index:auto}
+/* علامة الاختيار موحّدة في الصفحة: دائرة تيل بعلامة مرسومة (بدل مربع المتصفح والرمز النصي ✓ الذي يختلف شكله بين الأجهزة) */
+:root{--tick:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.4 6.3 4.9 8.7 9.6 3.6' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");--tick-ink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.4 6.3 4.9 8.7 9.6 3.6' fill='none' stroke='%230B0B0C' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.addon input[type=checkbox],.brochure>input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:0 0 24px;width:24px;height:24px;margin:0;border-radius:50%;border:1.5px solid rgba(154,160,168,.7);background:#fff no-repeat center/12px 12px;cursor:pointer;transition:background-color .2s,border-color .2s}
+.addon input[type=checkbox]:checked,.brochure>input[type=checkbox]:checked{background-color:var(--teal);border-color:var(--teal);background-image:var(--tick)}
+.addon input[type=checkbox]:focus-visible,.brochure>input[type=checkbox]:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.svc.on .chk::after,.type-btn.active::after{content:""}
+.svc.on .chk{background:var(--teal) var(--tick) no-repeat center/12px 12px}
+.type-btn.active::after{background:var(--teal) var(--tick) no-repeat center/11px 11px}
+.type-btn.lux.active::after{background:#C9CDD3 var(--tick-ink) no-repeat center/11px 11px}
+/* حجز الموعد على الجوال: الرقم والعنوان في سطر، والحقول بعرض البطاقة كاملًا */
+@media(max-width:520px){
+  .book-panel{padding:18px 14px}
+  .gov-step{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:10px;align-items:center}
+  .gs-num{width:28px;height:28px;margin:0;font-size:.85rem}
+  .gs-body{display:contents}
+  .gs-body>*{grid-column:1/-1}
+  .gs-body>.gs-label{grid-column:2;margin:0}
+  .gs-body>.gs-label+*{margin-top:12px}
+}
+/* الإجمالي يتحرك حركة خفيفة حين يتغيّر — يرى الزائر أن السعر تحدّث */
+@keyframes mwTotal{from{opacity:.3;transform:translateY(5px)}to{opacity:1;transform:none}}
+#total.mw-bump,#mbarTotal.mw-bump{animation:mwTotal .45s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion:reduce){#total.mw-bump,#mbarTotal.mw-bump{animation:none}}
 </style>
 </head>
 <body>
@@ -2741,6 +2775,17 @@ function injectIcons(){
 }
 
 injectIcons();
+
+/* حركة الإجمالي: تُعاد فقط حين يتغيّر الرقم فعلًا (المراقبة لا تمسّ الحساب) */
+(function(){
+  if(!('MutationObserver' in window)) return;
+  ['total','mbarTotal'].forEach(id=>{
+    const el=$(id); if(!el) return; let last=el.textContent;
+    new MutationObserver(()=>{ const now=el.textContent; if(now===last) return; last=now;
+      el.classList.remove('mw-bump'); void el.offsetWidth; el.classList.add('mw-bump'); })
+      .observe(el,{childList:true,characterData:true,subtree:true});
+  });
+})();
 
 /* شريط الإجمالي الثابت على الجوال: يظهر أثناء الخطوات ويختفي حين يصل الزائر للملخص */
 (function(){
