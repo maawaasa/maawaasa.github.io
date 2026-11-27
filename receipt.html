@@ -5,52 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>رفع إيصال الدفع | مأوى للتصوير العقاري</title>
 <meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23020001'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23A4243B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{--bg:#F5F5F3;--ink:#0B0B0C;--text2:#3A3C40;--grey:#62666C;--line:rgba(154,160,168,.38);--line2:rgba(154,160,168,.55);
+  --teal:#0E3F4E;--teal-rgb:14,63,78;--teal-hi-rgb:119,168,186;--shade-rgb:30,32,36;--err:#9A3324;
+  --disp:'Thmanyah Serif','Times New Roman',serif;--ar:'Thmanyah Sans','Geeza Pro',Tahoma,system-ui,sans-serif;--swash:"salt","swsh","dlig";--ease:cubic-bezier(.22,1,.36,1);
+  --g-num:linear-gradient(180deg,#B5BBC3 18%,#8C939C 38%,#555C66 55%,#9AA1AA 70%,#4A5059 86%);
+  --rim:linear-gradient(225deg,rgba(var(--teal-hi-rgb),.95) 0%,#fff 9%,rgba(var(--teal-hi-rgb),.95) 19%,rgba(var(--teal-rgb),.3) 50%,rgba(var(--teal-hi-rgb),.7) 82%,rgba(var(--teal-rgb),.75) 100%)}
+::selection{background:rgba(var(--teal-rgb),.18)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 45% at 85% 0%,rgba(var(--teal-hi-rgb),.18),transparent 65%)}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--black:#0B0B0B;--red:#A4243B;--wine:#7A1F2B;--off:#F7F5F2;--gray:#6B6B6B;--border:#E5E0DA;--green:#1F7A4D;--f:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif}
-body{font-family:var(--f);background:var(--off);color:var(--black);min-height:100vh;line-height:1.8}
-.wrap{max-width:520px;margin:0 auto;padding:22px 16px 40px}
-.top{text-align:center;padding:14px 0 22px}
-.logo{font-size:22px;font-weight:800;letter-spacing:4px}
-.logo b{color:var(--red)}
-.sub{color:var(--gray);font-size:12px;letter-spacing:2px;margin-top:2px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px 18px;box-shadow:0 10px 30px rgba(11,11,11,.05)}
-h1{font-size:17px;margin-bottom:6px}
-.hint{color:var(--gray);font-size:13px;margin-bottom:16px}
+:root{--black:#0B0B0C;--red:#0E3F4E;--wine:#0E3F4E;--off:#F5F5F3;--gray:#62666C;--border:rgba(154,160,168,.38);--green:#0E3F4E;--f:var(--ar)}
+body{font-family:var(--ar);background:var(--off);color:var(--black);min-height:100vh;line-height:1.8;-webkit-font-smoothing:antialiased}
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 16px 40px}
+.top{text-align:center;padding:16px 0 22px}
+.logo{font-family:var(--disp);font-size:28px;font-weight:700;font-feature-settings:var(--swash);line-height:1.2}
+.logo b{color:var(--teal)}
+.sub{color:var(--gray);font-size:13px;margin-top:2px}
+.card{position:relative;background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:inset 0 1px 0 #fff,0 30px 70px -40px rgba(var(--shade-rgb),.45),0 46px 90px -56px rgba(var(--teal-rgb),.4);border-radius:24px;padding:24px 20px}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:var(--rim);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+h1{font-family:var(--disp);font-weight:700;font-feature-settings:var(--swash);font-size:21px;line-height:1.45;margin-bottom:6px}
+.hint{color:var(--gray);font-size:14px;margin-bottom:16px}
 .state{text-align:center;padding:36px 10px}
 .state .ico{font-size:40px;margin-bottom:10px}
 .state h1{margin-bottom:8px}
-.state p{color:var(--gray);font-size:14px}
-.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;margin:0 auto 12px;animation:sp 1s linear infinite}
+.state p{color:var(--gray);font-size:14.5px}
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;margin:0 auto 12px;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.drop{border:2px dashed #CFC8BF;border-radius:14px;padding:26px 14px;text-align:center;cursor:pointer;transition:.2s;background:#FBFAF7}
-.drop:hover,.drop.on{border-color:var(--red);background:#FDF6F7}
+.drop{display:block;border:2px dashed var(--line2);border-radius:18px;padding:26px 14px;text-align:center;cursor:pointer;transition:.2s;background:#FBFBFA}
+.drop:hover,.drop.on{border-color:var(--teal);background:#F3F6F7}
 .drop .dico{font-size:30px;margin-bottom:6px}
-.drop b{font-size:14px}
-.drop span{display:block;color:var(--gray);font-size:12px;margin-top:3px}
+.drop b{font-size:15px}
+.drop span{display:block;color:var(--gray);font-size:12.5px;margin-top:3px}
 input[type=file]{display:none}
 .preview{margin-top:14px;display:none}
-.preview img{width:100%;max-height:260px;object-fit:contain;border-radius:10px;border:1px solid var(--border)}
-.fname{font-size:12px;color:var(--gray);margin-top:6px;word-break:break-all}
-.btn{width:100%;padding:15px;border:none;border-radius:11px;background:var(--red);color:#fff;font-family:var(--f);font-size:15px;font-weight:800;cursor:pointer;margin-top:16px;transition:.2s}
-.btn:hover{background:var(--wine)}
-.btn:disabled{opacity:.55;cursor:not-allowed}
-.err{display:none;background:#FDF1F2;border:1px solid #EBC7CC;color:var(--wine);border-radius:10px;padding:11px 14px;font-size:13px;margin-top:12px}
-.ok-ico{width:64px;height:64px;border-radius:50%;background:#EEF4EC;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px}
-.foot{text-align:center;color:var(--gray);font-size:12px;margin-top:18px;line-height:2}
-.foot a{color:var(--red);text-decoration:none}
-.rules{background:#F8F6F2;border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gray);margin-top:14px;line-height:1.9}
+.preview img{width:100%;max-height:260px;object-fit:contain;border-radius:12px;border:1px solid var(--border)}
+.fname{font-size:12.5px;color:var(--gray);margin-top:6px;word-break:break-all}
+.btn{width:100%;padding:15px;border:none;border-radius:999px;background:var(--black);color:#F3F4F6;font-family:var(--ar);font-size:15.5px;font-weight:600;cursor:pointer;margin-top:16px;transition:.25s;box-shadow:0 16px 34px -18px rgba(11,11,12,.55)}
+.btn:hover{background:#1F2124}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.err{display:none;background:#F6EEEC;border:1px solid #E8D2CD;color:var(--err);border-radius:12px;padding:11px 14px;font-size:13.5px;margin-top:12px}
+.ok-ico{width:64px;height:64px;border-radius:50%;background:#EEF3F4;color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px}
+.foot{text-align:center;color:var(--gray);font-size:12.5px;margin-top:18px;line-height:2}
+.foot a{color:var(--teal);text-decoration:none}
+.rules{background:#F6F7F7;border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:12.5px;color:var(--gray);margin-top:14px;line-height:1.9}
+
+/* شعار مأوى بدل الكتابة النصية، وأيقونات مرسومة بدل الإيموجي (مثل صفحة التحقق) */
+.top .logo-img{display:block;width:172px;height:auto;margin:0 auto}
+.state .ico{width:64px;height:64px;border-radius:50%;background:#F6EEEC;color:#9A3324;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:0}
+.drop .dico{display:flex;justify-content:center;color:var(--teal);font-size:0}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <div class="logo">مأوى<b>.</b></div>
-    <div class="sub">للتصوير العقاري</div>
+    <img class="logo-img" src="/assets/logo2026/mawa-wide.svg" alt="مأوى للتصوير العقاري" width="172" height="40">
   </div>
 
   <div class="card" id="cardLoading">
@@ -59,7 +78,7 @@ input[type=file]{display:none}
 
   <div class="card" id="cardError" style="display:none">
     <div class="state">
-      <div class="ico">⚠️</div>
+      <div class="ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 6.8v7"/><path d="M12 17.4v.01"/></svg></div>
       <h1 id="errTitle">الرابط غير صالح</h1>
       <p id="errMsg">يبدو أن الرابط منتهي أو مستخدم مسبقًا. تواصل معنا وسنرسل لك رابطًا جديدًا فورًا.</p>
       <p style="margin-top:14px"><a href="https://wa.me/966531646152" style="color:var(--red);font-weight:700">تواصل عبر واتساب</a></p>
@@ -70,7 +89,7 @@ input[type=file]{display:none}
     <h1 id="formTitle">رفع إيصال العربون</h1>
     <div class="hint" id="formHint">صوّر إيصال التحويل وارفعه هنا — الموعد محفوظ لك أثناء المراجعة.</div>
     <label class="drop" id="drop" for="file">
-      <div class="dico">🧾</div>
+      <div class="dico"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z"/><path d="M9 8h6M9 11.5h6M9 15h3.5"/></svg></div>
       <b>اضغط لاختيار صورة الإيصال</b>
       <span>JPG أو PNG — حتى 8 ميجابايت</span>
     </label>
@@ -88,7 +107,7 @@ input[type=file]{display:none}
 
   <div class="card" id="cardDone" style="display:none">
     <div class="state">
-      <div class="ok-ico">✓</div>
+      <div class="ok-ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17.5 19.5 7"/></svg></div>
       <h1>تم استلام الإيصال بنجاح</h1>
       <p id="doneMsg">إيصالك تحت المراجعة الآن، وموعدك محفوظ أثناء المراجعة. سنرسل لك تأكيد الحجز على بريدك فور الاعتماد.</p>
       <p style="margin-top:14px;color:var(--gray);font-size:13px" id="doneRef"></p>

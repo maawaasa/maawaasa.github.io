@@ -5,14 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الصفحة غير موجودة | مأوى للتصوير العقاري</title>
 <meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23020001'/%3E%3Ctext x='50' y='70' font-family='Arial' font-weight='900' font-size='54' fill='%23A4243B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <style>
-body{font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;background:#020001;color:#FBFAF6;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center;padding:24px}
-.box{max-width:480px}
-h1{font-size:64px;margin:0 0 8px;color:#A4243B}
-p{color:#b9b4ab;line-height:1.9;margin:0 0 28px}
-a.btn{display:inline-block;background:#A4243B;color:#fff;text-decoration:none;padding:12px 28px;border-radius:10px;font-weight:600;margin:0 6px 10px}
-a.ghost{background:transparent;border:1px solid #3a3733;color:#FBFAF6}
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{--bg:#F5F5F3;--ink:#0B0B0C;--text2:#3A3C40;--grey:#62666C;--line:rgba(154,160,168,.38);--line2:rgba(154,160,168,.55);
+  --teal:#0E3F4E;--teal-rgb:14,63,78;--teal-hi-rgb:119,168,186;--shade-rgb:30,32,36;--err:#9A3324;
+  --disp:'Thmanyah Serif','Times New Roman',serif;--ar:'Thmanyah Sans','Geeza Pro',Tahoma,system-ui,sans-serif;--swash:"salt","swsh","dlig";--ease:cubic-bezier(.22,1,.36,1);
+  --g-num:linear-gradient(180deg,#B5BBC3 18%,#8C939C 38%,#555C66 55%,#9AA1AA 70%,#4A5059 86%);
+  --rim:linear-gradient(225deg,rgba(var(--teal-hi-rgb),.95) 0%,#fff 9%,rgba(var(--teal-hi-rgb),.95) 19%,rgba(var(--teal-rgb),.3) 50%,rgba(var(--teal-hi-rgb),.7) 82%,rgba(var(--teal-rgb),.75) 100%)}
+::selection{background:rgba(var(--teal-rgb),.18)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 45% at 85% 0%,rgba(var(--teal-hi-rgb),.18),transparent 65%)}
+*{box-sizing:border-box}
+body{font-family:var(--ar);background:var(--bg);color:var(--ink);display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center;padding:24px;-webkit-font-smoothing:antialiased}
+.box{position:relative;z-index:1;max-width:480px}
+h1{font-family:var(--disp);font-weight:400;font-size:112px;line-height:1.05;margin:0 0 12px;background:var(--g-num);-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:var(--grey);font-size:16px;line-height:1.9;margin:0 0 28px}
+a.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--ink);color:#F3F4F6;text-decoration:none;padding:13px 26px;border-radius:999px;font-weight:600;font-size:15px;margin:0 5px 10px;box-shadow:0 16px 34px -18px rgba(11,11,12,.55);transition:transform .35s var(--ease)}
+a.btn:hover{transform:translateY(-2px)}
+a.ghost{background:transparent;border:1px solid var(--line2);color:var(--ink);box-shadow:none}
+a.ghost:hover{border-color:var(--teal);color:var(--teal)}
 </style>
 <script>
 /* دعم الروابط العميقة للحاسبة على الاستضافة الثابتة:

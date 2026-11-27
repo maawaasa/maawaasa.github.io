@@ -4,25 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>التحقق من عقد مأوى</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="assets/js/supabase-config.js"></script>
 <style>
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{--bg:#F5F5F3;--ink:#0B0B0C;--text2:#3A3C40;--grey:#62666C;--line:rgba(154,160,168,.38);--line2:rgba(154,160,168,.55);
+  --teal:#0E3F4E;--teal-rgb:14,63,78;--teal-hi-rgb:119,168,186;--shade-rgb:30,32,36;--err:#9A3324;
+  --disp:'Thmanyah Serif','Times New Roman',serif;--ar:'Thmanyah Sans','Geeza Pro',Tahoma,system-ui,sans-serif;--swash:"salt","swsh","dlig";--ease:cubic-bezier(.22,1,.36,1);
+  --g-num:linear-gradient(180deg,#B5BBC3 18%,#8C939C 38%,#555C66 55%,#9AA1AA 70%,#4A5059 86%);
+  --rim:linear-gradient(225deg,rgba(var(--teal-hi-rgb),.95) 0%,#fff 9%,rgba(var(--teal-hi-rgb),.95) 19%,rgba(var(--teal-rgb),.3) 50%,rgba(var(--teal-hi-rgb),.7) 82%,rgba(var(--teal-rgb),.75) 100%)}
+::selection{background:rgba(var(--teal-rgb),.18)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 45% at 85% 0%,rgba(var(--teal-hi-rgb),.18),transparent 65%)}
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--red:#A4243B;--ink:#1D1815;--mut:#6B6661;--line:#E8E3DA;--green:#16663a}
-body{font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;background:#EFEBE4;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#FBFAF6;border-radius:14px;box-shadow:0 10px 40px #00000018;max-width:420px;width:100%;padding:34px 30px;text-align:center}
-.logo{height:34px;width:auto;display:block;margin:0 auto 20px}
+:root{--red:#0E3F4E;--mut:#62666C;--green:#0E3F4E}
+body{font-family:var(--ar);background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;-webkit-font-smoothing:antialiased}
+.card{position:relative;z-index:1;background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:inset 0 1px 0 #fff,0 30px 70px -40px rgba(var(--shade-rgb),.45),0 46px 90px -56px rgba(var(--teal-rgb),.4);border-radius:28px;max-width:420px;width:100%;padding:36px 30px;text-align:center}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:var(--rim);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.logo{height:30px;width:auto;display:block;margin:0 auto 22px}
 .icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px}
-.ok{background:#E8F6EE;color:var(--green)}
-.bad{background:#FDEAEA;color:#8D2335}
-h1{font-size:1.25rem;margin-bottom:8px}
-p{font-size:.9rem;color:var(--mut);line-height:1.9}
-.row{display:flex;justify-content:space-between;font-size:.85rem;padding:10px 0;border-bottom:1px dashed var(--line);text-align:right}
+.ok{background:#EEF3F4;color:var(--teal)}
+.bad{background:#F6EEEC;color:var(--err)}
+h1{font-family:var(--disp);font-weight:700;font-feature-settings:var(--swash);font-size:1.45rem;line-height:1.45;margin-bottom:8px}
+p{font-size:.95rem;color:var(--mut);line-height:1.9}
+.row{display:flex;justify-content:space-between;gap:12px;font-size:.92rem;padding:11px 0;border-bottom:1px solid var(--line);text-align:right}
 .row b{color:var(--ink)}
-.badge{display:inline-block;border-radius:20px;padding:3px 14px;font-size:.75rem;font-weight:700;margin-top:6px}
-.sent{background:#E8F6EE;color:var(--green)}
-.pending{background:#FFF4DC;color:#805300}
-.spin{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:r 1s linear infinite;margin:0 auto 14px}
+.badge{display:inline-block;border-radius:999px;padding:4px 14px;font-size:.78rem;font-weight:600;margin-top:6px}
+.sent{background:#EEF3F4;color:var(--teal)}
+.pending{background:#F0F1F2;color:var(--text2)}
+.spin{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:r 1s linear infinite;margin:0 auto 14px}
 @keyframes r{to{transform:rotate(360deg)}}
 </style>
 </head>
