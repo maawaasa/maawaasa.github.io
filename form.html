@@ -7,36 +7,36 @@
 <title>مأوى للتصوير العقاري | نموذج طلب خدمة التصوير</title>
     <meta name="description" content="سجّل طلبك لخدمة التصوير العقاري الاحترافي - تصوير فوتوغرافي HDR، فيديو سينمائي، درون 4K، جولات 360°">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23A4243B'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='50' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
-    <meta name="theme-color" content="#A4243B">
+    <link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+    <meta name="theme-color" content="#F5F5F3">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+    <style>@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --gold: #A4243B;
-            --gold-light: #C44A60;
-            --gold-dark: #7A1A2C;
-            --bg: #FAFAF8;
-            --glass: rgba(0, 0, 0, 0.025);
-            --glass-border: rgba(0, 0, 0, 0.07);
-            --glass-hover: rgba(0, 0, 0, 0.04);
-            --text: #1A1A1A;
-            --text-dim: #6E6E73;
-            --text-mid: rgba(0,0,0,0.6);
-            --gold-glass: rgba(164, 36, 59, 0.06);
-            --gold-border: rgba(164, 36, 59, 0.12);
-            --success: #2ECC71;
-            --danger: #E74C3C;
-        }
+        :root{
+  /* هوية «أسود وبلاتيني» (2026-11) مثل الصفحة الرئيسية. الأسماء القديمة باقية لأن القواعد مبنية عليها:
+     --gold صار الأسود للاختيار والأزرار، و--gold-glass/--gold-border لمسة تيل خفيفة، و--danger أحمر الأخطاء الهادئ. */
+  --gold:#0B0B0C;--gold-light:#3A3C40;--gold-dark:#0B0B0C;--bg:#F5F5F3;
+  --glass:rgba(255,255,255,.6);--glass-border:rgba(154,160,168,.38);--glass-hover:rgba(255,255,255,.8);
+  --text:#0B0B0C;--text-dim:#62666C;--text-mid:#3A3C40;
+  --gold-glass:rgba(14,63,78,.05);--gold-border:rgba(14,63,78,.24);--success:#0E3F4E;--danger:#9A3324;
+  --teal:#0E3F4E;--teal-rgb:14,63,78;--teal-hi-rgb:119,168,186;--shade-rgb:30,32,36;
+  --disp:'Thmanyah Serif','Times New Roman',serif;--ar:'Thmanyah Sans','Geeza Pro',Tahoma,system-ui,sans-serif;--swash:"salt","swsh","dlig";
+  --g-num:linear-gradient(180deg,#B5BBC3 18%,#8C939C 38%,#555C66 55%,#9AA1AA 70%,#4A5059 86%);
+  --rim:linear-gradient(225deg,rgba(var(--teal-hi-rgb),.95) 0%,#fff 9%,rgba(var(--teal-hi-rgb),.95) 19%,rgba(var(--teal-rgb),.3) 50%,rgba(var(--teal-hi-rgb),.7) 82%,rgba(var(--teal-rgb),.75) 100%);
+}
 
         html { scroll-behavior: smooth; }
 
         body {
-            font-family:'IBM Plex Sans Arabic',sans-serif;
+            font-family:var(--ar);
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
@@ -49,8 +49,8 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 30% 10%, rgba(164, 36, 59, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 90%, rgba(88, 142, 184, 0.03) 0%, transparent 50%);
+                radial-gradient(ellipse at 30% 10%, rgba(14,63,78, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 90%, rgba(119,168,186,.06) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -180,7 +180,7 @@
             border-radius: 14px;
             border: 1px solid var(--glass-border);
             background: var(--bg);
-            font-family:'IBM Plex Sans Arabic',sans-serif;
+            font-family:var(--ar);
             font-size: 0.95rem;
             color: var(--text);
             outline: none;
@@ -200,13 +200,13 @@
         .form-group select:focus,
         .form-group textarea:focus {
             border-color: var(--gold);
-            box-shadow: 0 0 15px rgba(164, 36, 59, 0.08);
+            box-shadow: 0 0 15px rgba(14,63,78, 0.08);
         }
 
         .form-group input.error,
         .form-group select.error {
             border-color: var(--danger);
-            box-shadow: 0 0 10px rgba(231, 76, 60, 0.08);
+            box-shadow: 0 0 10px rgba(154,51,36,.08);
         }
 
         .form-group textarea {
@@ -316,7 +316,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.4s;
-            font-family:'IBM Plex Sans Arabic',sans-serif;
+            font-family:var(--ar);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -327,7 +327,7 @@
         }
 
         .btn-submit:hover {
-            box-shadow: 0 0 30px rgba(164, 36, 59, 0.3);
+            box-shadow: 0 0 30px rgba(14,63,78, 0.3);
             transform: translateY(-2px);
         }
 
@@ -381,7 +381,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(14,63,78,.08);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -408,19 +408,19 @@
             gap: 8px;
             padding: 14px 30px;
             border-radius: 50px;
-            background: #25D366;
+            background: #0B0B0C;
             color: #fff;
             font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
-            font-family:'IBM Plex Sans Arabic',sans-serif;
+            font-family:var(--ar);
             transition: all 0.3s;
             border: none;
             cursor: pointer;
         }
 
         .success-modal .btn-whatsapp:hover {
-            box-shadow: 0 0 25px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 0 25px rgba(11,11,12,.3);
             transform: translateY(-2px);
         }
 
@@ -453,13 +453,54 @@
             .form-card { padding: 22px 18px; }
             .brand-header { padding: 25px 16px; }
         }
-    </style>
+    
+/* ===== هوية «أسود وبلاتيني» — لمسات أخيرة ===== */
+::selection{background:rgba(var(--teal-rgb),.18)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+body{-webkit-font-smoothing:antialiased}
+body::before{background:radial-gradient(ellipse 60% 45% at 85% 0%,rgba(var(--teal-hi-rgb),.18),transparent 65%)}
+.brand-header{position:relative;background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-color:transparent;border-radius:28px;box-shadow:inset 0 1px 0 #fff,0 30px 70px -44px rgba(var(--shade-rgb),.45),0 46px 90px -56px rgba(var(--teal-rgb),.4)}
+.brand-header::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:var(--rim);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.brand-header .brand-tagline{font-family:var(--disp);font-weight:700;font-feature-settings:var(--swash);font-size:1.6rem;line-height:1.5}
+.brand-header .brand-tagline em{background:var(--g-num);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .04em .22em;margin:0 -.04em -.22em;display:inline-block}
+.form-card{background:rgba(255,255,255,.7);box-shadow:0 22px 50px -38px rgba(var(--shade-rgb),.4)}
+.form-card-title{font-family:var(--disp);font-weight:700;font-feature-settings:var(--swash);font-size:1.25rem}
+.form-group input,.form-group select,.form-group textarea{background:#fff;border-color:rgba(154,160,168,.55)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(var(--teal-rgb),.12)}
+.service-option{background:#fff}
+.service-option.selected{box-shadow:0 0 0 1px var(--gold),0 16px 34px -26px rgba(var(--teal-rgb),.5)}
+.btn-submit{background:#0B0B0C;box-shadow:0 16px 34px -18px rgba(11,11,12,.55)}
+.btn-submit:hover{background:#1F2124;box-shadow:0 20px 40px -18px rgba(11,11,12,.6)}
+.note-box{color:var(--teal)}
+.success-modal h3{font-family:var(--disp);font-weight:700;font-feature-settings:var(--swash)}
+.success-modal .success-icon{color:var(--teal)}
+.footer-brand .f-logo{font-family:var(--disp);font-weight:700;letter-spacing:0;background:none;-webkit-text-fill-color:currentColor;color:var(--text)}
+
+/* حقول التاريخ: كروم بلغة عربية يعرض «يوم/شهر/سنة» بحروف معكوسة — هذا يعيدها لترتيبها الصحيح ولا يمسّ القيمة */
+input[type=date]::-webkit-datetime-edit-day-field,input[type=date]::-webkit-datetime-edit-month-field,input[type=date]::-webkit-datetime-edit-year-field{direction:rtl!important;unicode-bidi:normal!important}
+
+/* أيقونات النموذج بنفس رسم أيقونات الحاسبة («بلاتيني») بدل الإيموجي */
+.mi{display:block;overflow:visible}
+.mi *{vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.mi .m{fill:url(#mwPlat);stroke:currentColor;stroke-width:1.4}
+.mi .d,.mi .o{fill:none;stroke:currentColor;stroke-width:1.4}
+.mi .f{fill:currentColor}
+.mi .a{fill:var(--teal)}
+.form-card-title .card-icon{color:var(--text)}
+.form-card-title .card-icon .mi{width:26px;height:26px}
+.service-option .svc-icon{color:var(--text)}
+.service-option .svc-icon .mi{width:38px;height:38px}
+.note-box .note-icon .mi{width:21px;height:21px}
+.service-option .service-check{font-size:0}
+.service-option.selected .service-check{background:var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.4 6.3 4.9 8.7 9.6 3.6' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/12px 12px;border-color:var(--teal)}
+</style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="mwPlat" gradientUnits="userSpaceOnUse" x1="0" y1="3" x2="0" y2="29"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#E4E7EB"/><stop offset="1" stop-color="#C5CAD1"/></linearGradient></defs></svg>
     <div class="grid-bg"></div>
 
     <div class="app-container">
-        <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:#6E6E73;font-size:0.9rem;font-weight:500;text-decoration:none;margin-bottom:20px;transition:color 0.3s;font-family:'IBM Plex Sans Arabic',sans-serif;">&#8594; العودة للموقع</a>
+        <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:#6E6E73;font-size:0.9rem;font-weight:500;text-decoration:none;margin-bottom:20px;transition:color 0.3s;font-family:'Thmanyah Sans',sans-serif;">&#8594; العودة للموقع</a>
 
         <div class="brand-header">
             <div class="brand-logo"><img src="assets/logo-mark-dark.svg" alt="مأوى" style="height:36px;width:auto"></div>
@@ -469,7 +510,7 @@
         </div>
 
         <div class="note-box">
-            <span class="note-icon">&#128161;</span>
+            <span class="note-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><circle cx="16" cy="16" r="11"/></g><g class="d"><path d="M16 14.6v7.6"/></g><g class="f"><circle cx="16" cy="10.4" r="1.5"/></g></svg></span>
             <span>سجّل البيانات المطلوبة بالكامل ثم اضغط "إرسال الطلب". سيتم حفظ طلبك في نظام مأوى للتصوير العقاري ويتولى فريقنا التواصل معك.</span>
         </div>
 
@@ -477,7 +518,7 @@
 
             <div class="form-card">
                 <div class="form-card-title">
-                    <div class="card-icon">&#128100;</div>
+                    <div class="card-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><circle cx="16" cy="10.6" r="5.2"/><path d="M6.2 27c.6-5.6 4.6-9.2 9.8-9.2s9.2 3.6 9.8 9.2z"/></g></svg></div>
                     بياناتك
                 </div>
                 <div class="form-grid">
@@ -502,7 +543,7 @@
 
             <div class="form-card">
                 <div class="form-card-title">
-                    <div class="card-icon">&#127968;</div>
+                    <div class="card-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><path d="M6 27V15.6L16 7.4l10 8.2V27z"/></g><g class="a"><rect x="18.6" y="17" width="4" height="4" rx=".4"/></g><g class="d"><path d="M11.6 27v-6h4.4v6"/></g><g class="o"><path d="M3.5 27h25"/></g></svg></div>
                     بيانات العقار
                 </div>
                 <div class="form-grid">
@@ -540,13 +581,13 @@
 
             <div class="form-card">
                 <div class="form-card-title">
-                    <div class="card-icon">&#128247;</div>
+                    <div class="card-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><path d="M3.5 13a3 3 0 0 1 3-3h4.1l1.7-2.8c.3-.5.8-.8 1.4-.8h4.6c.6 0 1.1.3 1.4.8l1.7 2.8h4.1a3 3 0 0 1 3 3v10.5a3 3 0 0 1-3 3h-19a3 3 0 0 1-3-3z"/><rect x="22.4" y="8.2" width="3.4" height="1.8" rx=".6"/></g><g class="a"><circle cx="16" cy="18" r="3"/></g><g class="d"><circle cx="16" cy="18" r="5.6"/><circle cx="16" cy="18" r="3"/></g><g class="f"><rect x="6.3" y="12.6" width="2.8" height="1.5" rx=".5"/></g></svg></div>
                     الخدمات المطلوبة <span class="required">*</span>
                 </div>
                 <div class="services-grid" id="servicesGrid">
                     <div class="service-option" data-service="photo" onclick="toggleService(this)">
-                        <div class="service-check">&#10003;</div>
-                        <div class="svc-icon">&#128247;</div>
+                        <div class="service-check"></div>
+                        <div class="svc-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><path d="M3.5 13a3 3 0 0 1 3-3h4.1l1.7-2.8c.3-.5.8-.8 1.4-.8h4.6c.6 0 1.1.3 1.4.8l1.7 2.8h4.1a3 3 0 0 1 3 3v10.5a3 3 0 0 1-3 3h-19a3 3 0 0 1-3-3z"/><rect x="22.4" y="8.2" width="3.4" height="1.8" rx=".6"/></g><g class="a"><circle cx="16" cy="18" r="3"/></g><g class="d"><circle cx="16" cy="18" r="5.6"/><circle cx="16" cy="18" r="3"/></g><g class="f"><rect x="6.3" y="12.6" width="2.8" height="1.5" rx=".5"/></g></svg></div>
                         <div class="svc-name">التصوير الفوتوغرافي</div>
                         <div class="svc-desc">صور HDR احترافية للعقار</div>
                         <div class="package-options">
@@ -555,8 +596,8 @@
                         </div>
                     </div>
                     <div class="service-option" data-service="video" onclick="toggleService(this)">
-                        <div class="service-check">&#10003;</div>
-                        <div class="svc-icon">&#127909;</div>
+                        <div class="service-check"></div>
+                        <div class="svc-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><rect x="4" y="13.2" width="24" height="13.8" rx="2"/><path d="M4.5 12.4 27 7.6l-.75-3.5L3.75 8.9z"/></g><g class="a"><circle cx="8" cy="22.4" r="1.4"/></g><g class="d"><path d="M9.45 11.35 10.5 7.45M15.07 10.15l1.06-3.9M20.7 8.96l1.05-3.9"/><path d="M4 17.6h24M8.4 17.6l2.4-4.4M14.4 17.6l2.4-4.4M20.4 17.6l2.4-4.4"/><path d="M12 22.4h11.5"/></g></svg></div>
                         <div class="svc-name">الفيديو السينمائي</div>
                         <div class="svc-desc">فيديو سينمائي بتصحيح ألوان</div>
                         <div class="package-options">
@@ -565,8 +606,8 @@
                         </div>
                     </div>
                     <div class="service-option" data-service="drone" onclick="toggleService(this)">
-                        <div class="service-check">&#10003;</div>
-                        <div class="svc-icon">&#128747;</div>
+                        <div class="service-check"></div>
+                        <div class="svc-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><rect x="12.2" y="12.6" width="7.6" height="6.8" rx="2.2"/></g><g class="a"><circle cx="16" cy="16" r="1.6"/></g><g class="g"><circle cx="7.6" cy="8" r="1"/><circle cx="24.4" cy="8" r="1"/><circle cx="7.6" cy="24" r="1"/><circle cx="24.4" cy="24" r="1"/></g><g class="o"><path d="M13.2 13.6 8.3 8.7M18.8 13.6l4.9-4.9M13.2 18.4l-4.9 4.9M18.8 18.4l4.9 4.9"/><circle cx="7.6" cy="8" r="4.1"/><circle cx="24.4" cy="8" r="4.1"/><circle cx="7.6" cy="24" r="4.1"/><circle cx="24.4" cy="24" r="4.1"/></g></svg></div>
                         <div class="svc-name">تصوير الدرون 4K</div>
                         <div class="svc-desc">لقطات جوية بدقة عالية</div>
                         <div class="package-options">
@@ -575,8 +616,8 @@
                         </div>
                     </div>
                     <div class="service-option" data-service="vr360" onclick="toggleService(this)">
-                        <div class="service-check">&#10003;</div>
-                        <div class="svc-icon">&#127760;</div>
+                        <div class="service-check"></div>
+                        <div class="svc-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><path d="M10.4 23.4v-7.2L16 11.6l5.6 4.6v7.2z"/></g><g class="a"><path d="M14.75 5.44l-3.4-2.3.2 4.1z"/></g><g class="d"><path d="M14.6 23.4v-3.6h2.8v3.6"/></g><g class="o"><path d="M20.35 5.64A11.6 11.6 0 1 1 11.65 5.64"/></g></svg></div>
                         <div class="svc-name">جولات 360°</div>
                         <div class="svc-desc">جولة افتراضية تفاعلية</div>
                         <div class="package-options">
@@ -589,7 +630,7 @@
 
             <div class="form-card">
                 <div class="form-card-title">
-                    <div class="card-icon">&#128221;</div>
+                    <div class="card-icon"><svg viewBox="0 0 32 32" class="mi" aria-hidden="true"><g class="m"><path d="M8.5 4.5h10.8L25 10.2V26a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 7 26V6a1.5 1.5 0 0 1 1.5-1.5z"/></g><g class="d"><path d="M19.3 4.5v5.7H25M11 15h10M11 19h10M11 23h6"/></g></svg></div>
                     ملاحظات إضافية
                 </div>
                 <div class="form-group full-width">
@@ -599,7 +640,7 @@
 
             <div class="submit-section">
                 <button class="btn-submit" onclick="submitForm()">
-                    &#128228; إرسال الطلب
+                    إرسال الطلب
                 </button>
             </div>
         </form>
@@ -612,10 +653,10 @@
 
     <div class="success-overlay" id="successOverlay">
         <div class="success-modal">
-            <div class="success-icon">&#9989;</div>
+            <div class="success-icon"><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17.5 19.5 7"/></svg></div>
             <h3>تم إرسال طلبك بنجاح!</h3>
             <p>شكرًا لك! تم حفظ طلبك في نظام مأوى للتصوير العقاري بنجاح. سيتواصل فريقنا معك في أقرب وقت لتأكيد الموعد والتفاصيل.</p>
-            <button class="btn-whatsapp" onclick="closeSuccess()">&#128077; حسنًا</button>
+            <button class="btn-whatsapp" onclick="closeSuccess()">حسنًا</button>
         </div>
     </div>
 
@@ -735,7 +776,7 @@
                 console.error(err);
                 alert('حدث خطأ أثناء الإرسال: ' + (err.message || 'يرجى المحاولة مرة أخرى'));
             } finally {
-                btn.innerHTML = '&#128228; إرسال الطلب';
+                btn.innerHTML = 'إرسال الطلب';
                 btn.disabled = false;
             }
         }
