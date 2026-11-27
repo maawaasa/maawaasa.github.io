@@ -163,6 +163,27 @@ footer .bd{display:flex;gap:4mm}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn.secondary{background:#fff;color:#292522;border:1px solid #cfc8c1}
 @media print{@page{size:A4;margin:0}body{background:#fff;padding:0}.top,.panel,.preview-modal{display:none}.page{box-shadow:none;margin:0;border-radius:0;page-break-after:always}.page:last-child{page-break-after:auto}.hcard,.sign,.card{box-shadow:none}}
+
+@font-face{font-family:'Thmanyah Serif';src:url("/assets/fonts/thmanyah/thmanyahseriftext-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url("/assets/fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+/* ===== واجهة صفحة الاعتماد بهوية «أسود وبلاتيني» (2026-11). مستند العقد المعتمد (.page) ومعاينة البريد لم يتغيّرا — الألوان هنا للواجهة فقط ===== */
+body{background:#F5F5F3}
+.top{background:#0E0F11;font-family:'Thmanyah Sans','IBM Plex Sans Arabic','Geeza Pro',Tahoma,sans-serif}
+.top strong{font-family:'Thmanyah Serif','Times New Roman',serif;font-weight:700;font-feature-settings:"salt","swsh","dlig"}
+.panel{font-family:'Thmanyah Sans','IBM Plex Sans Arabic','Geeza Pro',Tahoma,sans-serif;border:1px solid rgba(154,160,168,.38);border-radius:20px;box-shadow:0 26px 60px -40px rgba(30,32,36,.45)}
+.panel h1{font-family:'Thmanyah Serif','Times New Roman',serif;font-weight:700;font-feature-settings:"salt","swsh","dlig";font-size:1.4rem}
+.panel .muted,.panel .loading{color:#62666C}
+.panel .status.ok{background:#EEF3F4;color:#0E3F4E}
+.panel .status.warn{background:#F0F1F2;color:#3A3C40}
+.panel .status.err{background:#F6EEEC;color:#9A3324}
+.panel .btn{background:#0B0B0C;border-radius:999px;font-family:'Thmanyah Sans','IBM Plex Sans Arabic','Geeza Pro',Tahoma,sans-serif;font-weight:600;padding:12px 22px;box-shadow:0 14px 30px -18px rgba(11,11,12,.55)}
+.panel .btn:hover:not(:disabled){background:#1F2124}
+.panel .btn.secondary{background:transparent;color:#0B0B0C;border:1px solid rgba(154,160,168,.55);box-shadow:none}
+.panel .fact{background:#F6F7F7;border-radius:12px}
+.panel .fact small{color:#62666C}
+:focus-visible{outline:2px solid #0E3F4E;outline-offset:3px}
 </style>
 </head>
 <body>
